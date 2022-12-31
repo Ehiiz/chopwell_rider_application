@@ -39,7 +39,7 @@ class OrderHistoryPage extends StatelessWidget {
         padding: EdgeInsets.symmetric(
             vertical: screenHeight * 0.01, horizontal: screenWidth * 0.02),
         child: ListView(children: [
-          Text('Order History',
+          Text('Delivery History',
               style: Theme.of(context).primaryTextTheme.titleLarge),
           SizedBox(height: 10),
           Row(

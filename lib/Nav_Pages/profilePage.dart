@@ -102,12 +102,12 @@ class _MyProfilePageState extends State<MyProfilePage> {
                 ),
                 Column(
                   children: [
-                    ProfileButtons("assets/card.svg", "Store Details",
+                    ProfileButtons("assets/card.svg", "Rider Details",
                         BankWithdrawalDetailsPage()),
                     ProfileButtons("assets/coupon.svg", "Payment Details",
                         BankWithdrawalDetailsPage()),
-                    ProfileButtons("assets/order_history.svg", "Order History",
-                        OrderHistoryPage()),
+                    ProfileButtons("assets/order_history.svg",
+                        "Delivery History", OrderHistoryPage()),
                     ProfileButtons("assets/order_history.svg", "Payout History",
                         PayoutHistoryPage()),
                     ProfileButtons("assets/help.svg", "Help", FavouritePage())
