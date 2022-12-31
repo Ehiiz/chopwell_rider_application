@@ -48,15 +48,30 @@ class _MainNavPageState extends State<MainNavPage> {
             ),
             items: [
               BottomNavigationBarItem(
-                icon: SvgPicture.asset("assets/Home.svg"),
+                icon: SvgPicture.asset(
+                  "assets/Home.svg",
+                  color: currentIndex == 0
+                      ? KConstants.baseRedColor
+                      : Color(0xFFAFB4BB),
+                ),
                 label: 'Home',
               ),
               BottomNavigationBarItem(
-                icon: SvgPicture.asset("assets/bi_bookmark-check-fill.svg"),
+                icon: SvgPicture.asset(
+                  "assets/bi_bookmark-check-fill.svg",
+                  color: currentIndex == 1
+                      ? KConstants.baseRedColor
+                      : Color(0xFFAFB4BB),
+                ),
                 label: 'Wallet',
               ),
               BottomNavigationBarItem(
-                icon: SvgPicture.asset("assets/Profile.svg"),
+                icon: SvgPicture.asset(
+                  "assets/Profile.svg",
+                  color: currentIndex == 2
+                      ? KConstants.baseRedColor
+                      : Color(0xFFAFB4BB),
+                ),
                 label: 'Profile',
               ),
             ]));
