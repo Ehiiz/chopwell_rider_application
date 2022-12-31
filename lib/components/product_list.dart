@@ -55,27 +55,21 @@ class ProductBar extends StatelessWidget {
                           fontSize: 15.0,
                         ),
                       )
-                    : SizedBox(
+                    : Container(
                         height: 25,
+                        decoration: BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(
+                              color: KConstants.baseRedColor,
+                              width: 2.0,
+                            ),
+                          ),
+                        ),
                         child: TextField(
                           //      controller: _bookTitleController,
                           maxLines: 1,
                           decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                                // borderSide: BorderSide(
-                                //   color: KConstants.baseRedColor,
-                                // ),
-                                borderSide: BorderSide.none),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: KConstants.baseRedColor,
-                              ),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: KConstants.baseRedColor,
-                              ),
-                            ),
+                            border: InputBorder.none,
                             floatingLabelBehavior: FloatingLabelBehavior.never,
                             labelText: "food",
                             labelStyle: TextStyle(
@@ -99,27 +93,21 @@ class ProductBar extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                             fontSize: 20.0),
                       )
-                    : SizedBox(
+                    : Container(
                         height: 25,
+                        decoration: BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(
+                              color: KConstants.baseTwoRedColor,
+                              width: 2.0,
+                            ),
+                          ),
+                        ),
                         child: TextField(
                           //      controller: _bookTitleController,
                           maxLines: 1,
                           decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                                // borderSide: BorderSide(
-                                //   color: KConstants.baseRedColor,
-                                // ),
-                                borderSide: BorderSide.none),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: KConstants.baseRedColor,
-                              ),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: KConstants.baseRedColor,
-                              ),
-                            ),
+                            border: InputBorder.none,
                             floatingLabelBehavior: FloatingLabelBehavior.never,
                             labelText: "price",
                             labelStyle: TextStyle(

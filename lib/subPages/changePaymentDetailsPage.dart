@@ -27,15 +27,6 @@ class ChangePaymentDetailsPage extends StatelessWidget {
                 size: 25,
               ),
             ),
-            actions: [
-              IconButton(
-                  onPressed: null,
-                  icon: Icon(
-                    Icons.search,
-                    color: Colors.black,
-                    size: 25,
-                  ))
-            ],
           ),
           body: Padding(
             padding: EdgeInsets.symmetric(
@@ -53,29 +44,23 @@ class ChangePaymentDetailsPage extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(
+                    Container(
                       height: 35,
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            color: KConstants.baseRedColor,
+                            width: 1.0,
+                          ),
+                        ),
+                      ),
                       child: TextField(
                         //      controller: _bookTitleController,
                         maxLines: 1,
                         decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                              // borderSide: BorderSide(
-                              //   color: KConstants.baseRedColor,
-                              // ),
-                              borderSide: BorderSide.none),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: KConstants.baseRedColor,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: KConstants.baseRedColor,
-                            ),
-                          ),
+                          border: InputBorder.none,
                           floatingLabelBehavior: FloatingLabelBehavior.never,
-                          labelText: "name of bank",
+                          labelText: "Zenith Bank",
                           labelStyle: TextStyle(
                             color: KConstants.baseTwoGreyColor,
                             fontSize: 15,
@@ -88,30 +73,33 @@ class ChangePaymentDetailsPage extends StatelessWidget {
                     SizedBox(
                       height: 10,
                     ),
+                    Text(
+                      "bank name",
+                      style: TextStyle(
+                        fontFamily: "Questrial",
+                        color: KConstants.baseRedColor,
+                      ),
+                    ),
                     SizedBox(
+                      height: 30,
+                    ),
+                    Container(
                       height: 35,
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            color: KConstants.baseRedColor,
+                            width: 1.0,
+                          ),
+                        ),
+                      ),
                       child: TextField(
                         //      controller: _bookTitleController,
-
                         maxLines: 1,
                         decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                              // borderSide: BorderSide(
-                              //   color: KConstants.baseRedColor,
-                              // ),
-                              borderSide: BorderSide.none),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: KConstants.baseRedColor,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: KConstants.baseRedColor,
-                            ),
-                          ),
+                          border: InputBorder.none,
                           floatingLabelBehavior: FloatingLabelBehavior.never,
-                          labelText: "account number",
+                          labelText: "1234567890",
                           labelStyle: TextStyle(
                             color: KConstants.baseTwoGreyColor,
                             fontSize: 15,
@@ -124,29 +112,33 @@ class ChangePaymentDetailsPage extends StatelessWidget {
                     SizedBox(
                       height: 10,
                     ),
+                    Text(
+                      "account number",
+                      style: TextStyle(
+                        fontFamily: "Questrial",
+                        color: KConstants.baseRedColor,
+                      ),
+                    ),
                     SizedBox(
+                      height: 30,
+                    ),
+                    Container(
                       height: 35,
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            color: KConstants.baseRedColor,
+                            width: 1.0,
+                          ),
+                        ),
+                      ),
                       child: TextField(
                         //      controller: _bookTitleController,
                         maxLines: 1,
                         decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                              // borderSide: BorderSide(
-                              //   color: KConstants.baseRedColor,
-                              // ),
-                              borderSide: BorderSide.none),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: KConstants.baseRedColor,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: KConstants.baseRedColor,
-                            ),
-                          ),
+                          border: InputBorder.none,
                           floatingLabelBehavior: FloatingLabelBehavior.never,
-                          labelText: "bank",
+                          labelText: "oriasotie emmanuel",
                           labelStyle: TextStyle(
                             color: KConstants.baseTwoGreyColor,
                             fontSize: 15,
@@ -154,6 +146,16 @@ class ChangePaymentDetailsPage extends StatelessWidget {
                             fontFamily: "Montserrat",
                           ),
                         ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      "account name",
+                      style: TextStyle(
+                        fontFamily: "Questrial",
+                        color: KConstants.baseRedColor,
                       ),
                     ),
                   ],

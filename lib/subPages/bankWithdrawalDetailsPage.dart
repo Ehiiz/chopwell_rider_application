@@ -58,8 +58,10 @@ class BankWithdrawalDetailsPage extends StatelessWidget {
                         fontFamily: "Montserrat",
                         fontSize: 20.0,
                         color: KConstants.baseDarkColor,
-                        fontWeight: FontWeight.bold,
                       ),
+                    ),
+                    SizedBox(
+                      height: 5,
                     ),
                     Text(
                       "Oriasotie Emmanuel",
@@ -67,8 +69,10 @@ class BankWithdrawalDetailsPage extends StatelessWidget {
                         fontFamily: "Montserrat",
                         fontSize: 20.0,
                         color: KConstants.baseGreyColor,
-                        fontWeight: FontWeight.bold,
                       ),
+                    ),
+                    SizedBox(
+                      height: 5,
                     ),
                     Text(
                       "0116780789",
@@ -76,7 +80,6 @@ class BankWithdrawalDetailsPage extends StatelessWidget {
                         fontFamily: "Montserrat",
                         fontSize: 20.0,
                         color: KConstants.baseGreyColor,
-                        fontWeight: FontWeight.bold,
                       ),
                     ),
                     Divider(
@@ -90,10 +93,11 @@ class BankWithdrawalDetailsPage extends StatelessWidget {
                       alignment: Alignment.bottomRight,
                       child: ElevatedButton(
                         style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStatePropertyAll(Colors.transparent),
-                          elevation: MaterialStatePropertyAll(0.0),
-                        ),
+                            backgroundColor:
+                                MaterialStatePropertyAll(Colors.transparent),
+                            elevation: MaterialStatePropertyAll(0.0),
+                            padding: MaterialStatePropertyAll(
+                                EdgeInsets.only(top: 0.0))),
                         onPressed: () {
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
@@ -106,6 +110,7 @@ class BankWithdrawalDetailsPage extends StatelessWidget {
                             fontFamily: "Montserrat",
                             fontSize: 15.0,
                             color: KConstants.baseRedColor,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
