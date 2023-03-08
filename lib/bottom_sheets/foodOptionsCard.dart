@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:chopwell_merchant_application/constants/constants.dart';
+import 'package:chopwell_rider_application/constants/constants.dart';
 import 'package:sliding_sheet/sliding_sheet.dart';
 
 class FoodOptionsCard extends StatefulWidget {

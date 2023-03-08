@@ -1,4 +1,4 @@
-# chopwell_merchant_application
+# chopwell_rider_application
 
 A new Flutter project.
 

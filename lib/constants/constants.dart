@@ -28,6 +28,8 @@ class KConstants {
 
   static Color baseBlueColor = Color(0xFF0000FF);
 
+  static Color baseShadowColor = Color(0x1A5A6CEA);
+
   static List<String> foodName = [
     "Pounded Yam and Egusi",
     "Meatpie",

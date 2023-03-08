@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.chopwell_merchant_application">
+    package="com.example.chopwell_rider_application">
    <application
-        android:label="chopwell_merchant_application"
+        android:label="chopwell_rider_application"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
