@@ -1,3 +1,4 @@
+import 'package:chopwell_rider_application/models/request_models/update_rider_status_request_model.dart';
 import 'package:chopwell_rider_application/models/response_models/map_based_response_model.dart';
 import 'package:chopwell_rider_application/models/request_models/set_location_request_model.dart';
 import 'package:chopwell_rider_application/screens/Nav_Pages/ordersPage.dart';
@@ -14,6 +15,8 @@ import 'package:chopwell_rider_application/services/update_location_service.dart
 import 'package:chopwell_rider_application/screens/subPages/bankWithdrawalDetailsPage.dart';
 import 'package:chopwell_rider_application/screens/subPages/orderHistoryPage.dart';
 import 'package:chopwell_rider_application/screens/subPages/payoutHistoryPage.dart';
+import 'package:chopwell_rider_application/services/update_rider_status_service.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:chopwell_rider_application/constants/constants.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -39,45 +42,62 @@ class NewProfilePage extends ConsumerStatefulWidget {
 }
 
 class _NewProfilePageState extends ConsumerState<NewProfilePage> {
-  void _updateLocation() async {
-    final request = SetLocationRequestModel(location: "location");
-    final response = await UpdateLocationService.location(request);
-
-    if (response.status == "success") {
-      // Navigator.push(context, MaterialPageRoute(builder: (context) {
-      //   return MainNavPage();
-      // }));
-    } else {
-      print(response);
-      customErrorBar("Unable to update location");
-    }
-  }
-
-  Future<Position> _getCurrentLocation() async {
-    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      return Future.error('Location services are disabled');
-    }
-
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return Future.error('Location permissions are denied');
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      return Future.error('Location permissions are denied forever');
-    }
-    return await Geolocator.getCurrentPosition();
-  }
-
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     final userDetailRef = ref.watch(fetchUserDetailFutureProvider);
+
+    void _updateLocation() async {
+      final request = SetLocationRequestModel(location: "location");
+      final response = await UpdateLocationService.location(request);
+
+      if (response.status == "success") {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(customSuccessBar("Location Updated"));
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(customErrorBar("Failed to update location"));
+      }
+    }
+
+    Future<Position> _getCurrentLocation() async {
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        return Future.error('Location services are disabled');
+      }
+
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          return Future.error('Location permissions are denied');
+        }
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+        return Future.error('Location permissions are denied forever');
+      }
+      return await Geolocator.getCurrentPosition();
+    }
+
+    void _updateRiderStatus(String status) async {
+      final request = UpdateRiderStatusRequestModel(status: "offline");
+      final response = await UpdateRiderService().flipStatus(request);
+
+      if (response.status == "success") {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(customSuccessBar("Status updated"));
+
+        ref.refresh(fetchUserDetailFutureProvider);
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(customErrorBar("Failed to update status"));
+
+        ref.refresh(fetchUserDetailFutureProvider);
+      }
+    }
+
     return SafeArea(
       child: Scaffold(
         extendBody: true,
@@ -169,6 +189,7 @@ class _NewProfilePageState extends ConsumerState<NewProfilePage> {
                         return Text(error.toString());
                       }, loading: () {
                         return Shimmer.fromColors(
+                            // ignore: sort_child_properties_last
                             child: Container(
                                 height: 10,
                                 width: 150,
@@ -181,6 +202,11 @@ class _NewProfilePageState extends ConsumerState<NewProfilePage> {
                             highlightColor: KConstants.baseFourDarkColor);
                       }),
                       const SizedBox(
+                        height: 10,
+                      ),
+
+                      // ignore: prefer_const_constructors
+                      SizedBox(
                         height: 10,
                       ),
                       Row(
@@ -208,16 +234,17 @@ class _NewProfilePageState extends ConsumerState<NewProfilePage> {
                             return Text(error.toString());
                           }, loading: () {
                             return Shimmer.fromColors(
-                                child: Container(
-                                    height: 10,
-                                    width: 150,
-                                    margin: EdgeInsets.symmetric(vertical: 5.0),
-                                    decoration: const BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(20.0)))),
-                                baseColor: KConstants.baseFourGreyColor,
-                                highlightColor: KConstants.baseFourDarkColor);
+                              baseColor: KConstants.baseFourGreyColor,
+                              highlightColor: KConstants.baseFourDarkColor,
+                              child: Container(
+                                  height: 10,
+                                  width: 150,
+                                  margin: EdgeInsets.symmetric(vertical: 5.0),
+                                  decoration: const BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(20.0)))),
+                            );
                           }),
                         ],
                       ),
@@ -236,17 +263,48 @@ class _NewProfilePageState extends ConsumerState<NewProfilePage> {
                   ),
                 ),
                 const SizedBox(
-                  height: 30,
+                  height: 20,
                 ),
                 Column(
                   children: [
-                    ProfileButtons("assets/card.svg", "Rider Details",
-                        BankWithdrawalDetailsPage()),
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          // ignore: prefer_const_constructors
+                          Container(
+                            margin: EdgeInsets.symmetric(vertical: 5.0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                IconButton(
+                                    onPressed: () {},
+                                    icon: Icon(CupertinoIcons.flag)),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  "change status",
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Montserrat',
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          Switch(
+                              value: false,
+                              onChanged: (value) {
+                                setState(() {});
+                              }),
+                        ]),
                     ProfileButtons("assets/coupon.svg", "Payment Details",
                         BankWithdrawalDetailsPage()),
-                    ProfileButtons("assets/order_history.svg",
-                        "Delivery History", OrderHistoryPage()),
-                    ProfileButtons("assets/order_history.svg", "Payout History",
+                    ProfileButtons("assets/helmet.svg", "Delivery History",
+                        OrderHistoryPage()),
+                    ProfileButtons("assets/withdrawal.svg", "Payout History",
                         PayoutHistoryPage()),
                     ProfileButtons("assets/help.svg", "Help", MyOrders())
                   ],
