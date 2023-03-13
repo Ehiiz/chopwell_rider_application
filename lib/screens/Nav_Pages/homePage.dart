@@ -1,43 +1,56 @@
+import 'dart:math';
+
+import 'package:chopwell_rider_application/models/response_models/list_based_response_model.dart';
+import 'package:chopwell_rider_application/models/response_models/map_based_response_model.dart';
 import 'package:chopwell_rider_application/screens/Nav_Pages/ordersPage.dart';
 import 'package:chopwell_rider_application/screens/micro_components/order_progress_bar.dart';
 import 'package:chopwell_rider_application/screens/subPages/orderProgressPage.dart';
+import 'package:chopwell_rider_application/services/home_details_service.dart';
 import 'package:flutter/material.dart';
 import 'package:chopwell_rider_application/constants/constants.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shimmer/shimmer.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
+import '../../services/wallet_balance_service.dart';
 
-  // This widget is the root of your application.
+final orderSummaryFutureProvider =
+    FutureProvider.autoDispose<MapDataResponseModel>((ref) async {
+  final orderSummaryDetails = ref.watch(homeDetailsProvider);
+  return orderSummaryDetails.summary();
+});
+
+final walletBalanceFutureProvider =
+    FutureProvider.autoDispose<MapDataResponseModel>(
+  (ref) async {
+    final walletBalanceDetails = ref.watch(walletBalanceProvider);
+    return walletBalanceDetails.fetchBalance();
+  },
+);
+
+final topProductsFutureProvider =
+    FutureProvider.autoDispose<ListDataResponseModel>((ref) async {
+  final topProductDetails = ref.watch(homeDetailsProvider);
+  return topProductDetails.products();
+});
+
+class MyHomePage extends ConsumerStatefulWidget {
+  const MyHomePage({Key? key}) : super(key: key);
+
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  ConsumerState<MyHomePage> createState() => _MyHomePageState();
 }
 
 int _currentIndex = 0;
 final List<Widget> _children = [];
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends ConsumerState<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-
+    final orderSummaryRef = ref.watch(orderSummaryFutureProvider);
+    final topProductsRef = ref.watch(topProductsFutureProvider);
+    final walletBalanceRef = ref.watch(walletBalanceFutureProvider);
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -54,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Store Summary',
+                      'Rider Summary',
                       style: TextStyle(
                         fontSize: 20,
                         fontFamily: 'Montserrat',
@@ -78,84 +91,169 @@ class _MyHomePageState extends State<MyHomePage> {
                 SizedBox(
                   height: 20,
                 ),
-                balanceBox(
-                  label: "balance",
-                  figure: '\$3000',
-                  bgColor: KConstants.baseGreenColor,
-                  screenWidth: screenWidth,
-                  screenHeight: screenHeight * 0.3,
-                ),
-                SizedBox(
+                walletBalanceRef.when(data: (data) {
+                  final balance = double.parse(data.data["accountBalance"]);
+                  final formattedBalance = balance.toStringAsFixed(
+                      max(0, balance.truncateToDouble() == balance ? 0 : 2));
+                  return balanceBox(
+                    label: "balance",
+                    figure: "₦$formattedBalance",
+                    bgColor: KConstants.baseGreenColor,
+                    screenWidth: screenWidth,
+                    screenHeight: screenHeight * 0.3,
+                  );
+                }, error: (error, _) {
+                  return Text(error.toString());
+                }, loading: () {
+                  return Shimmer.fromColors(
+                    baseColor: KConstants.baseSixGreyColor,
+                    highlightColor: KConstants.baseSixGreyColor,
+                    child: Container(
+                      width: screenWidth,
+                      height: screenHeight * 0.3,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                    ),
+                  );
+                }),
+                const SizedBox(
                   height: 15,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    balanceBox(
-                        bgColor: KConstants.baseOrangeColor,
-                        label: "orders",
-                        figure: "200",
-                        screenWidth: screenWidth * 0.45,
-                        screenHeight: screenHeight),
-                    balanceBox(
+                orderSummaryRef.when(data: (data) {
+                  final orderDetails = data.data;
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      balanceBox(
+                          bgColor: KConstants.baseOrangeColor,
+                          label: "orders",
+                          figure: orderDetails["totalOrder"].toString(),
+                          screenWidth: screenWidth * 0.45,
+                          screenHeight: screenHeight),
+                      balanceBox(
                         label: "sales",
-                        figure: "\$2300",
+                        figure: "₦${orderDetails["orderBalance"].toString()}",
                         bgColor: KConstants.baseTwoRedColor,
                         screenWidth: screenWidth * 0.45,
-                        screenHeight: screenHeight),
-                  ],
-                ),
-                SizedBox(
-                  height: 30,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return MyOrders();
-                    }));
-                  },
-                  child: OrderProgressBar(
-                      KConstants.baseFourGreyColor,
-                      Offset(5, 5),
-                      "assets/Restaurant.svg",
-                      "View Restaurant",
-                      "see your menu",
-                      "view",
-                      KConstants.baseRedColor,
-                      KConstants.baseGreyColor),
-                ),
-                SizedBox(
-                  height: 30,
-                ),
-                Text(
-                  "Top Sellers",
-                  style: TextStyle(
-                    fontFamily: "Montserrat",
-                    fontSize: 20.0,
-                    color: KConstants.baseTwoGreyColor,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                Container(
-                  height: screenHeight * 0.7,
-                  child: GridView.builder(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
+                        screenHeight: screenHeight,
                       ),
-                      itemCount: 6,
-                      itemBuilder: (BuildContext context, int index) =>
-                          Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5.0)),
-                            margin: EdgeInsets.all(5.0),
-                            child:
-                                Image.asset(KConstants.restaurantImages[index]),
-                          )),
+                    ],
+                  );
+                }, error: (error, _) {
+                  return Text(error.toString());
+                }, loading: () {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Shimmer.fromColors(
+                        baseColor: KConstants.baseFiveGreyColor,
+                        highlightColor: KConstants.baseFiveGreyColor,
+                        child: Container(
+                          width: screenWidth * 0.45,
+                          height: screenHeight * 0.25,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20.0),
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      Shimmer.fromColors(
+                        baseColor: KConstants.baseFiveGreyColor,
+                        highlightColor: KConstants.baseFiveGreyColor,
+                        child: Container(
+                          width: screenWidth * 0.45,
+                          height: screenHeight * 0.25,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20.0),
+                            color: Colors.white,
+                          ),
+                        ),
+                      )
+                    ],
+                  );
+                }),
+                const SizedBox(
+                  height: 30,
                 ),
+                // GestureDetector(
+                //   onTap: () {
+                //     Navigator.push(context,
+                //         MaterialPageRoute(builder: (context) {
+                //       return MyOrders();
+                //     }));
+                //   },
+                //   child: OrderProgressBar(
+                //     KConstants.baseFourGreyColor,
+                //     Offset(5, 5),
+                //     "assets/Restaurant.svg",
+                //     "View Restaurant",
+                //     "see your menu",
+                //     "view",
+                //     KConstants.baseRedColor,
+                //     KConstants.baseGreyColor,
+                //   ),
+                // ),
+                const SizedBox(
+                  height: 30,
+                ),
+                // Text(
+                //   "Top Sellers",
+                //   style: TextStyle(
+                //     fontFamily: "Montserrat",
+                //     fontSize: 20.0,
+                //     color: KConstants.baseTwoGreyColor,
+                //     fontWeight: FontWeight.bold,
+                //   ),
+                // ),
+                // SizedBox(
+                //   height: 15,
+                // ),
+                //   topProductsRef.when(data: (data) {
+                //     print(data.data);
+                //     return Container(
+                //       height: screenHeight * 0.7,
+                //       child: GridView.builder(
+                //           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                //             crossAxisCount: 3,
+                //           ),
+                //           itemCount: 6,
+                //           itemBuilder: (BuildContext context, int index) =>
+                //               Container(
+                //                 decoration: BoxDecoration(
+                //                     borderRadius: BorderRadius.circular(5.0)),
+                //                 margin: EdgeInsets.all(5.0),
+                //                 child: Image.asset(
+                //                     KConstants.restaurantImages[index]),
+                //               )),
+                //     );
+                //   }, error: (error, _) {
+                //     return Container(
+                //       height: screenHeight * 0.7,
+                //       child: GridView.builder(
+                //           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                //             crossAxisCount: 3,
+                //           ),
+                //           itemCount: 6,
+                //           itemBuilder: (BuildContext context, int index) =>
+                //               Container(
+                //                 decoration: BoxDecoration(
+                //                     borderRadius: BorderRadius.circular(5.0)),
+                //                 margin: EdgeInsets.all(5.0),
+                //                 child: Image.asset(
+                //                     KConstants.restaurantImages[index]),
+                //               )),
+                //     );
+                //   }, loading: () {
+                //     return Shimmer.fromColors(
+                //         child: Container(
+                //           color: Colors.white,
+                //         ),
+                //         baseColor: KConstants.baseThreeGreyColor,
+                //         highlightColor: KConstants.baseFiveGreyColor);
+                //   })
+                //
               ],
             ),
           ),
