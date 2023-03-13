@@ -38,7 +38,6 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
         return ResetPasswordPage(email: email, otp: otp);
       }));
     } else {
-      print(response);
       ScaffoldMessenger.of(context)
           .showSnackBar(customErrorBar("OTP Verification Failed"));
     }

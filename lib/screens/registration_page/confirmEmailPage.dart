@@ -24,14 +24,12 @@ class _ConfirmEmailPageState extends State<ConfirmEmailPage> {
     final request = VerifyEmailRequestModel(email: email);
 
     final response = await PasswordResetEmailService.passwordReset(request);
-    print(response);
     if (response.status == "success") {
       _showProgressIndicator = false;
       Navigator.push(context, MaterialPageRoute(builder: (context) {
         return VerifyOtpPage(email: email);
       }));
     } else {
-      print(response);
       ScaffoldMessenger.of(context)
           .showSnackBar(customErrorBar("Unable to confirm email"));
     }

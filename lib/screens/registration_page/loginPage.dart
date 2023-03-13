@@ -274,6 +274,8 @@ SnackBar customErrorBar(String message) {
       message,
       style: TextStyle(
         fontFamily: 'Montserrat',
+        fontSize: 18.0,
+        fontWeight: FontWeight.bold,
       ),
     ),
     backgroundColor: KConstants.baseRedColor,
