@@ -1,4 +1,4 @@
-import 'package:chopwell_rider_application/bottom_sheets/foodOptionsCard.dart';
+import 'package:chopwell_rider_application/screens/bottom_sheets/foodOptionsCard.dart';
 import 'package:chopwell_rider_application/constants/constants.dart';
 import 'package:chopwell_rider_application/models/asset_models/product_model.dart';
 import 'package:chopwell_rider_application/providers/cart_provider.dart';
