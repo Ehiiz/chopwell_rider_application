@@ -35,7 +35,7 @@ class ProfileButtons extends StatelessWidget {
               menuName,
               style: const TextStyle(
                 fontSize: 20,
-                fontWeight: FontWeight.normal,
+                fontWeight: FontWeight.bold,
                 fontFamily: 'Montserrat',
               ),
             ),
