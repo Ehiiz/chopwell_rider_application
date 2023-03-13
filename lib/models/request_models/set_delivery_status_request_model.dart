@@ -4,11 +4,9 @@ part 'set_delivery_status_request_model.g.dart';
 
 @JsonSerializable()
 class SetDeliveryStatusRequestModel {
-  final String order_id;
   final String order_status;
 
-  SetDeliveryStatusRequestModel(
-      {required this.order_id, required this.order_status});
+  SetDeliveryStatusRequestModel({required this.order_status});
 
   factory SetDeliveryStatusRequestModel.fromJson(Map<String, dynamic> json) =>
       _$SetDeliveryStatusRequestModelFromJson(json);
