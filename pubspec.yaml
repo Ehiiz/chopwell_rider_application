@@ -53,16 +53,22 @@ dependencies:
   google_maps_flutter: ^2.2.5
   url_launcher: ^6.1.10
   maps_places_autocomplete: ^0.0.2
+  flutter_google_places_hoc081098: ^1.0.0-nullsafety.5
+  google_api_headers: ^1.1.1
+  google_maps_webservice: ^0.0.20-nullsafety.5
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
+  build_runner: ^2.1.4
+  json_serializable: ^6.6.1
+  freezed: ^2.1.1
+  flutter_lints: ^2.0.0
+
 flutter_native_splash:
   color: "EC0606"
   image: assets/chopwell_icon.svg
-
-  flutter_lints: ^2.0.0
 
 flutter:
   uses-material-design: true
