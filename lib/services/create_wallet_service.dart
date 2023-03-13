@@ -12,13 +12,11 @@ class CreateWalletAccountService {
     final response = await RequestModule.post(_createWalletPath, {},
         headers: {"Authorization": "Bearer ${token!}"});
 
-    print(response);
     if (response.statusCode == 200) {
       final responseMap = json.decode(response.body);
-      print(responseMap);
 
       final decodedResponse = StringDataResponseModel.fromJson(responseMap);
-      print(responseMap);
+
       return decodedResponse;
     } else {
       throw Exception('Unable to create wallet');

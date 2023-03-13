@@ -11,9 +11,7 @@ class SignupService {
         headers: {"": ""});
 
     if (response.statusCode == 200) {
-      print("I succeeded");
       final responseMap = json.decode(response.body);
-      print(responseMap);
       final decodedResponse = MapDataResponseModel.fromJson(responseMap);
       return decodedResponse;
     } else {

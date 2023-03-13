@@ -17,11 +17,8 @@ class PinService {
     final response = await RequestModule.post(_pinservice, request.toJson(),
         headers: {"Authorization": "Bearer ${token!}"});
 
-    print(response);
-
     if (response.statusCode == 200) {
       final responseMap = json.decode(response.body);
-      print(responseMap);
       final decodedResponse = NullDataResponseModel.fromJson(responseMap);
       return decodedResponse;
     } else {

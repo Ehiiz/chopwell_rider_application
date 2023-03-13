@@ -17,12 +17,9 @@ class WalletBalance {
     final response = await RequestModule.get(_getWalletBalancePath,
         headers: {"Authorization": "Bearer ${token!}"});
 
-    print(response);
     if (response.statusCode == 200) {
       final responseMap = json.decode(response.body);
-      print(responseMap);
       final decodedResponse = MapDataResponseModel.fromJson(responseMap);
-      print(decodedResponse);
       return decodedResponse;
     } else {
       throw Exception('Unable to fetch wallet balance');
