@@ -14,7 +14,7 @@ class MainNavPage extends StatefulWidget {
 
 class _MainNavPageState extends State<MainNavPage> {
   List pages = [
-    HomePage(),
+    MyHomePage(),
     MyOrders(),
     NewProfilePage(),
   ];
