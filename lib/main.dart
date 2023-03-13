@@ -3,6 +3,9 @@ import 'package:chopwell_rider_application/screens/Nav_Pages/homePage.dart';
 import 'package:chopwell_rider_application/screens/Nav_Pages/ordersPage.dart';
 import 'package:chopwell_rider_application/screens/Nav_Pages/profilePage.dart';
 import 'package:chopwell_rider_application/screens/registration_page/loginPage.dart';
+import 'package:chopwell_rider_application/screens/subPages/bankWithdrawalDetailsPage.dart';
+import 'package:chopwell_rider_application/screens/subPages/orderHistoryPage.dart';
+import 'package:chopwell_rider_application/screens/subPages/payoutHistoryPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -61,7 +64,7 @@ class MyApp extends StatelessWidget {
               disabledColor: KConstants.baseThreeDarkColor,
               splashColor: KConstants.baseFourRedColor,
             )),
-        home: LoginPage());
+        home: BottomNavBar());
   }
 }
 
@@ -70,7 +73,7 @@ class BottomNavBar extends StatelessWidget {
 
   List<Widget> _buildScreens() {
     return [
-      const HomePage(),
+      const MyHomePage(),
       const MyOrders(),
       const NewProfilePage(),
     ];
