@@ -7,13 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shimmer/shimmer.dart';
+import '../../models/response_models/list_based_response_model.dart';
 
-import '../../models/response_models/null_list_based_response_model.dart';
-
-final customerOrdersFutureProvider =
-    FutureProvider.autoDispose<NullListDataResponseModel>((ref) async {
-  final customerOrderService = ref.watch(fetchOrdersProvider);
-  return customerOrderService.orders();
+final riderOrderFutureProvider =
+    FutureProvider.autoDispose<ListDataResponseModel>((ref) async {
+  final orderSummaryDetails = ref.watch(fetchOrdersProvider);
+  return orderSummaryDetails.orders();
 });
 
 class MyOrders extends ConsumerWidget {
@@ -23,7 +22,7 @@ class MyOrders extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-    final customerOrderRef = ref.watch(customerOrdersFutureProvider);
+    final riderOrdersRef = ref.watch(riderOrderFutureProvider);
     final cart = ref.watch(cartStateNotifierProvider);
 
     return Scaffold(
@@ -74,7 +73,7 @@ class MyOrders extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: 15),
-                customerOrderRef.when(
+                riderOrdersRef.when(
                   data: (data) {
                     final orderList = data.data;
                     final List<Map<String, dynamic>> completedOrders = [];
@@ -85,7 +84,6 @@ class MyOrders extends ConsumerWidget {
                       }
                     });
 
-                    print(completedOrders);
                     return ListView.builder(
                       physics: const ClampingScrollPhysics(),
                       shrinkWrap: true,
@@ -93,17 +91,19 @@ class MyOrders extends ConsumerWidget {
                       itemCount: completedOrders.length,
                       itemBuilder: (BuildContext context, int index) =>
                           OrderFavouritesBox(
-                              false,
-                              false,
-                              completedOrders[index]["order_details"]["food"],
-                              completedOrders[index]["created_at"],
-                              completedOrders[index]["amount"].toString(),
-                              completedOrders[index]["_id"],
-                              completedOrders[index]["restaurant"]["name"],
-                              completedOrders[index]["total"],
-                              completedOrders[index]["deliveryFee"],
-                              completedOrders[index]["vat"],
-                              completedOrders[index]["account"]),
+                        false,
+                        false,
+                        completedOrders[index]["order_details"]["food"],
+                        completedOrders[index]["created_at"],
+                        completedOrders[index]["amount"].toString(),
+                        completedOrders[index]["_id"],
+                        completedOrders[index]["restaurant"]["name"],
+                        completedOrders[index]["total"],
+                        completedOrders[index]["deliveryFee"],
+                        completedOrders[index]["vat"],
+                        completedOrders[index]["account"],
+                        completedOrders[index]["status"],
+                      ),
                     );
                   },
                   error: (error, _) {
@@ -148,7 +148,7 @@ class MyOrders extends ConsumerWidget {
                 const SizedBox(
                   height: 10,
                 ),
-                customerOrderRef.when(
+                riderOrdersRef.when(
                   data: (data) {
                     final orderList = data.data;
                     final List<Map<String, dynamic>> completedOrders = [];
@@ -209,7 +209,7 @@ class MyOrders extends ConsumerWidget {
               ]),
             ),
             onRefresh: () async {
-              ref.refresh(customerOrdersFutureProvider);
+              ref.refresh(riderOrderFutureProvider);
             }));
   }
 }
