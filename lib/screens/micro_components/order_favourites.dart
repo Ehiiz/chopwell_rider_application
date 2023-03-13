@@ -1,6 +1,10 @@
 import 'package:chopwell_rider_application/constants/constants.dart';
+import 'package:chopwell_rider_application/models/request_models/set_delivery_status_request_model.dart';
+import 'package:chopwell_rider_application/screens/Nav_Pages/ordersPage.dart';
 import 'package:chopwell_rider_application/screens/micro_components/class_Components.dart';
+import 'package:chopwell_rider_application/screens/registration_page/loginPage.dart';
 import 'package:chopwell_rider_application/screens/subPages/orderProgressPage.dart';
+import 'package:chopwell_rider_application/services/update_delivery_status_service.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -10,19 +14,21 @@ final orderIdProvider = StateProvider<String>((ref) => "");
 
 class OrderFavouritesBox extends ConsumerWidget {
   OrderFavouritesBox(
-      this.favourite,
-      //   this.restaurantImage,
-      // this.restaurantName,
-      this.orderStatus,
-      this.mealDetails,
-      this.date,
-      this.amount,
-      this.orderId,
-      this.restaurantName,
-      this.total,
-      this.deliveryFee,
-      this.vat,
-      this.account);
+    this.favourite,
+    //   this.restaurantImage,
+    // this.restaurantName,
+    this.orderStatus,
+    this.mealDetails,
+    this.date,
+    this.amount,
+    this.orderId,
+    this.restaurantName,
+    this.total,
+    this.deliveryFee,
+    this.vat,
+    this.account,
+    this.status,
+  );
   //
   bool favourite;
   bool orderStatus;
@@ -36,13 +42,35 @@ class OrderFavouritesBox extends ConsumerWidget {
   String deliveryFee;
   String vat;
   String account;
+  String status;
 
   // String restaurantImage;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final dateTime = DateTime.parse(date);
-    final formattedDateTime = DateFormat('yyyy-MM-dd h:mm a').format(dateTime);
+    final formattedDate = DateFormat('MMMM d, y').format(dateTime);
+    final formattedTime = DateFormat('h:mm a').format(dateTime);
+
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    //create a reject logic
+
+    void _acceptOrder() async {
+      final request = SetDeliveryStatusRequestModel(order_status: "accepted");
+      final response = await UpdateDeliveryStatus(orderId).status(request);
+
+      if (response.status == "succcess") {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(customSuccessBar("Order accepted"));
+
+        ref.refresh(riderOrderFutureProvider);
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(customErrorBar("Unable to accept order"));
+      }
+    }
 
     return GestureDetector(
         onTap: () {
@@ -112,18 +140,19 @@ class OrderFavouritesBox extends ConsumerWidget {
                 scrollDirection: Axis.vertical,
                 itemCount: mealDetails.length,
                 itemBuilder: (BuildContext context, int index) => TextsWidgets(
-                    text: mealDetails[index]["food_name"],
-                    textPrice: mealDetails[index]["food_price"],
-                    textColor: KConstants.baseGreyColor,
-                    textSize: 18.0,
-                    textWeight: FontWeight.normal),
+                  text: mealDetails[index]["food_name"],
+                  textPrice: "₦${mealDetails[index]["food_price"]}",
+                  textColor: Colors.black,
+                  textSize: 18.0,
+                  textWeight: FontWeight.normal,
+                ),
               ),
               const SizedBox(height: 15),
               TextsWidgets(
                 text: "Food Cost",
                 textPrice: "₦$amount",
                 textWeight: FontWeight.w500,
-                textColor: KConstants.baseGreyColor,
+                textColor: Colors.black,
                 textSize: 20.0,
               ),
               const SizedBox(height: 10),
@@ -133,14 +162,14 @@ class OrderFavouritesBox extends ConsumerWidget {
                 text: 'Delivery',
                 textPrice: "₦$deliveryFee",
                 textWeight: FontWeight.w500,
-                textColor: KConstants.baseGreyColor,
+                textColor: Colors.black,
                 textSize: 20.0,
               ),
               const SizedBox(height: 10),
               TextsWidgets(
                 text: "VAT",
                 textPrice: "₦$vat",
-                textColor: KConstants.baseGreyColor,
+                textColor: Colors.black,
                 textWeight: FontWeight.w500,
                 textSize: 20.0,
               ),
@@ -148,7 +177,7 @@ class OrderFavouritesBox extends ConsumerWidget {
               TextsWidgets(
                 text: 'Total',
                 textPrice: "₦$total",
-                textColor: KConstants.baseDarkColor,
+                textColor: Colors.black,
                 textWeight: FontWeight.bold,
                 textSize: 20.0,
               ),
@@ -165,7 +194,7 @@ class OrderFavouritesBox extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    formattedDateTime,
+                    formattedTime,
                     style: TextStyle(
                       color: KConstants.baseDarkColor,
                       fontSize: 17,
@@ -182,7 +211,7 @@ class OrderFavouritesBox extends ConsumerWidget {
                       }));
                     },
                     child: Text(
-                      orderStatus ? "completed" : "progress",
+                      status,
                       style: TextStyle(
                         color: orderStatus
                             ? KConstants.baseGreyColor
@@ -195,6 +224,82 @@ class OrderFavouritesBox extends ConsumerWidget {
                   ),
                 ],
               ),
+              status == "pending"
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        OutlinedButton(
+                          onPressed: () {
+                            _acceptOrder();
+                          },
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                              KConstants.baseGreenColor,
+                            ),
+                            padding: MaterialStateProperty.all(
+                              EdgeInsets.symmetric(
+                                  vertical: 15.0, horizontal: 15.0),
+                            ),
+                            shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                  15.0,
+                                ), // Set your desired border radius here
+                                side: BorderSide.none,
+                              ),
+                            ),
+                            minimumSize: MaterialStateProperty.all(
+                              Size(screenWidth * .45, 40),
+                            ),
+                          ),
+                          child: Text(
+                            "accept",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontFamily: "Montserrat",
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        OutlinedButton(
+                          onPressed: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                              return ConfirmationPage(
+                                orderId: orderId,
+                              );
+                            }));
+                          },
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                              KConstants.baseThreeDarkColor,
+                            ),
+                            padding: MaterialStateProperty.all(
+                              EdgeInsets.symmetric(
+                                  vertical: 15.0, horizontal: 15.0),
+                            ),
+                            shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                    15.0), // Set your desired border radius here
+                                side: BorderSide.none,
+                              ),
+                            ),
+                          ),
+                          child: Text(
+                            "reject",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontFamily: "Montserrat",
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  : Container()
             ],
           ),
         ));
