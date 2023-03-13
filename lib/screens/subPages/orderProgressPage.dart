@@ -3,6 +3,7 @@ import 'package:chopwell_rider_application/models/request_models/set_delivery_st
 import 'package:chopwell_rider_application/models/response_models/map_based_response_model.dart';
 import 'package:chopwell_rider_application/screens/micro_components/order_favourites.dart';
 import 'package:chopwell_rider_application/screens/micro_components/order_progress_bar.dart';
+import 'package:chopwell_rider_application/screens/registration_page/loginPage.dart';
 import 'package:chopwell_rider_application/services/single_order_detail_service.dart';
 import 'package:chopwell_rider_application/services/update_delivery_status_service.dart';
 import 'package:chopwell_rider_application/screens/subPages/singleOrderDetailsPage.dart';
@@ -18,52 +19,86 @@ final singleProductFutureProvider =
   return singleProductService.orderDetail(orderId);
 });
 
-class ConfirmationPage extends ConsumerWidget {
+class ConfirmationPage extends ConsumerStatefulWidget {
   ConfirmationPage({Key? key, required this.orderId}) : super(key: key);
-
-  void _confirmDelivery(String orderId, String orderStatus) async {
-    final request = SetDeliveryStatusRequestModel(
-        order_id: orderId, order_status: orderStatus);
-
-    final response = await UpdateDeliveryStatus.status(request);
-
-    if (response.status == "success") {
-      // show pop up and refresh page
-
-      // Navigator.push(context, MaterialPageRoute(builder: (context) {
-      //   return MainNavPage();
-      // }));
-    } else {
-      print(response);
-    }
-  }
 
   String orderId;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConfirmationPage> createState() =>
+      _ConfirmationPageState(orderId);
+}
+
+class _ConfirmationPageState extends ConsumerState<ConfirmationPage> {
+  _ConfirmationPageState(this.orderId);
+
+  String orderId;
+
+  @override
+  Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
 
     final orderDetails = ref.watch(singleProductFutureProvider);
     bool confirmOrder = false;
+    bool _showCircularIndicator = false;
+
+    void _confirmDelivery(String orderId, String orderStatus) async {
+      setState(() {
+        _showCircularIndicator = true;
+      });
+      final request = SetDeliveryStatusRequestModel(order_status: orderStatus);
+
+      final response = await UpdateDeliveryStatus(orderId).status(request);
+
+      if (response.status == "succcess") {
+        ScaffoldMessenger.of(context).showSnackBar(
+            customSuccessBar("Order status updated to $orderStatus"));
+        ref.refresh(singleProductFutureProvider);
+        setState(() {
+          _showCircularIndicator = false;
+        });
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(customErrorBar("Unable to update order"));
+        setState(() {
+          _showCircularIndicator = false;
+        });
+        ref.refresh(singleProductFutureProvider);
+      }
+    }
+
+    List<String> buttonClick = [
+      "accepted",
+      "picked",
+      "delivering",
+      "ready",
+      "pending",
+    ];
 
     List<String> acceptBox = [
       "accepted",
       "completed",
       "ready",
       "delivering",
-      "delivered"
+      "delivered",
+      "picked",
     ];
 
     final List<String> readyBox = [
       "completed",
       "ready",
       "delivering",
-      "delivered"
+      "delivered",
+      "picked",
     ];
 
-    final List<String> deliveringBox = ["completed", "delivering", "delivered"];
+    final List<String> deliveringBox = [
+      "completed",
+      "picked",
+      "delivering",
+      "delivered"
+    ];
 
     final List<String> deliveredBox = ["completed", "delivered"];
 
@@ -78,6 +113,11 @@ class ConfirmationPage extends ConsumerWidget {
     String vat = "";
     String account = "";
     String address = "";
+    String status = "";
+    String statusRequest = "completed";
+    String currentId = "";
+
+    bool clickButtonValue = false;
 
     return SafeArea(
       child: SafeArea(
@@ -123,8 +163,10 @@ class ConfirmationPage extends ConsumerWidget {
                               width: 5,
                             ),
                             orderDetails.when(data: (data) {
-                              print(data.data["location"]["address"]);
                               address = data.data["location"]["address"];
+                              setState(() {
+                                currentId = data.data["_id"];
+                              });
                               return Container(
                                 width: screenWidth * .65,
                                 child: Expanded(
@@ -164,15 +206,17 @@ class ConfirmationPage extends ConsumerWidget {
                               vat: vat,
                               deliveryFee: deliveryFee,
                               account: account,
+                              status: status,
                             );
                           }));
                         },
-                        child: const Text(
+                        child: Text(
                           "order details",
                           style: TextStyle(
                             fontSize: 14,
                             fontFamily: 'Questrial',
                             fontWeight: FontWeight.bold,
+                            color: KConstants.baseTwoRedColor,
                           ),
                         ),
                       ),
@@ -183,17 +227,25 @@ class ConfirmationPage extends ConsumerWidget {
                   ),
                   Expanded(
                     child: orderDetails.when(data: (data) {
-                      print(data.data);
                       String status = data.data["status"];
-
                       bool acceptBoxValue = acceptBox.contains(status);
                       bool readyBoxValue = readyBox.contains(status);
                       bool deliveringBoxValue = deliveringBox.contains(status);
                       bool deliveredBoxValue = deliveredBox.contains(status);
-                      if (status == "delivered") {
-                        confirmOrder = true;
+                      clickButtonValue = buttonClick.contains(status);
+                      if (status == "accepted") {
+                        statusRequest = "picked";
                       }
-                      // orderStatus = status;
+                      if (status == "ready") {
+                        statusRequest = "picked";
+                      }
+                      if (status == "picked") {
+                        statusRequest = "delivering";
+                      }
+                      if (status == "delivering") {
+                        statusRequest = "delivered";
+                      }
+
                       mealDetails = data.data["order_details"]["food"];
                       date = data.data["created_at"].toString();
                       orderId = data.data["_id"];
@@ -204,6 +256,7 @@ class ConfirmationPage extends ConsumerWidget {
                       total = data.data["total"];
                       vat = data.data["vat"];
                       account = data.data["account"];
+                      status = data.data["status"];
 
                       return ListView(
                         children: [
@@ -384,38 +437,61 @@ class ConfirmationPage extends ConsumerWidget {
                       );
                     }),
                   ),
+                  const SizedBox(
+                    height: 25,
+                  ),
                   Center(
-                    child: SizedBox(
-                      width: 300,
-                      height: 50,
-                      child: ElevatedButton(
-                        onPressed: () => confirmOrder
-                            ? _confirmDelivery(orderId, "completed")
-                            : null,
-                        style: ButtonStyle(
-                            backgroundColor: confirmOrder
-                                ? MaterialStateProperty.all(
-                                    KConstants.baseTwoRedColor)
-                                : MaterialStateProperty.all(
-                                    KConstants.baseFourDarkColor),
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20.0),
-                              ),
-                            )),
-                        child: const Text(
-                          'Confirm Delivery',
-                          style: TextStyle(
-                            fontFamily: "Montserrat",
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
+                      child: Stack(
+                    children: [
+                      SizedBox(
+                        width: 300,
+                        height: 50,
+                        child: ElevatedButton(
+                          onPressed: clickButtonValue
+                              ? () async {
+                                  _confirmDelivery(
+                                    currentId,
+                                    statusRequest,
+                                  );
+                                }
+                              : null,
+                          style: ButtonStyle(
+                              backgroundColor: clickButtonValue
+                                  ? MaterialStateProperty.all(
+                                      KConstants.baseTwoRedColor,
+                                    )
+                                  : MaterialStateProperty.all(
+                                      KConstants.baseFourDarkColor,
+                                    ),
+                              shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                              )),
+                          child: Text(
+                            _showCircularIndicator ? "" : statusRequest,
+                            // ignore: prefer_const_constructors
+                            style: TextStyle(
+                              fontFamily: "Montserrat",
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
+                      if (_showCircularIndicator)
+                        // ignore: dead_code
+                        const Positioned.fill(
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                    ],
+                  )),
                   const SizedBox(
                     height: 25,
                   )
