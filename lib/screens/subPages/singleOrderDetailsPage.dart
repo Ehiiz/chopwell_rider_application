@@ -15,6 +15,7 @@ class SingleOrderDetailsPage extends StatelessWidget {
     required this.deliveryFee,
     required this.vat,
     required this.account,
+    required this.status,
   }) : super(key: key);
 
   bool orderStatus;
@@ -27,6 +28,7 @@ class SingleOrderDetailsPage extends StatelessWidget {
   String deliveryFee;
   String vat;
   String account;
+  String status;
 
   @override
   Widget build(BuildContext context) {
@@ -69,17 +71,19 @@ class SingleOrderDetailsPage extends StatelessWidget {
                   height: 30,
                 ),
                 OrderFavouritesBox(
-                    false,
-                    orderStatus,
-                    mealDetails,
-                    date,
-                    amount,
-                    orderId,
-                    restaurantName,
-                    total,
-                    deliveryFee,
-                    vat,
-                    account)
+                  false,
+                  orderStatus,
+                  mealDetails,
+                  date,
+                  amount,
+                  orderId,
+                  restaurantName,
+                  total,
+                  deliveryFee,
+                  vat,
+                  account,
+                  status,
+                )
               ],
             ),
           ),
