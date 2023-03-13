@@ -61,7 +61,7 @@ class OrderFavouritesBox extends ConsumerWidget {
       final request = SetDeliveryStatusRequestModel(order_status: "accepted");
       final response = await UpdateDeliveryStatus(orderId).status(request);
 
-      if (response.status == "succcess") {
+      if (response.status == "success") {
         ScaffoldMessenger.of(context)
             .showSnackBar(customSuccessBar("Order accepted"));
 

@@ -56,27 +56,27 @@ class OrderHistoryPage extends ConsumerWidget {
           Text('Delivery History',
               style: Theme.of(context).primaryTextTheme.titleLarge),
           const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'june',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontFamily: "Montserrat",
-                  color: KConstants.baseGreyColor,
-                ),
-              ),
-              Text(
-                "2000",
-                style: TextStyle(
-                    fontFamily: "Montserrat",
-                    color: KConstants.baseRedColor,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 25.0),
-              ),
-            ],
-          ),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //   children: [
+          //     Text(
+          //       'june',
+          //       style: TextStyle(
+          //         fontSize: 20,
+          //         fontFamily: "Montserrat",
+          //         color: KConstants.baseGreyColor,
+          //       ),
+          //     ),
+          //     Text(
+          //       "2000",
+          //       style: TextStyle(
+          //           fontFamily: "Montserrat",
+          //           color: KConstants.baseRedColor,
+          //           fontWeight: FontWeight.bold,
+          //           fontSize: 25.0),
+          //     ),
+          //   ],
+          // ),
           const SizedBox(
             height: 10,
           ),
@@ -115,7 +115,10 @@ class OrderHistoryPage extends ConsumerWidget {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                        deliveries[index]["created_at"],
+                                        DateFormat("dd MMM yyyy, hh:mm a")
+                                            .format(DateTime.parse(
+                                                deliveries[index]
+                                                    ["created_at"])),
                                         style: TextStyle(
                                           fontFamily: "Montserrat",
                                           color: KConstants.baseThreeDarkColor,
@@ -150,12 +153,19 @@ class OrderHistoryPage extends ConsumerWidget {
                                           const SizedBox(
                                             width: 5.0,
                                           ),
-                                          const Text(
-                                            //deliveries[index]["location"]["addresss"],
-                                            'Apo Resettlement, Abuja ',
-                                            style: TextStyle(
-                                                fontSize: 13,
-                                                fontFamily: 'Montserrat'),
+                                          Container(
+                                            width: screenWidth * .4,
+                                            child: Expanded(
+                                              child: Text(
+                                                deliveries[index]["location"]
+                                                    ["address"],
+                                                maxLines: 1,
+                                                style: const TextStyle(
+                                                  fontSize: 13,
+                                                  fontFamily: 'Montserrat',
+                                                ),
+                                              ),
+                                            ),
                                           ),
                                         ],
                                       ),

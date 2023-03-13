@@ -90,7 +90,7 @@ class _ChangePaymentDetailsPageState
 
     final response = await UpdateBankDetailsService().updateBank(request);
 
-    if (response.status == "succcess") {
+    if (response.status == "success") {
       setState(() {
         _showProgressIndicator = false;
       });
@@ -174,7 +174,7 @@ class _ChangePaymentDetailsPageState
                                 items: bankList.map<DropdownMenuItem<String>>(
                                     (Map<String, dynamic> value) {
                                   return DropdownMenuItem<String>(
-                                    value: value["name"] as String,
+                                    value: value["name"]! as String,
                                     child: SizedBox(
                                         width: screenWidth * .9,
                                         child: Row(

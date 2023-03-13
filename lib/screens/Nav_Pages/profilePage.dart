@@ -42,6 +42,8 @@ class NewProfilePage extends ConsumerStatefulWidget {
 }
 
 class _NewProfilePageState extends ConsumerState<NewProfilePage> {
+  bool _updateRIderProgress = false;
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -82,21 +84,33 @@ class _NewProfilePageState extends ConsumerState<NewProfilePage> {
     }
 
     void _updateRiderStatus(String status) async {
-      final request = UpdateRiderStatusRequestModel(status: "offline");
+      setState(() {
+        _updateRIderProgress = true;
+      });
+      final request = UpdateRiderStatusRequestModel(rider_status: status);
       final response = await UpdateRiderService().flipStatus(request);
 
       if (response.status == "success") {
+        setState(() {
+          _updateRIderProgress = false;
+        });
         ScaffoldMessenger.of(context)
             .showSnackBar(customSuccessBar("Status updated"));
 
         ref.refresh(fetchUserDetailFutureProvider);
       } else {
+        setState(() {
+          _updateRIderProgress = false;
+        });
         ScaffoldMessenger.of(context)
             .showSnackBar(customErrorBar("Failed to update status"));
 
         ref.refresh(fetchUserDetailFutureProvider);
       }
     }
+
+    bool riderStatus = false;
+    String requestStatus = "";
 
     return SafeArea(
       child: Scaffold(
@@ -133,188 +147,226 @@ class _NewProfilePageState extends ConsumerState<NewProfilePage> {
           ],
         ),
         body: Center(
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              vertical: screenHeight * 0.01,
-              horizontal: screenWidth * 0.02,
-            ),
-            child: ListView(
-              children: [
-                const SizedBox(
-                  height: 30,
+            child: Padding(
+                padding: EdgeInsets.symmetric(
+                  vertical: screenHeight * 0.01,
+                  horizontal: screenWidth * 0.02,
                 ),
-                Container(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                child: Stack(children: [
+                  ListView(
                     children: [
-                      userDetailRef.when(data: (data) {
-                        final userDetail = data.data;
-                        return CircleAvatar(
-                          radius: 50,
-                          backgroundImage:
-                              NetworkImage(userDetail["profile_picture"]),
-                          // backgroundColor: KConstants.baseGreenColor,
-                        );
-                      }, error: (error, _) {
-                        return Text(error.toString());
-                      }, loading: () {
-                        return Shimmer.fromColors(
-                          baseColor: KConstants.baseFourGreyColor,
-                          highlightColor: KConstants.baseFourDarkColor,
-                          child: Container(
-                            width: 10.0,
-                            height: 10.0,
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.white,
-                            ),
-                          ),
-                        );
-                      }),
                       const SizedBox(
-                        height: 10,
+                        height: 30,
                       ),
-                      userDetailRef.when(data: (data) {
-                        final userDetail = data.data;
-                        return Text(
-                          userDetail["name"].toString(),
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: KConstants.baseTwoDarkColor,
-                            fontSize: 18,
-                            fontFamily: 'Montserrat',
-                          ),
-                        );
-                      }, error: (error, _) {
-                        return Text(error.toString());
-                      }, loading: () {
-                        return Shimmer.fromColors(
-                            // ignore: sort_child_properties_last
-                            child: Container(
-                                height: 10,
-                                width: 150,
-                                margin: EdgeInsets.symmetric(vertical: 5.0),
-                                decoration: const BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.all(
-                                        Radius.circular(20.0)))),
-                            baseColor: KConstants.baseFourGreyColor,
-                            highlightColor: KConstants.baseFourDarkColor);
-                      }),
-                      const SizedBox(
-                        height: 10,
-                      ),
-
-                      // ignore: prefer_const_constructors
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SvgPicture.asset(
-                            "assets/location.svg",
-                            width: 25,
-                            height: 25,
-                          ),
-                          const SizedBox(
-                            width: 10.0,
-                          ),
-                          userDetailRef.when(data: (data) {
-                            final userDetail = data.data;
-                            return Text(
-                              userDetail["location"]["address"],
-                              style: const TextStyle(
-                                fontSize: 17,
-                                fontFamily: 'Montserrat',
-                                fontWeight: FontWeight.normal,
-                              ),
-                            );
-                          }, error: (error, _) {
-                            return Text(error.toString());
-                          }, loading: () {
-                            return Shimmer.fromColors(
-                              baseColor: KConstants.baseFourGreyColor,
-                              highlightColor: KConstants.baseFourDarkColor,
-                              child: Container(
-                                  height: 10,
-                                  width: 150,
-                                  margin: EdgeInsets.symmetric(vertical: 5.0),
+                      Container(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            userDetailRef.when(data: (data) {
+                              final userDetail = data.data;
+                              return CircleAvatar(
+                                radius: 50,
+                                backgroundImage:
+                                    NetworkImage(userDetail["profile_picture"]),
+                                // backgroundColor: KConstants.baseGreenColor,
+                              );
+                            }, error: (error, _) {
+                              return Text(error.toString());
+                            }, loading: () {
+                              return Shimmer.fromColors(
+                                baseColor: KConstants.baseFourGreyColor,
+                                highlightColor: KConstants.baseFourDarkColor,
+                                child: Container(
+                                  width: 10.0,
+                                  height: 10.0,
                                   decoration: const BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(20.0)))),
-                            );
-                          }),
-                        ],
+                                    shape: BoxShape.circle,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              );
+                            }),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            userDetailRef.when(data: (data) {
+                              final userDetail = data.data;
+                              return Text(
+                                userDetail["name"].toString(),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: KConstants.baseTwoDarkColor,
+                                  fontSize: 18,
+                                  fontFamily: 'Montserrat',
+                                ),
+                              );
+                            }, error: (error, _) {
+                              return Text(error.toString());
+                            }, loading: () {
+                              return Shimmer.fromColors(
+                                  // ignore: sort_child_properties_last
+                                  child: Container(
+                                      height: 10,
+                                      width: 150,
+                                      margin:
+                                          EdgeInsets.symmetric(vertical: 5.0),
+                                      decoration: const BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(20.0)))),
+                                  baseColor: KConstants.baseFourGreyColor,
+                                  highlightColor: KConstants.baseFourDarkColor);
+                            }),
+                            const SizedBox(
+                              height: 10,
+                            ),
+
+                            // ignore: prefer_const_constructors
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SvgPicture.asset(
+                                  "assets/location.svg",
+                                  width: 25,
+                                  height: 25,
+                                ),
+                                const SizedBox(
+                                  width: 10.0,
+                                ),
+                                userDetailRef.when(data: (data) {
+                                  final userDetail = data.data;
+                                  return Text(
+                                    userDetail["location"]["address"],
+                                    style: const TextStyle(
+                                      fontSize: 17,
+                                      fontFamily: 'Montserrat',
+                                      fontWeight: FontWeight.normal,
+                                    ),
+                                  );
+                                }, error: (error, _) {
+                                  return Text(error.toString());
+                                }, loading: () {
+                                  return Shimmer.fromColors(
+                                    baseColor: KConstants.baseFourGreyColor,
+                                    highlightColor:
+                                        KConstants.baseFourDarkColor,
+                                    child: Container(
+                                        height: 10,
+                                        width: 150,
+                                        margin:
+                                            EdgeInsets.symmetric(vertical: 5.0),
+                                        decoration: const BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(20.0)))),
+                                  );
+                                }),
+                              ],
+                            ),
+                            const SizedBox(
+                              width: 10.0,
+                            ),
+                            Text(
+                              'edit',
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'Montserrat',
+                                  color: KConstants.baseGreenColor),
+                            ),
+                          ],
+                        ),
                       ),
                       const SizedBox(
-                        width: 10.0,
+                        height: 20,
                       ),
-                      Text(
-                        'edit',
-                        style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Montserrat',
-                            color: KConstants.baseGreenColor),
+                      Column(
+                        children: [
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                // ignore: prefer_const_constructors
+                                Container(
+                                  margin: EdgeInsets.symmetric(vertical: 5.0),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      IconButton(
+                                          onPressed: () {},
+                                          icon: Icon(CupertinoIcons.flag)),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      const Text(
+                                        "change status",
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'Montserrat',
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                userDetailRef.when(data: (data) {
+                                  final status = data.data["status"];
+
+                                  if (status == "online") {
+                                    riderStatus = true;
+                                    requestStatus = "offline";
+                                  }
+
+                                  if (status == "offline") {
+                                    riderStatus = false;
+                                    requestStatus = "online";
+                                  }
+                                  print(requestStatus);
+                                  return Switch(
+                                      value: riderStatus,
+                                      onChanged: (value) {
+                                        _updateRiderStatus(requestStatus);
+                                        setState(() {
+                                          riderStatus = value;
+                                        });
+                                      });
+                                }, error: (error, _) {
+                                  return Text("");
+                                }, loading: () {
+                                  return Shimmer.fromColors(
+                                    child: Container(
+                                      color: Colors.white,
+                                      height: 10,
+                                      width: 10,
+                                    ),
+                                    baseColor: KConstants.baseFiveGreyColor,
+                                    highlightColor:
+                                        KConstants.baseFiveGreyColor,
+                                  );
+                                })
+                              ]),
+                          ProfileButtons("assets/coupon.svg", "Payment Details",
+                              BankWithdrawalDetailsPage()),
+                          ProfileButtons("assets/helmet.svg",
+                              "Delivery History", OrderHistoryPage()),
+                          ProfileButtons("assets/withdrawal.svg",
+                              "Payout History", PayoutHistoryPage()),
+                          ProfileButtons("assets/help.svg", "Help", MyOrders())
+                        ],
                       ),
                     ],
                   ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Column(
-                  children: [
-                    Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          // ignore: prefer_const_constructors
-                          Container(
-                            margin: EdgeInsets.symmetric(vertical: 5.0),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                IconButton(
-                                    onPressed: () {},
-                                    icon: Icon(CupertinoIcons.flag)),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Text(
-                                  "change status",
-                                  style: const TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: 'Montserrat',
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          Switch(
-                              value: false,
-                              onChanged: (value) {
-                                setState(() {});
-                              }),
-                        ]),
-                    ProfileButtons("assets/coupon.svg", "Payment Details",
-                        BankWithdrawalDetailsPage()),
-                    ProfileButtons("assets/helmet.svg", "Delivery History",
-                        OrderHistoryPage()),
-                    ProfileButtons("assets/withdrawal.svg", "Payout History",
-                        PayoutHistoryPage()),
-                    ProfileButtons("assets/help.svg", "Help", MyOrders())
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
+                  if (_updateRIderProgress)
+                    Center(
+                      child: CircularProgressIndicator(
+                        color: Colors.red,
+                      ),
+                    ),
+                ]))),
       ),
     );
-    ;
   }
 }

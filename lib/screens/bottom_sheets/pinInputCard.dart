@@ -2,6 +2,7 @@
 
 import 'package:chopwell_rider_application/main.dart';
 import 'package:chopwell_rider_application/models/request_models/withdraw_wallet_request_model.dart';
+import 'package:chopwell_rider_application/screens/Nav_Pages/profilePage.dart';
 import 'package:chopwell_rider_application/screens/micro_components/signin_input.dart';
 import 'package:chopwell_rider_application/screens/registration_page/loginPage.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,6 +16,7 @@ import '../../models/request_models/change_pin_request_model.dart';
 import '../../models/request_models/create_pin_request_model.dart';
 import '../../services/pay_wallet_service.dart';
 import '../../services/transaction_pin_service.dart';
+import '../subPages/bankWithdrawalDetailsPage.dart';
 
 final pinInfo = StateProvider<String>((ref) => "");
 
@@ -73,6 +75,8 @@ class _PinInputSheetState extends ConsumerState<PinInputSheet> {
         setState(() {
           _showProgressIndicator = false;
         });
+        ref.refresh(fetchUserDetailFutureProvider);
+
         Navigator.pop(context);
         ScaffoldMessenger.of(context)
             .showSnackBar(customSuccessBar("Pin Successfully Created"));
@@ -93,6 +97,7 @@ class _PinInputSheetState extends ConsumerState<PinInputSheet> {
       final response = await PinService.changePin(request);
 
       if (response.status == "success") {
+        ref.refresh(fetchUserDetailFutureProvider);
         setState(() {
           _showProgressIndicator = false;
         });
@@ -116,6 +121,7 @@ class _PinInputSheetState extends ConsumerState<PinInputSheet> {
       setState(() {
         _showProgressIndicator = true;
       });
+      print("I am withdrawinf");
       final request = WithdrawWalletRequestModel(pin: pin, amount: amount);
       final response = await PayWalletService.paywallet(request);
 
@@ -123,14 +129,10 @@ class _PinInputSheetState extends ConsumerState<PinInputSheet> {
         setState(() {
           _showProgressIndicator = false;
         });
-        print(response);
+        ref.refresh(walletBalanceFutureProvider);
         Navigator.pop(context);
         ScaffoldMessenger.of(context)
-            .showSnackBar(customSuccessBar("Successfully paid with wallet"));
-
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return BottomNavBar();
-        }));
+            .showSnackBar(customSuccessBar("Withdrawal Successful"));
         //create pop up that pin has been updated successfully
       } else {
         // create pop up that pin failed or pass in error

@@ -1,14 +1,25 @@
+import 'package:chopwell_rider_application/models/response_models/list_based_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:chopwell_rider_application/constants/constants.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shimmer/shimmer.dart';
 
-class PayoutHistoryPage extends StatelessWidget {
+import '../../services/payout_history_service.dart';
+
+final payoutHistoryFutureProvider =
+    FutureProvider.autoDispose<ListDataResponseModel>((ref) {
+  final payoutHistoryService = ref.watch(payoutHistoryServiceProvider);
+  return payoutHistoryService.fetchPayouts();
+});
+
+class PayoutHistoryPage extends ConsumerWidget {
   const PayoutHistoryPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-
+    final payoutsRef = ref.watch(payoutHistoryFutureProvider);
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
@@ -41,10 +52,13 @@ class PayoutHistoryPage extends StatelessWidget {
         child: ListView(children: [
           Text('Payout History',
               style: Theme.of(context).primaryTextTheme.titleLarge),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Column(
-            children: List.generate(
-                KConstants.foodImages.length,
+              children: payoutsRef.when(data: (data) {
+            final payouts = data.data;
+            print(payouts);
+            return List.generate(
+                data.data.length,
                 (index) => Container(
                       margin: EdgeInsets.only(bottom: 10.0),
                       height: 100.0,
@@ -52,13 +66,13 @@ class PayoutHistoryPage extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          Container(
+                          SizedBox(
                             width: screenWidth * 0.2,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  "June 19th",
+                                  payouts[index]["created"],
                                   style: TextStyle(
                                     fontFamily: "Montserrat",
                                     fontSize: 13.0,
@@ -66,7 +80,7 @@ class PayoutHistoryPage extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  "19:30",
+                                  "",
                                   style: TextStyle(
                                     fontFamily: "Montserrat",
                                     fontSize: 13.0,
@@ -76,7 +90,7 @@ class PayoutHistoryPage extends StatelessWidget {
                               ],
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 5,
                           ),
                           Row(
@@ -88,49 +102,48 @@ class PayoutHistoryPage extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      "GT Bank",
+                                      payouts[index]["paid_to"]["bankName"],
                                       style: TextStyle(
                                         fontFamily: "Montserrat",
                                         color: KConstants.baseRedColor,
                                         fontSize: 15.0,
-                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
                                     const SizedBox(
                                       height: 5.0,
                                     ),
                                     Text(
-                                      "Oriasotie Emmanuel Ehimare",
+                                      payouts[index]["paid_to"]["accountName"],
                                       style: TextStyle(
                                         fontFamily: "Montserrat",
                                         color: KConstants.baseDarkColor,
                                         fontSize: 15.0,
-                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
                                     Text(
-                                      "098082672882",
+                                      payouts[index]["paid_to"]
+                                          ["accountNumber"],
                                       style: TextStyle(
                                         fontFamily: "Montserrat",
                                         color: KConstants.baseDarkColor,
                                         fontSize: 15.0,
-                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
                               Text(
-                                "2000",
+                                "₦${payouts[index]["paid_to"]["amount"]}",
                                 style: TextStyle(
-                                    fontFamily: "Montserrat",
-                                    color: KConstants.baseDarkColor,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20.0),
+                                  fontFamily: "Montserrat",
+                                  color: KConstants.baseDarkColor,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20.0,
+                                ),
                               ),
                             ],
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 5,
                           ),
                           Divider(
@@ -140,8 +153,21 @@ class PayoutHistoryPage extends StatelessWidget {
                           )
                         ],
                       ),
-                    )),
-          )
+                    ));
+          }, error: (error, _) {
+            return [Text(error.toString())];
+          }, loading: () {
+            return [
+              Shimmer.fromColors(
+                child: Container(
+                    color: Colors.white,
+                    height: screenHeight * .7,
+                    width: screenWidth),
+                baseColor: KConstants.baseFourGreyColor,
+                highlightColor: KConstants.baseFourGreyColor,
+              )
+            ];
+          }))
         ]),
       ),
     ));

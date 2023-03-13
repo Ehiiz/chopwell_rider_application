@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:chopwell_rider_application/models/response_models/map_based_response_model.dart';
+import 'package:chopwell_rider_application/screens/Nav_Pages/profilePage.dart';
 import 'package:chopwell_rider_application/screens/bottom_sheets/pinInputCard.dart';
 import 'package:chopwell_rider_application/services/fetch_user_detail_service.dart';
 import 'package:chopwell_rider_application/services/wallet_balance_service.dart';
@@ -14,12 +15,6 @@ final walletBalanceFutureProvider =
     FutureProvider.autoDispose<MapDataResponseModel>((ref) async {
   final walletBalanceService = ref.watch(walletBalanceProvider);
   return walletBalanceService.fetchBalance();
-});
-
-final fetchUserDetailFutureProvider =
-    FutureProvider.autoDispose<MapDataResponseModel>((ref) async {
-  final fetchUserService = ref.watch(fetchUserDetailProvider);
-  return fetchUserService.info();
 });
 
 class BankWithdrawalDetailsPage extends ConsumerStatefulWidget {
@@ -95,19 +90,20 @@ class _BankWithdrawalDetailsPageState
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             walletRef.when(data: (data) {
-                              final walletBalance = data.data["accountBalance"];
-                              final formattedBalance =
-                                  walletBalance.toStringAsFixed(max(
+                              final walletBalance = data.data;
+                              final balance =
+                                  double.parse(data.data["accountBalance"]);
+                              final formattedBalance = balance.toStringAsFixed(
+                                  max(
                                       0,
-                                      walletBalance.truncateToDouble() ==
-                                              walletBalance
+                                      balance.truncateToDouble() == balance
                                           ? 0
                                           : 2));
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    formattedBalance,
+                                    "₦$formattedBalance",
                                     style: TextStyle(
                                       fontFamily: "Questrial",
                                       fontSize: 22,
@@ -115,15 +111,15 @@ class _BankWithdrawalDetailsPageState
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 5,
                                   ),
-                                  Container(
+                                  SizedBox(
                                     width: screenWidth * .75,
                                     child: Expanded(
                                       child: Text(
                                         walletBalance["client"],
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontFamily: "Questrial",
                                           fontSize: 15,
                                           color: Colors.black,

@@ -51,7 +51,7 @@ class _ConfirmationPageState extends ConsumerState<ConfirmationPage> {
 
       final response = await UpdateDeliveryStatus(orderId).status(request);
 
-      if (response.status == "succcess") {
+      if (response.status == "success") {
         ScaffoldMessenger.of(context).showSnackBar(
             customSuccessBar("Order status updated to $orderStatus"));
         ref.refresh(singleProductFutureProvider);
