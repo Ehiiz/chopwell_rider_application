@@ -18,32 +18,6 @@ class _SignUpPageState extends State<SignUpPage> {
 
   bool _showProgressIndicator = false;
 
-  void _handleSignUp() async {
-    final email = _emailController.text;
-    final password = _passwordController.text;
-
-    setState(() {
-      _showProgressIndicator = true;
-    });
-    final request = SignupRequestModel(email: email, password: password);
-    final response = await SignupService.signup(request);
-
-    if (response.status == "success") {
-      setState(() {
-        _showProgressIndicator = false;
-      });
-      // ScaffoldMessenger.of(context)
-      //     .showSnackBar(customSuccessBar("Signup Successful. Log in"));
-      Navigator.push(context, MaterialPageRoute(builder: (context) {
-        return LoginPage();
-      }));
-    } else {
-      print(response);
-      // ScaffoldMessenger.of(context)
-      //     .showSnackBar(customErrorBar("Failed to sign up"));
-    }
-  }
-
   @override
   void dispose() {
     _emailController.dispose();
@@ -55,6 +29,36 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
+
+    void _handleSignUp() async {
+      final email = _emailController.text;
+      final password = _passwordController.text;
+
+      setState(() {
+        _showProgressIndicator = true;
+      });
+      final request = SignupRequestModel(email: email, password: password);
+      final response = await SignupService.signup(request);
+
+      if (response.status == "success") {
+        setState(() {
+          _showProgressIndicator = false;
+        });
+        // ScaffoldMessenger.of(context)
+        //     .showSnackBar(customSuccessBar("Signup Successful"));
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return LoginPage();
+        }));
+      } else {
+        print(response);
+        setState(() {
+          _showProgressIndicator = false;
+        });
+        // ScaffoldMessenger.of(context)
+        //     .showSnackBar(customErrorBar("Failed to sign up"));
+      }
+    }
+
     return MaterialApp(
         home: SafeArea(
       child: Scaffold(

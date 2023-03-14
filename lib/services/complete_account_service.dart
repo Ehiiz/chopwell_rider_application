@@ -9,15 +9,19 @@ class CompleteAccountService {
 
   static Future<MapDataResponseModel> setup(
       CompleteAccountRequestModel request) async {
+    print("I enter");
     final token = await AuthToken.getAuthToken();
     final response = await RequestModule.post(
         _completeAccountPath, request.toJson(),
         headers: {"Authorization": "Bearer ${token!}"});
     if (response.statusCode == 200) {
+      print("I succeed");
       final responseMap = json.decode(response.body);
       final decodedResponse = MapDataResponseModel.fromJson(responseMap);
       return decodedResponse;
     } else {
+      print("I failed");
+
       throw Exception('Unable to complete account setup');
     }
   }

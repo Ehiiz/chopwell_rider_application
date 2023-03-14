@@ -21,49 +21,6 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
   bool _showProgressIndicator = false;
 
-  void _handleSignIn() async {
-    setState(() {
-      _showProgressIndicator = true;
-    });
-
-    final appId = await OneSignal.shared.getDeviceState().then((value) {
-      print(value!.userId);
-      final appId = value!.userId;
-      return appId;
-    });
-    print("This is the App Id $appId");
-
-    final email = _emailController.text;
-    final password = _passwordController.text;
-    final request =
-        SignInRequestModel(email: email, password: password, appId: appId!);
-    final response = await SigninService.signin(request);
-
-    if (response.status == "success") {
-      if (response.data["status"]) {
-        // ignore: use_build_context_synchronously
-        setState(() {
-          _showProgressIndicator = false;
-        });
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return BottomNavBar();
-        }));
-      } else {
-        // ignore: use_build_context_synchronously
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return CompleteAccountPage();
-        }));
-      }
-    } else {
-      print(response);
-      ScaffoldMessenger.of(context)
-          .showSnackBar(customErrorBar("Login failed"));
-
-      //pop up error
-    }
-    // Do something with the email and password values
-  }
-
   @override
   void dispose() {
     _emailController.dispose();
@@ -75,6 +32,50 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
+
+    void _handleSignIn() async {
+      setState(() {
+        _showProgressIndicator = true;
+      });
+
+      final appId = await OneSignal.shared.getDeviceState().then((value) {
+        print(value!.userId);
+        final appId = value!.userId;
+        return appId;
+      });
+      print("This is the App Id $appId");
+
+      final email = _emailController.text;
+      final password = _passwordController.text;
+      final request =
+          SignInRequestModel(email: email, password: password, appId: appId!);
+      final response = await SigninService.signin(request);
+
+      if (response.status == "success") {
+        if (response.data["status"]) {
+          // ignore: use_build_context_synchronously
+          setState(() {
+            _showProgressIndicator = false;
+          });
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return BottomNavBar();
+          }));
+        } else {
+          // ignore: use_build_context_synchronously
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return CompleteAccountPage();
+          }));
+        }
+      } else {
+        print(response);
+        // ScaffoldMessenger.of(context)
+        //     .showSnackBar(customErrorBar("Login failed"));
+
+        //pop up error
+      }
+      // Do something with the email and password values
+    }
+
     return MaterialApp(
         home: SafeArea(
       child: Scaffold(
