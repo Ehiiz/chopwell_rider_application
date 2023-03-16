@@ -29,6 +29,43 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
   double longitude = 0.0;
 
   bool submitForm = false;
+  void _hanldeCompleteAccount(
+      BuildContext context, double longitude, double latitude) async {
+    final name = _nameController.text;
+    final state = _stateController.text;
+    final location = _locationController.text;
+    final phone = _phoneController.text;
+
+    setState(() {
+      _showProgressIndicator = true;
+    });
+
+    final request = CompleteAccountRequestModel(
+      name: name,
+      address: location,
+      state: state,
+      phone: phone,
+      longitude: longitude,
+      latitude: latitude,
+    );
+    final response = await CompleteAccountService.setup(request);
+
+    if (response.status == "success") {
+      // include toast notification
+
+      setState(() {
+        _showProgressIndicator = false;
+      });
+
+      Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return BottomNavBar();
+      }));
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(customErrorBar("Account setup failed"));
+    }
+    // Do something with the email and password values
+  }
 
   Future<Position> _getCurrentLocation() async {
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
@@ -63,49 +100,9 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
-
-    void _hanldeCompleteAccount(double longitude, double latitude) async {
-      final name = _nameController.text;
-      final state = _stateController.text;
-      final location = _locationController.text;
-      final phone = _phoneController.text;
-
-      setState(() {
-        _showProgressIndicator = true;
-      });
-
-      final request = CompleteAccountRequestModel(
-        name: name,
-        address: location,
-        state: state,
-        phone: phone,
-        longitude: longitude,
-        latitude: latitude,
-      );
-      final response = await CompleteAccountService.setup(request);
-
-      if (response.status == "success") {
-        // include toast notification
-        setState(() {
-          _showProgressIndicator = false;
-        });
-
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return BottomNavBar();
-        }));
-      } else {
-        print(response);
-        // ScaffoldMessenger.of(context)
-        //     .showSnackBar(customErrorBar("Account setup failed"));
-      }
-      // Do something with the email and password values
-    }
-
-    return MaterialApp(
-        home: SafeArea(
+    return SafeArea(
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: Container(
+        body: SizedBox(
           child: ListView(
             children: [
               ClipPath(
@@ -263,8 +260,11 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
                             width: 200,
                             height: 48,
                             child: OutlinedButton(
-                                onPressed: () =>
-                                    _hanldeCompleteAccount(longitude, latitude),
+                                onPressed: () => _hanldeCompleteAccount(
+                                      context,
+                                      longitude,
+                                      latitude,
+                                    ),
                                 style: ButtonStyle(
                                   backgroundColor: MaterialStateProperty.all(
                                       KConstants.baseDarkColor),
@@ -305,7 +305,7 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
           ),
         ),
       ),
-    ));
+    );
   }
 }
 

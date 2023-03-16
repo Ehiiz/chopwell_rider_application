@@ -18,18 +18,20 @@ class _ConfirmEmailPageState extends State<ConfirmEmailPage> {
 
   bool _showProgressIndicator = false;
 
-  void _handleEmailConfirmation() async {
+  void _handleEmailConfirmation(BuildContext context) async {
     final email = _emailController.text;
     _showProgressIndicator = true;
     final request = VerifyEmailRequestModel(email: email);
 
     final response = await PasswordResetEmailService.passwordReset(request);
+    print(response);
     if (response.status == "success") {
       _showProgressIndicator = false;
       Navigator.push(context, MaterialPageRoute(builder: (context) {
         return VerifyOtpPage(email: email);
       }));
     } else {
+      print(response);
       ScaffoldMessenger.of(context)
           .showSnackBar(customErrorBar("Unable to confirm email"));
     }
@@ -46,10 +48,8 @@ class _ConfirmEmailPageState extends State<ConfirmEmailPage> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
-    return MaterialApp(
-        home: SafeArea(
+    return SafeArea(
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
         body: SizedBox(
           child: ListView(
             children: [
@@ -92,7 +92,8 @@ class _ConfirmEmailPageState extends State<ConfirmEmailPage> {
                             width: 200,
                             height: 48,
                             child: OutlinedButton(
-                                onPressed: () => _handleEmailConfirmation(),
+                                onPressed: () =>
+                                    _handleEmailConfirmation(context),
                                 style: ButtonStyle(
                                   backgroundColor: MaterialStateProperty.all(
                                       KConstants.baseDarkColor),
@@ -131,7 +132,7 @@ class _ConfirmEmailPageState extends State<ConfirmEmailPage> {
           ),
         ),
       ),
-    ));
+    );
   }
 }
 

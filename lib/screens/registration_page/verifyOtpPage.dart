@@ -24,7 +24,7 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
 
   String email;
 
-  void _handleVerifyOTP() async {
+  void _handleVerifyOTP(BuildContext context) async {
     final otp = _otpController.text;
     _showProgressIndicator = true;
 
@@ -38,6 +38,7 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
         return ResetPasswordPage(email: email, otp: otp);
       }));
     } else {
+      print(response);
       ScaffoldMessenger.of(context)
           .showSnackBar(customErrorBar("OTP Verification Failed"));
     }
@@ -53,10 +54,8 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
-    return MaterialApp(
-        home: SafeArea(
+    return SafeArea(
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
         body: SizedBox(
           child: ListView(
             children: [
@@ -99,7 +98,7 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
                             width: 200,
                             height: 48,
                             child: OutlinedButton(
-                                onPressed: () => _handleVerifyOTP(),
+                                onPressed: () => _handleVerifyOTP(context),
                                 style: ButtonStyle(
                                   backgroundColor: MaterialStateProperty.all(
                                       KConstants.baseDarkColor),
@@ -138,7 +137,7 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
           ),
         ),
       ),
-    ));
+    );
   }
 }
 

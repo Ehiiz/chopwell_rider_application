@@ -18,6 +18,32 @@ class _SignUpPageState extends State<SignUpPage> {
 
   bool _showProgressIndicator = false;
 
+  void _handleSignUp(BuildContext context) async {
+    final email = _emailController.text;
+    final password = _passwordController.text;
+
+    setState(() {
+      _showProgressIndicator = true;
+    });
+    final request = SignupRequestModel(email: email, password: password);
+    final response = await SignupService.signup(request);
+
+    if (response.status == "success") {
+      setState(() {
+        _showProgressIndicator = false;
+      });
+      ScaffoldMessenger.of(context)
+          .showSnackBar(customSuccessBar("Signup Successful. Log in"));
+      Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return LoginPage();
+      }));
+    } else {
+      print(response);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(customErrorBar("Failed to sign up"));
+    }
+  }
+
   @override
   void dispose() {
     _emailController.dispose();
@@ -29,41 +55,9 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
-
-    void _handleSignUp() async {
-      final email = _emailController.text;
-      final password = _passwordController.text;
-
-      setState(() {
-        _showProgressIndicator = true;
-      });
-      final request = SignupRequestModel(email: email, password: password);
-      final response = await SignupService.signup(request);
-
-      if (response.status == "success") {
-        setState(() {
-          _showProgressIndicator = false;
-        });
-        // ScaffoldMessenger.of(context)
-        //     .showSnackBar(customSuccessBar("Signup Successful"));
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return LoginPage();
-        }));
-      } else {
-        print(response);
-        setState(() {
-          _showProgressIndicator = false;
-        });
-        // ScaffoldMessenger.of(context)
-        //     .showSnackBar(customErrorBar("Failed to sign up"));
-      }
-    }
-
-    return MaterialApp(
-        home: SafeArea(
+    return SafeArea(
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: Container(
+        body: SizedBox(
           child: ListView(
             children: [
               ClipPath(
@@ -107,42 +101,42 @@ class _SignUpPageState extends State<SignUpPage> {
               const SizedBox(
                 height: 15,
               ),
-              Container(
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: width * .05),
+                child: SignInput(
+                  Icons.email_rounded,
+                  "email",
+                  "user@gmail.com",
+                  controller: _emailController,
+                ),
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: width * .05),
+                child: SignInput(
+                  Icons.password_rounded,
+                  "password",
+                  "Password123",
+                  controller: _passwordController,
+                ),
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              SizedBox(
                 width: width * .8,
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: width * .05),
-                        child: SignInput(
-                          Icons.email_rounded,
-                          "email",
-                          "user@gmail.com",
-                          controller: _emailController,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: width * .05),
-                        child: SignInput(
-                          Icons.password_rounded,
-                          "password",
-                          "Password123",
-                          controller: _passwordController,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 30,
-                      ),
                       Stack(
                         children: [
                           SizedBox(
                             width: 200,
                             height: 48,
                             child: OutlinedButton(
-                                onPressed: () => _handleSignUp(),
+                                onPressed: () => _handleSignUp(context),
                                 style: ButtonStyle(
                                   backgroundColor: MaterialStateProperty.all(
                                       KConstants.baseDarkColor),
@@ -206,7 +200,7 @@ class _SignUpPageState extends State<SignUpPage> {
           ),
         ),
       ),
-    ));
+    );
   }
 }
 
