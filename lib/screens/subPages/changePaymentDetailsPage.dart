@@ -48,7 +48,7 @@ class _ChangePaymentDetailsPageState
   }
 
   Future<MapDataResponseModel> _verifyUserName(
-      String account_number, String bank_code) async {
+      BuildContext context, String account_number, String bank_code) async {
     setState(() {
       _verifyingName = true;
     });
@@ -76,8 +76,8 @@ class _ChangePaymentDetailsPageState
   bool _verifyingName = false;
   bool _showProgressIndicator = false;
 
-  void _updateBankDetails(String account_number, String account_name,
-      String bank_name, String bank_code) async {
+  void _updateBankDetails(BuildContext context, String account_number,
+      String account_name, String bank_name, String bank_code) async {
     setState(() {
       _showProgressIndicator = true;
     });
@@ -245,7 +245,9 @@ class _ChangePaymentDetailsPageState
                                 }
                                 if (value.length == 10) {
                                   final response = await _verifyUserName(
-                                      _accountNumberController.text, bankCode);
+                                      context,
+                                      _accountNumberController.text,
+                                      bankCode);
                                   setState(() {
                                     _accountNameController.text =
                                         response.data["name"];
@@ -331,6 +333,7 @@ class _ChangePaymentDetailsPageState
                             child: ElevatedButton(
                               onPressed: () {
                                 _updateBankDetails(
+                                  context,
                                   _accountNumberController.text,
                                   _accountNameController.text,
                                   _selectedItem,

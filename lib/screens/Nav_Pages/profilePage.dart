@@ -44,70 +44,72 @@ class NewProfilePage extends ConsumerStatefulWidget {
 class _NewProfilePageState extends ConsumerState<NewProfilePage> {
   bool _updateRIderProgress = false;
 
+  void _updateLocation(
+    BuildContext context,
+  ) async {
+    final request = SetLocationRequestModel(location: "location");
+    final response = await UpdateLocationService.location(request);
+
+    if (response.status == "success") {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(customSuccessBar("Location Updated"));
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(customErrorBar("Failed to update location"));
+    }
+  }
+
+  Future<Position> _getCurrentLocation() async {
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error('Location services are disabled');
+    }
+
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error('Location permissions are denied forever');
+    }
+    return await Geolocator.getCurrentPosition();
+  }
+
+  void _updateRiderStatus(BuildContext context, String status) async {
+    setState(() {
+      _updateRIderProgress = true;
+    });
+    final request = UpdateRiderStatusRequestModel(rider_status: status);
+    final response = await UpdateRiderService().flipStatus(request);
+
+    if (response.status == "success") {
+      setState(() {
+        _updateRIderProgress = false;
+      });
+      ScaffoldMessenger.of(context)
+          .showSnackBar(customSuccessBar("Status updated"));
+
+      ref.refresh(fetchUserDetailFutureProvider);
+    } else {
+      setState(() {
+        _updateRIderProgress = false;
+      });
+      ScaffoldMessenger.of(context)
+          .showSnackBar(customErrorBar("Failed to update status"));
+
+      ref.refresh(fetchUserDetailFutureProvider);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     final userDetailRef = ref.watch(fetchUserDetailFutureProvider);
-
-    void _updateLocation() async {
-      final request = SetLocationRequestModel(location: "location");
-      final response = await UpdateLocationService.location(request);
-
-      if (response.status == "success") {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(customSuccessBar("Location Updated"));
-      } else {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(customErrorBar("Failed to update location"));
-      }
-    }
-
-    Future<Position> _getCurrentLocation() async {
-      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-      if (!serviceEnabled) {
-        return Future.error('Location services are disabled');
-      }
-
-      LocationPermission permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-        if (permission == LocationPermission.denied) {
-          return Future.error('Location permissions are denied');
-        }
-      }
-
-      if (permission == LocationPermission.deniedForever) {
-        return Future.error('Location permissions are denied forever');
-      }
-      return await Geolocator.getCurrentPosition();
-    }
-
-    void _updateRiderStatus(String status) async {
-      setState(() {
-        _updateRIderProgress = true;
-      });
-      final request = UpdateRiderStatusRequestModel(rider_status: status);
-      final response = await UpdateRiderService().flipStatus(request);
-
-      if (response.status == "success") {
-        setState(() {
-          _updateRIderProgress = false;
-        });
-        ScaffoldMessenger.of(context)
-            .showSnackBar(customSuccessBar("Status updated"));
-
-        ref.refresh(fetchUserDetailFutureProvider);
-      } else {
-        setState(() {
-          _updateRIderProgress = false;
-        });
-        ScaffoldMessenger.of(context)
-            .showSnackBar(customErrorBar("Failed to update status"));
-
-        ref.refresh(fetchUserDetailFutureProvider);
-      }
-    }
 
     bool riderStatus = false;
     String requestStatus = "";
@@ -328,7 +330,8 @@ class _NewProfilePageState extends ConsumerState<NewProfilePage> {
                                   return Switch(
                                       value: riderStatus,
                                       onChanged: (value) {
-                                        _updateRiderStatus(requestStatus);
+                                        _updateRiderStatus(
+                                            context, requestStatus);
                                         setState(() {
                                           riderStatus = value;
                                         });
@@ -337,14 +340,14 @@ class _NewProfilePageState extends ConsumerState<NewProfilePage> {
                                   return Text("");
                                 }, loading: () {
                                   return Shimmer.fromColors(
+                                    baseColor: KConstants.baseFiveGreyColor,
+                                    highlightColor:
+                                        KConstants.baseFiveGreyColor,
                                     child: Container(
                                       color: Colors.white,
                                       height: 10,
                                       width: 10,
                                     ),
-                                    baseColor: KConstants.baseFiveGreyColor,
-                                    highlightColor:
-                                        KConstants.baseFiveGreyColor,
                                   );
                                 })
                               ]),

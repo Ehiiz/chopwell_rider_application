@@ -167,7 +167,7 @@ class _ConfirmationPageState extends ConsumerState<ConfirmationPage> {
                               setState(() {
                                 currentId = data.data["_id"];
                               });
-                              return Container(
+                              return SizedBox(
                                 width: screenWidth * .65,
                                 child: Expanded(
                                   child: Text(

@@ -30,13 +30,13 @@ class PayoutHistoryPage extends ConsumerWidget {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back_ios,
             color: Colors.black,
             size: 25,
           ),
         ),
-        actions: [
+        actions: const [
           IconButton(
               onPressed: null,
               icon: Icon(
@@ -60,9 +60,9 @@ class PayoutHistoryPage extends ConsumerWidget {
             return List.generate(
                 data.data.length,
                 (index) => Container(
-                      margin: EdgeInsets.only(bottom: 10.0),
+                      margin: const EdgeInsets.only(bottom: 10.0),
                       height: 100.0,
-                      padding: EdgeInsets.symmetric(horizontal: 5.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 5.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
@@ -159,12 +159,12 @@ class PayoutHistoryPage extends ConsumerWidget {
           }, loading: () {
             return [
               Shimmer.fromColors(
+                baseColor: KConstants.baseFourGreyColor,
+                highlightColor: KConstants.baseFourGreyColor,
                 child: Container(
                     color: Colors.white,
                     height: screenHeight * .7,
                     width: screenWidth),
-                baseColor: KConstants.baseFourGreyColor,
-                highlightColor: KConstants.baseFourGreyColor,
               )
             ];
           }))
