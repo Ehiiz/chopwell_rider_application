@@ -140,11 +140,12 @@ class _BankWithdrawalDetailsPageState
                               );
                             }, loading: () {
                               return Shimmer.fromColors(
-                                baseColor: KConstants.baseDarkColor,
-                                highlightColor: KConstants.baseGreyColor,
-                                child: SizedBox(
+                                baseColor: KConstants.baseFourGreyColor,
+                                highlightColor: KConstants.baseFourGreyColor,
+                                child: Container(
                                   width: screenWidth * .4,
-                                  height: 10,
+                                  height: 20,
+                                  color: Colors.white,
                                 ),
                               );
                             }),
@@ -190,55 +191,78 @@ class _BankWithdrawalDetailsPageState
                       height: 15,
                     ),
                     userDetailRef.when(data: (data) {
-                      final bankDetails = data.data["bank_details"];
-                      return Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            bankDetails["bank_name"],
-                            style: TextStyle(
-                              fontFamily: "Montserrat",
-                              fontSize: 18.0,
-                              color: KConstants.baseGreyColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            bankDetails["account_name"],
-                            style: TextStyle(
-                              fontFamily: "Montserrat",
-                              fontSize: 18.0,
-                              color: KConstants.baseDarkColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            bankDetails["account_number"],
-                            style: TextStyle(
-                              fontFamily: "Montserrat",
-                              fontSize: 18.0,
-                              color: KConstants.baseDarkColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 15,
-                          ),
-                        ],
-                      );
+                      bool detailsExist = false;
+                      Map<String, dynamic> bankDetails = {};
+                      if (data.data.containsKey("bank_details") &&
+                          data.data["bank_details"] != null) {
+                        bankDetails = data.data["bank_details"];
+
+                        setState(() {
+                          detailsExist = true;
+                        });
+                      } else {
+                        setState(() {
+                          detailsExist = false;
+                        });
+                      }
+
+                      return detailsExist
+                          ? Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  bankDetails["bank_name"],
+                                  style: TextStyle(
+                                    fontFamily: "Montserrat",
+                                    fontSize: 18.0,
+                                    color: KConstants.baseGreyColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                Text(
+                                  bankDetails["account_name"],
+                                  style: TextStyle(
+                                    fontFamily: "Montserrat",
+                                    fontSize: 18.0,
+                                    color: KConstants.baseDarkColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                Text(
+                                  bankDetails["account_number"],
+                                  style: TextStyle(
+                                    fontFamily: "Montserrat",
+                                    fontSize: 18.0,
+                                    color: KConstants.baseDarkColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 15,
+                                ),
+                              ],
+                            )
+                          : Text(
+                              "Set Withdrawal Account",
+                              style: TextStyle(
+                                fontFamily: "Montserrat",
+                                fontSize: 18.0,
+                                color: KConstants.baseRedColor,
+                              ),
+                            );
                     }, error: (error, _) {
                       return Text(error.toString());
                     }, loading: () {
                       return Shimmer.fromColors(
-                        baseColor: KConstants.baseFiveGreyColor,
-                        highlightColor: KConstants.baseFiveGreyColor,
+                        baseColor: KConstants.baseFourGreyColor,
+                        highlightColor: KConstants.baseFourGreyColor,
                         child: Container(
                           width: screenWidth,
                           height: 100,
@@ -308,7 +332,7 @@ class _BankWithdrawalDetailsPageState
                           }));
                         },
                         child: Text(
-                          "change bank details",
+                          "update bank details",
                           style: TextStyle(
                             fontFamily: "Montserrat",
                             fontSize: 15.0,

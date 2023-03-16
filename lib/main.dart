@@ -2,6 +2,7 @@ import 'package:chopwell_rider_application/constants/constants.dart';
 import 'package:chopwell_rider_application/screens/Nav_Pages/homePage.dart';
 import 'package:chopwell_rider_application/screens/Nav_Pages/ordersPage.dart';
 import 'package:chopwell_rider_application/screens/Nav_Pages/profilePage.dart';
+import 'package:chopwell_rider_application/screens/registration_page/loginPage.dart';
 import 'package:chopwell_rider_application/screens/registration_page/signUpPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -60,7 +61,7 @@ class MyApp extends StatelessWidget {
               disabledColor: KConstants.baseThreeDarkColor,
               splashColor: KConstants.baseFourRedColor,
             )),
-        home: BottomNavBar());
+        home: LoginPage());
   }
 }
 
