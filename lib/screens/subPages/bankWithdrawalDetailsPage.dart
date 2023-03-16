@@ -44,14 +44,14 @@ class _BankWithdrawalDetailsPageState
               onPressed: () {
                 Navigator.pop(context);
               },
-              icon: Icon(
+              icon: const Icon(
                 Icons.arrow_back_ios,
                 color: Colors.black,
                 size: 25,
               ),
             ),
             actions: [
-              IconButton(
+              const IconButton(
                   onPressed: null,
                   icon: Icon(
                     Icons.search,
@@ -276,12 +276,14 @@ class _BankWithdrawalDetailsPageState
                     userDetailRef.when(data: (data) {
                       final accountNumber =
                           data.data["meta"]["transaction_pin"];
+                      print(data.data);
                       return Align(
                         alignment: Alignment.bottomRight,
                         child: TextButton(
                           onPressed: () {
                             showModalBottomSheet(
                               context: context,
+                              isScrollControlled: true,
                               builder: (BuildContext context) {
                                 return StatefulBuilder(
                                   builder: (BuildContext context,
@@ -319,7 +321,7 @@ class _BankWithdrawalDetailsPageState
                     Align(
                       alignment: Alignment.bottomRight,
                       child: ElevatedButton(
-                        style: ButtonStyle(
+                        style: const ButtonStyle(
                             backgroundColor:
                                 MaterialStatePropertyAll(Colors.transparent),
                             elevation: MaterialStatePropertyAll(0.0),
@@ -328,7 +330,7 @@ class _BankWithdrawalDetailsPageState
                         onPressed: () {
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
-                            return ChangePaymentDetailsPage();
+                            return const ChangePaymentDetailsPage();
                           }));
                         },
                         child: Text(
@@ -354,6 +356,7 @@ class _BankWithdrawalDetailsPageState
                         onPressed: () {
                           showModalBottomSheet(
                             context: context,
+                            isScrollControlled: true,
                             builder: (BuildContext context) {
                               return StatefulBuilder(
                                 builder: (BuildContext context,
@@ -369,7 +372,7 @@ class _BankWithdrawalDetailsPageState
                             },
                           );
                         },
-                        child: Text(
+                        child: const Text(
                           'Withdraw',
                           style: TextStyle(
                             fontFamily: "Montserrat",
@@ -392,7 +395,7 @@ class _BankWithdrawalDetailsPageState
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
               ],

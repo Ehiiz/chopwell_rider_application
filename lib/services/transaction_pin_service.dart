@@ -19,9 +19,13 @@ class PinService {
 
     if (response.statusCode == 200) {
       final responseMap = json.decode(response.body);
+      print(responseMap);
+
       final decodedResponse = NullDataResponseModel.fromJson(responseMap);
       return decodedResponse;
     } else {
+      final responseMap = json.decode(response.body);
+      print(responseMap);
       throw Exception('Unable to set pin');
     }
   }

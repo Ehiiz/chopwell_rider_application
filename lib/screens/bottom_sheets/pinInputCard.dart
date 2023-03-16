@@ -121,7 +121,7 @@ class _PinInputSheetState extends ConsumerState<PinInputSheet> {
       setState(() {
         _showProgressIndicator = true;
       });
-      print("I am withdrawinf");
+
       final request = WithdrawWalletRequestModel(pin: pin, amount: amount);
       final response = await PayWalletService.paywallet(request);
 
@@ -150,15 +150,18 @@ class _PinInputSheetState extends ConsumerState<PinInputSheet> {
     }
 
     return Material(
-      color: Colors.transparent,
       elevation: 4.0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16.0),
       ),
       child: Container(
         width: screenWidth,
-        height: screenHeight,
-        padding: EdgeInsets.symmetric(horizontal: 10),
+        height: screenHeight * .7,
+        padding: EdgeInsets.symmetric(
+          horizontal: 10,
+          vertical: 10,
+        ),
+        margin: EdgeInsets.only(top: 10),
         decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(
@@ -170,8 +173,52 @@ class _PinInputSheetState extends ConsumerState<PinInputSheet> {
           children: [
             const SizedBox(height: 20),
             walletPay
-                ? SignInput(Icons.money, "enter amount", "",
-                    controller: _amountController)
+                ? Align(
+                    alignment: Alignment.center,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100.0),
+                        color: KConstants.baseTwoRedColor,
+                      ),
+                      width: screenHeight * .3,
+                      child: TextField(
+                        style: const TextStyle(
+                          fontFamily: "Questrial",
+                          color: Colors.white,
+                          fontSize: 25.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        controller: _amountController,
+                        keyboardType: TextInputType.number,
+                        textInputAction: TextInputAction.done,
+                        decoration: InputDecoration(
+                          floatingLabelBehavior: FloatingLabelBehavior.never,
+                          fillColor: KConstants.baseTwoDarkColor,
+                          enabledBorder: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(100.0),
+                            ),
+                            borderSide: BorderSide.none,
+                          ),
+                          focusedBorder: const OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                          ),
+                          prefixIcon: Icon(
+                            CupertinoIcons.money_dollar,
+                            color: Colors.white,
+                          ),
+                          labelStyle: TextStyle(
+                            fontFamily: "Montserrat",
+                            color: KConstants.baseRedColor,
+                            fontSize: 25.0,
+                            // fontWeight: FontWeight.bold,
+                          ),
+                          labelText: "enter amount",
+                          hintText: "",
+                        ),
+                      ),
+                    ),
+                  )
                 : Container(),
             Text(
               walletPay

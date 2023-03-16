@@ -40,9 +40,11 @@ class _LoginPageState extends State<LoginPage> {
 
     if (response.status == "success") {
       // ignore: use_build_context_synchronously
+      print(response.data["status"]);
 
       if (response.data["status"]) {
         // ignore: use_build_context_synchronously
+
         setState(() {
           _showProgressIndicator = false;
         });
