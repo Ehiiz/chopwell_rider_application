@@ -390,6 +390,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
+  flutter_imagekit:
+    dependency: "direct main"
+    description:
+      name: flutter_imagekit
+      sha256: ac5add29751d3e7ce49346764ace7f580a26e10eab348c86f58674c136be14d9
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.5"
   flutter_lints:
     dependency: "direct dev"
     description:
