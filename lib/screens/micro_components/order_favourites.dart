@@ -12,7 +12,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final orderIdProvider = StateProvider<String>((ref) => "");
 
-class OrderFavouritesBox extends ConsumerWidget {
+class OrderFavouritesBox extends ConsumerStatefulWidget {
   OrderFavouritesBox(
     this.favourite,
     //   this.restaurantImage,
@@ -44,10 +44,56 @@ class OrderFavouritesBox extends ConsumerWidget {
   String account;
   String status;
 
-  // String restaurantImage;
+  @override
+  ConsumerState<OrderFavouritesBox> createState() => _OrderFavouritesBoxState(
+      this.favourite,
+      this.orderStatus,
+      this.mealDetails,
+      this.date,
+      this.amount,
+      this.orderId,
+      this.restaurantName,
+      this.total,
+      this.deliveryFee,
+      this.vat,
+      this.account,
+      this.status);
+}
+
+class _OrderFavouritesBoxState extends ConsumerState<OrderFavouritesBox> {
+  _OrderFavouritesBoxState(
+    this.favourite,
+    this.orderStatus,
+    this.mealDetails,
+    this.date,
+    this.amount,
+    this.orderId,
+    this.restaurantName,
+    this.total,
+    this.deliveryFee,
+    this.vat,
+    this.account,
+    this.status,
+  );
+
+  final bool favourite;
+  final bool orderStatus;
+  final List<dynamic> mealDetails;
+  final String date;
+  final String amount;
+  final String orderId;
+  final String restaurantName;
+  final String total;
+  final String deliveryFee;
+  final String vat;
+  final String account;
+  final String status;
+
+  bool _showProgressIndicator = false;
+  bool _showRejectIndicator = false;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final dateTime = DateTime.parse(date);
     final formattedDate = DateFormat('MMMM d, y').format(dateTime);
     final formattedTime = DateFormat('h:mm a').format(dateTime);
@@ -58,15 +104,48 @@ class OrderFavouritesBox extends ConsumerWidget {
     //create a reject logic
 
     void _acceptOrder() async {
+      setState(() {
+        _showProgressIndicator = true;
+      });
       final request = SetDeliveryStatusRequestModel(order_status: "accepted");
       final response = await UpdateDeliveryStatus(orderId).status(request);
 
       if (response.status == "success") {
+        setState(() {
+          _showProgressIndicator = false;
+        });
         ScaffoldMessenger.of(context)
             .showSnackBar(customSuccessBar("Order accepted"));
 
         ref.refresh(riderOrderFutureProvider);
       } else {
+        setState(() {
+          _showProgressIndicator = false;
+        });
+        ScaffoldMessenger.of(context)
+            .showSnackBar(customErrorBar("Unable to accept order"));
+      }
+    }
+
+    void _rejectOrder() async {
+      setState(() {
+        _showProgressIndicator = true;
+      });
+      final request = SetDeliveryStatusRequestModel(order_status: "cancelled");
+      final response = await UpdateDeliveryStatus(orderId).status(request);
+
+      if (response.status == "success") {
+        setState(() {
+          _showProgressIndicator = false;
+        });
+        ScaffoldMessenger.of(context)
+            .showSnackBar(customSuccessBar("Order accepted"));
+
+        ref.refresh(riderOrderFutureProvider);
+      } else {
+        setState(() {
+          _showProgressIndicator = false;
+        });
         ScaffoldMessenger.of(context)
             .showSnackBar(customErrorBar("Unable to accept order"));
       }
@@ -228,75 +307,104 @@ class OrderFavouritesBox extends ConsumerWidget {
                   ? Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        OutlinedButton(
-                          onPressed: () {
-                            _acceptOrder();
-                          },
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                              KConstants.baseGreenColor,
-                            ),
-                            padding: MaterialStateProperty.all(
-                              EdgeInsets.symmetric(
-                                  vertical: 15.0, horizontal: 15.0),
-                            ),
-                            shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                  15.0,
-                                ), // Set your desired border radius here
-                                side: BorderSide.none,
+                        Stack(
+                          children: [
+                            SizedBox(
+                              width: screenWidth * .45,
+                              height: 60,
+                              child: OutlinedButton(
+                                onPressed: () {
+                                  _acceptOrder();
+                                },
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(
+                                    KConstants.baseGreenColor,
+                                  ),
+                                  padding: MaterialStateProperty.all(
+                                    EdgeInsets.symmetric(
+                                        vertical: 15.0, horizontal: 15.0),
+                                  ),
+                                  shape: MaterialStateProperty.all(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                        15.0,
+                                      ), // Set your desired border radius here
+                                      side: BorderSide.none,
+                                    ),
+                                  ),
+                                  // minimumSize: MaterialStateProperty.all(
+                                  //   Size(screenWidth * .45, 40),
+                                  // ),
+                                ),
+                                child: Text(
+                                  _showProgressIndicator ? "" : "accept",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontFamily: "Montserrat",
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                               ),
                             ),
-                            minimumSize: MaterialStateProperty.all(
-                              Size(screenWidth * .45, 40),
-                            ),
-                          ),
-                          child: Text(
-                            "accept",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontFamily: "Montserrat",
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+                            if (_showProgressIndicator)
+                              // ignore: dead_code
+                              const Positioned.fill(
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                          ],
                         ),
-                        OutlinedButton(
-                          onPressed: () {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (context) {
-                              return ConfirmationPage(
-                                orderId: orderId,
-                              );
-                            }));
-                          },
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                              KConstants.baseThreeDarkColor,
-                            ),
-                            padding: MaterialStateProperty.all(
-                              EdgeInsets.symmetric(
-                                  vertical: 15.0, horizontal: 15.0),
-                            ),
-                            shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                    15.0), // Set your desired border radius here
-                                side: BorderSide.none,
+                        Stack(
+                          children: [
+                            SizedBox(
+                              width: screenWidth * .35,
+                              height: 60,
+                              child: OutlinedButton(
+                                onPressed: () {
+                                  _rejectOrder();
+                                },
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(
+                                    KConstants.baseThreeDarkColor,
+                                  ),
+                                  padding: MaterialStateProperty.all(
+                                    EdgeInsets.symmetric(
+                                        vertical: 15.0, horizontal: 15.0),
+                                  ),
+                                  shape: MaterialStateProperty.all(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                          15.0), // Set your desired border radius here
+                                      side: BorderSide.none,
+                                    ),
+                                  ),
+                                ),
+                                child: Text(
+                                  "reject",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontFamily: "Montserrat",
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                          child: Text(
-                            "reject",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontFamily: "Montserrat",
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
+                            if (_showRejectIndicator)
+                              // ignore: dead_code
+                              const Positioned.fill(
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                          ],
+                        )
                       ],
                     )
                   : Container()

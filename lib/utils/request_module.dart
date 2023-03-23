@@ -1,4 +1,4 @@
-import 'package:chopwell_rider_application/hooks/url_constant.dart';
+import 'package:chopwell_rider_application/utils/url_constant.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 

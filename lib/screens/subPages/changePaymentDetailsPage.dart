@@ -69,12 +69,13 @@ class _ChangePaymentDetailsPageState
     }
   }
 
-  String _selectedItem = "";
+  String _selectedItem = "click to select bank";
   String _userName = "";
   String bankCode = "";
   List<dynamic> bankCodeList = [];
   bool _verifyingName = false;
   bool _showProgressIndicator = false;
+  bool _buttonReady = false;
 
   void _updateBankDetails(BuildContext context, String account_number,
       String account_name, String bank_name, String bank_code) async {
@@ -153,64 +154,48 @@ class _ChangePaymentDetailsPageState
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            height: 35,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  color: KConstants.baseRedColor,
-                                  width: 1.0,
+                              height: 35,
+                              width: screenWidth,
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(
+                                    color: KConstants.baseRedColor,
+                                    width: 1.0,
+                                  ),
                                 ),
                               ),
-                            ),
-                            child: bankList.when(data: (data) {
-                              bankCodeList =
-                                  (data.data["bank"] as List<dynamic>);
-                              final bankList =
-                                  (data.data["bank"] as List<dynamic>)
-                                      .cast<Map<String, dynamic>>();
-                              return DropdownButton(
+                              child: DropdownButton(
                                 value: _selectedItem,
-                                items: bankList.map<DropdownMenuItem<String>>(
-                                    (Map<String, dynamic> value) {
+                                items: defaultBankList
+                                    .map<DropdownMenuItem<String>>(
+                                        (Map<String, dynamic> value) {
                                   return DropdownMenuItem<String>(
                                     value: value["name"]! as String,
                                     child: SizedBox(
-                                        width: screenWidth * .9,
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              value["name"]!,
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                fontFamily: "Montserrat",
-                                                color:
-                                                    KConstants.baseTwoRedColor,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ],
-                                        )),
+                                      width: screenWidth * .8,
+                                      child: Text(
+                                        value["name"]!,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.fade,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontFamily: "Montserrat",
+                                          color: KConstants.baseTwoRedColor,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
                                   );
                                 }).toList(),
                                 onChanged: (value) {
-                                  final result = bankCodeList.firstWhere(
-                                      (item) => item['name'] == value,
-                                      orElse: () => null);
+                                  final result = defaultBankList.firstWhere(
+                                      (item) => item['name'] == value);
                                   setState(() {
                                     _selectedItem = value as String;
                                     bankCode = result["code"];
                                   });
                                 },
-                              );
-                            }, error: (error, _) {
-                              return Text(error.toString());
-                            }, loading: () {
-                              return Text("Loading");
-                            }),
-                          ),
+                              )),
                           const SizedBox(
                             height: 10,
                           ),
@@ -244,6 +229,9 @@ class _ChangePaymentDetailsPageState
                                           .substring(0, 10);
                                 }
                                 if (value.length == 10) {
+                                  setState(() {
+                                    _verifyingName = true;
+                                  });
                                   final response = await _verifyUserName(
                                       context,
                                       _accountNumberController.text,
@@ -251,6 +239,8 @@ class _ChangePaymentDetailsPageState
                                   setState(() {
                                     _accountNameController.text =
                                         response.data["name"];
+                                    _verifyingName = false;
+                                    _buttonReady = true;
                                   });
                                 }
                               },
@@ -340,8 +330,11 @@ class _ChangePaymentDetailsPageState
                                   bankCode,
                                 );
                               },
+                              // ignore: sort_child_properties_last
                               child: Text(
-                                'Update Bank Details',
+                                _showProgressIndicator
+                                    ? ""
+                                    : 'Update Bank Details',
                                 style: TextStyle(
                                   fontFamily: "Montserrat",
                                   color: Colors.white,
@@ -351,7 +344,9 @@ class _ChangePaymentDetailsPageState
                               ),
                               style: ButtonStyle(
                                   backgroundColor: MaterialStateProperty.all(
-                                    KConstants.baseTwoRedColor,
+                                    _buttonReady
+                                        ? KConstants.baseTwoRedColor
+                                        : KConstants.baseGreyColor,
                                   ),
                                   shape: MaterialStateProperty.all<
                                       RoundedRectangleBorder>(
@@ -374,10 +369,11 @@ class _ChangePaymentDetailsPageState
                     ],
                   ),
                   if (_verifyingName)
-                    const Positioned.fill(
+                    Positioned.fill(
                       child: Center(
                         child: CircularProgressIndicator(
-                          color: Colors.white,
+                          backgroundColor: Colors.transparent,
+                          color: KConstants.baseRedColor,
                         ),
                       ),
                     ),

@@ -1,14 +1,20 @@
 // ignore_for_file: use_build_context_synchronously
+import 'dart:io';
+
 import 'package:chopwell_rider_application/constants/constants.dart';
 import 'package:chopwell_rider_application/models/request_models/complete_account_request_model.dart';
+import 'package:chopwell_rider_application/screens/bottom_sheets/updateLocationCard.dart';
 import 'package:chopwell_rider_application/screens/micro_components/signin_input.dart';
 import 'package:chopwell_rider_application/screens/registration_page/loginPage.dart';
 import 'package:chopwell_rider_application/services/complete_account_service.dart';
+import 'package:chopwell_rider_application/utils/image_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:flutter/widgets.dart';
 
-import '../../main.dart';
-import '../../services/third_party_services/google_location_service.dart';
+import '../../../main.dart';
+import '../../../services/third_party_services/google_location_service.dart';
 
 class CompleteAccountPage extends StatefulWidget {
   const CompleteAccountPage({Key? key}) : super(key: key);
@@ -22,11 +28,39 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
   final TextEditingController _stateController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _imageController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
 
   bool _showProgressIndicator = false;
+  bool _showLocationIndicator = false;
+  bool _imageSet = false;
   double latitude = 0.0;
   double longitude = 0.0;
+
+  Future<File?> _getImage() async {
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      File file = File(pickedFile.path);
+      final image = await imageUpload(file);
+      print(image);
+      setState(() {
+        // imageStatus = "image uploaded";
+        _imageController.text = image;
+        _imageSet = true;
+      });
+    }
+  }
+
+  void changeValue(double lat, double long, String addr) {
+    setState(() {
+      latitude = lat;
+      longitude = long;
+      _locationController.text = addr;
+    });
+    print("These are my details $lat, $long, $addr");
+  }
 
   bool submitForm = false;
   void _hanldeCompleteAccount(
@@ -35,6 +69,7 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
     final state = _stateController.text;
     final location = _locationController.text;
     final phone = _phoneController.text;
+    final image = _imageController.text;
 
     setState(() {
       _showProgressIndicator = true;
@@ -47,6 +82,7 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
       phone: phone,
       longitude: longitude,
       latitude: latitude,
+      image: image,
     );
     final response = await CompleteAccountService.setup(request);
 
@@ -84,6 +120,7 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
     if (permission == LocationPermission.deniedForever) {
       return Future.error('Location permissions are denied forever');
     }
+
     return await Geolocator.getCurrentPosition();
   }
 
@@ -103,207 +140,192 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
     return SafeArea(
       child: Scaffold(
         body: SizedBox(
-          child: ListView(
-            children: [
-              ClipPath(
-                clipper: MyClipper(),
-                child: Container(
-                  height: height * .3,
-                  width: width * .2,
-                  decoration: BoxDecoration(
-                    color: KConstants.baseRedColor,
+            child: Stack(
+          children: [
+            ListView(
+              children: [
+                ClipPath(
+                  clipper: MyClipper(),
+                  child: Container(
+                    height: height * .3,
+                    width: width * .2,
+                    decoration: BoxDecoration(
+                      color: KConstants.baseRedColor,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                Container(
+                  width: width * .8,
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        GestureDetector(
+                          onTap: () => _getImage(),
+                          child: _imageSet
+                              ? CircleAvatar(
+                                  radius: 50,
+                                  backgroundImage:
+                                      AssetImage("assets/OIP.jpeg"))
+                              : CircleAvatar(
+                                  radius: 50,
+                                  backgroundImage:
+                                      NetworkImage(_imageController.text),
+                                ),
+                        ),
+                        Padding(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: width * .05),
+                          child: SignInput(
+                            Icons.person,
+                            "name",
+                            "",
+                            controller: _nameController,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        Padding(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: width * .05),
+                          child: SignInput(
+                            Icons.phone_android_rounded,
+                            "phone",
+                            "",
+                            controller: _phoneController,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        Padding(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: width * .05),
+                          child: SignInput(
+                            Icons.map_rounded,
+                            "state",
+                            "",
+                            controller: _stateController,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        Padding(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: width * .05),
+                          child: SignInput(
+                            Icons.location_city,
+                            "location",
+                            "",
+                            controller: _locationController,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        ElevatedButton(
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(
+                                Colors.white,
+                              ),
+                            ),
+                            onPressed: () async {
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                builder: (BuildContext context) {
+                                  return StatefulBuilder(
+                                    builder: (BuildContext context,
+                                        StateSetter setState) {
+                                      return SetLocationCard(
+                                        onLocationChanged: changeValue,
+                                        accountSetup: true,
+                                      );
+                                    },
+                                  );
+                                },
+                              );
+                            },
+                            // ignore: prefer_const_constructors
+                            child: Text(
+                              'use current location',
+                              style: const TextStyle(
+                                fontFamily: "Questrial",
+                                color: Colors.red,
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            )),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        Stack(
+                          children: [
+                            SizedBox(
+                              width: 200,
+                              height: 48,
+                              child: OutlinedButton(
+                                  onPressed: () => _hanldeCompleteAccount(
+                                        context,
+                                        longitude,
+                                        latitude,
+                                      ),
+                                  style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(
+                                        KConstants.baseDarkColor),
+                                    shape: MaterialStateProperty.all(
+                                        RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30.0),
+                                    )),
+                                  ),
+                                  child: Text(
+                                    _showProgressIndicator
+                                        ? ''
+                                        : "complete setup",
+                                    // ignore: prefer_const_constructors
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                      fontFamily: "Montserrat",
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  )),
+                            ),
+                            if (_showProgressIndicator)
+                              Positioned.fill(
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                    color: KConstants.baseRedColor,
+                                    backgroundColor: Colors.transparent,
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ]),
+                ),
+                const SizedBox(
+                  height: 50,
+                ),
+              ],
+            ),
+            if (_showLocationIndicator)
+              const Positioned.fill(
+                child: Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 15,
-              ),
-              Container(
-                width: width * .8,
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: width * .05),
-                        child: SignInput(
-                          Icons.person,
-                          "name",
-                          "",
-                          controller: _nameController,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: width * .05),
-                        child: SignInput(
-                          Icons.phone_android_rounded,
-                          "phone",
-                          "",
-                          controller: _phoneController,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: width * .05),
-                        child: SignInput(
-                          Icons.map_rounded,
-                          "state",
-                          "",
-                          controller: _stateController,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: width * .05),
-                        child: SignInput(
-                          Icons.location_city,
-                          "location",
-                          "",
-                          controller: _locationController,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: width * .05),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(100.0),
-                            color: KConstants.baseFourRedColor,
-                          ),
-                          child: TextField(
-                            onChanged: (value) {
-                              print(value);
-                            },
-                            style: const TextStyle(
-                              fontFamily: "Questrial",
-                              color: Colors.white,
-                              fontSize: 15.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            controller: _searchController,
-                            keyboardType: TextInputType.visiblePassword,
-                            textInputAction: TextInputAction.done,
-                            decoration: InputDecoration(
-                              floatingLabelBehavior:
-                                  FloatingLabelBehavior.never,
-                              fillColor: KConstants.baseRedColor,
-                              enabledBorder: const OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(100.0),
-                                ),
-                                borderSide: BorderSide.none,
-                              ),
-                              focusedBorder: const OutlineInputBorder(
-                                borderSide: BorderSide.none,
-                              ),
-                              prefixIcon: IconButton(
-                                  onPressed: () {
-                                    LocationService.getPlace(
-                                        _searchController.text);
-                                  },
-                                  icon: Icon(
-                                    Icons.my_location_rounded,
-                                    color: KConstants.baseTwoRedColor,
-                                  )),
-                              labelStyle: TextStyle(
-                                fontFamily: "Montserrat",
-                                color: KConstants.baseRedColor,
-                                fontSize: 15.0,
-                                // fontWeight: FontWeight.bold,
-                              ),
-                              labelText: "address",
-                              hintText: "",
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      ElevatedButton(
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                              Colors.white,
-                            ),
-                          ),
-                          onPressed: () async {
-                            Position? location = await _getCurrentLocation();
-                            print(location);
-                            setState(() {
-                              latitude = location!.latitude;
-                              longitude = location!.longitude;
-                            });
-                          },
-                          child: Text(
-                            'use current location',
-                            style: TextStyle(
-                              fontFamily: "Questrial",
-                              color: Colors.red,
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          )),
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      Stack(
-                        children: [
-                          SizedBox(
-                            width: 200,
-                            height: 48,
-                            child: OutlinedButton(
-                                onPressed: () => _hanldeCompleteAccount(
-                                      context,
-                                      longitude,
-                                      latitude,
-                                    ),
-                                style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(
-                                      KConstants.baseDarkColor),
-                                  shape: MaterialStateProperty.all(
-                                      RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30.0),
-                                  )),
-                                ),
-                                child: Text(
-                                  _showProgressIndicator
-                                      ? ''
-                                      : "complete setup",
-                                  // ignore: prefer_const_constructors
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    fontFamily: "Montserrat",
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                )),
-                          ),
-                          if (_showProgressIndicator)
-                            const Positioned.fill(
-                              child: Center(
-                                child: CircularProgressIndicator(
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                        ],
-                      ),
-                    ]),
-              ),
-              const SizedBox(
-                height: 50,
-              ),
-            ],
-          ),
-        ),
+          ],
+        )),
       ),
     );
   }

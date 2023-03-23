@@ -15,6 +15,7 @@ CompleteAccountRequestModel _$CompleteAccountRequestModelFromJson(
       phone: json['phone'] as String,
       latitude: (json['latitude'] as num).toDouble(),
       longitude: (json['longitude'] as num).toDouble(),
+      image: json['image'] as String,
     );
 
 Map<String, dynamic> _$CompleteAccountRequestModelToJson(
@@ -26,4 +27,5 @@ Map<String, dynamic> _$CompleteAccountRequestModelToJson(
       'phone': instance.phone,
       'latitude': instance.latitude,
       'longitude': instance.longitude,
+      'image': instance.image,
     };

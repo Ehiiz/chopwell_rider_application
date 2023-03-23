@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:chopwell_rider_application/authentication/token-utils.dart';
-import 'package:chopwell_rider_application/hooks/request_module.dart';
+import 'package:chopwell_rider_application/models/response_models/error_response_model.dart';
+import 'package:chopwell_rider_application/services/complete_account_service.dart';
+import 'package:chopwell_rider_application/utils/request_module.dart';
 import 'package:chopwell_rider_application/models/response_models/string_based_response_model.dart';
 
 import '../models/request_models/withdraw_wallet_request_model.dart';
@@ -20,11 +22,19 @@ class PayWalletService {
 
     if (response.statusCode == 200) {
       final responseMap = json.decode(response.body);
-      print(responseMap);
-      final decodedResponse = NullDataResponseModel.fromJson(responseMap);
-      return decodedResponse;
+      if (responseMap["message"] != "jwt expired") {
+        final decodedResponse = NullDataResponseModel.fromJson(responseMap);
+        return decodedResponse;
+      }
+
+      final decodedResponse = ErrorResponseModel.fromJson(responseMap);
+      return convertNullErrorResponse(decodedResponse);
     } else {
-      throw Exception('Unable to pay with wallet');
+      final responseMap = json.decode(response.body);
+
+      final decodedResponse = ErrorResponseModel.fromJson(responseMap);
+      return convertNullErrorResponse(decodedResponse);
+      // throw Exception("Unable to set up working hours");
     }
   }
 }

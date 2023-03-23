@@ -46,8 +46,15 @@ class _NewProfilePageState extends ConsumerState<NewProfilePage> {
 
   void _updateLocation(
     BuildContext context,
+    String location,
+    double latitude,
+    double longitude,
   ) async {
-    final request = SetLocationRequestModel(location: "location");
+    final request = SetLocationRequestModel(
+      location: location,
+      longitude: longitude,
+      latitude: latitude,
+    );
     final response = await UpdateLocationService.location(request);
 
     if (response.status == "success") {

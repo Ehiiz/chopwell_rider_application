@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:chopwell_rider_application/authentication/token-utils.dart';
-import 'package:chopwell_rider_application/hooks/request_module.dart';
+import 'package:chopwell_rider_application/models/response_models/error_response_model.dart';
+import 'package:chopwell_rider_application/services/complete_account_service.dart';
+import 'package:chopwell_rider_application/utils/request_module.dart';
 import 'package:chopwell_rider_application/models/response_models/list_based_response_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -15,14 +17,21 @@ class DeliveryHistoryService {
     final token = await AuthToken.getAuthToken();
     final response = await RequestModule.get(_fetchDeliveryHistory,
         headers: {"Authorization": "Bearer ${token!} "});
-
     if (response.statusCode == 200) {
       final responseMap = json.decode(response.body);
-      final decodedResponse = await ListDataResponseModel.fromJson(responseMap);
+      if (responseMap["data"] != null) {
+        final decodedResponse = ListDataResponseModel.fromJson(responseMap);
+        return decodedResponse;
+      }
 
-      return decodedResponse;
+      final decodedResponse = ErrorResponseModel.fromJson(responseMap);
+      return convertListErrorResponse(decodedResponse);
     } else {
-      throw Exception('Unable to fetch orders');
+      final responseMap = json.decode(response.body);
+
+      final decodedResponse = ErrorResponseModel.fromJson(responseMap);
+      return convertListErrorResponse(decodedResponse);
+      // throw Exception("Unable to set up working hours");
     }
   }
 }
