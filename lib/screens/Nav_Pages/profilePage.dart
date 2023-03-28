@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chopwell_rider_application/models/request_models/update_rider_status_request_model.dart';
 import 'package:chopwell_rider_application/models/response_models/map_based_response_model.dart';
 import 'package:chopwell_rider_application/models/request_models/set_location_request_model.dart';
@@ -167,7 +168,7 @@ class _NewProfilePageState extends ConsumerState<NewProfilePage> {
                       const SizedBox(
                         height: 30,
                       ),
-                      Container(
+                      SizedBox(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
@@ -177,23 +178,18 @@ class _NewProfilePageState extends ConsumerState<NewProfilePage> {
                                 radius: 50,
                                 backgroundImage:
                                     NetworkImage(userDetail["profile_picture"]),
-                                // backgroundColor: KConstants.baseGreenColor,
+                                backgroundColor: KConstants.baseGreenColor,
                               );
                             }, error: (error, _) {
-                              return Text(error.toString());
-                            }, loading: () {
-                              return Shimmer.fromColors(
-                                baseColor: KConstants.baseFourGreyColor,
-                                highlightColor: KConstants.baseFourDarkColor,
-                                child: Container(
-                                  width: 10.0,
-                                  height: 10.0,
-                                  decoration: const BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.white,
-                                  ),
-                                ),
+                              return Image.network(
+                                "http://via.placeholder.com/350x150",
                               );
+                            }, loading: () {
+                              return const CircleAvatar(
+                                  radius: 50,
+                                  backgroundImage: CachedNetworkImageProvider(
+                                    ("http://via.placeholder.com/350x150"),
+                                  ));
                             }),
                             const SizedBox(
                               height: 10,
@@ -217,8 +213,8 @@ class _NewProfilePageState extends ConsumerState<NewProfilePage> {
                                   child: Container(
                                       height: 10,
                                       width: 150,
-                                      margin:
-                                          EdgeInsets.symmetric(vertical: 5.0),
+                                      margin: const EdgeInsets.symmetric(
+                                          vertical: 5.0),
                                       decoration: const BoxDecoration(
                                           color: Colors.white,
                                           borderRadius: BorderRadius.all(
@@ -300,17 +296,17 @@ class _NewProfilePageState extends ConsumerState<NewProfilePage> {
                                 // ignore: prefer_const_constructors
                                 Container(
                                   margin: EdgeInsets.symmetric(vertical: 5.0),
-                                  child: Row(
+                                  child: const Row(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: [
                                       IconButton(
-                                          onPressed: () {},
+                                          onPressed: null,
                                           icon: Icon(CupertinoIcons.flag)),
-                                      const SizedBox(
+                                      SizedBox(
                                         width: 10,
                                       ),
-                                      const Text(
+                                      Text(
                                         "change status",
                                         style: TextStyle(
                                           fontSize: 20,

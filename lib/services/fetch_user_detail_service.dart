@@ -20,6 +20,7 @@ class FetchUserDetailService {
     if (response.statusCode == 200) {
       final responseMap = json.decode(response.body);
       if (responseMap["data"] != null) {
+        print("I am not null");
         final decodedResponse = MapDataResponseModel.fromJson(responseMap);
         return decodedResponse;
       }

@@ -61,7 +61,7 @@ class MyApp extends StatelessWidget {
               disabledColor: KConstants.baseThreeDarkColor,
               splashColor: KConstants.baseFourRedColor,
             )),
-        home: BottomNavBar());
+        home: LoginPage());
   }
 }
 

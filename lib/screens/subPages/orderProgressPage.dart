@@ -33,6 +33,32 @@ class _ConfirmationPageState extends ConsumerState<ConfirmationPage> {
   _ConfirmationPageState(this.orderId);
 
   String orderId;
+  bool _showCircularIndicator = false;
+
+  void _confirmDelivery(String orderId, String orderStatus) async {
+    setState(() {
+      _showCircularIndicator = true;
+    });
+    final request = SetDeliveryStatusRequestModel(order_status: orderStatus);
+
+    final response = await UpdateDeliveryStatus(orderId).status(request);
+
+    if (response.status == "success") {
+      ScaffoldMessenger.of(context).showSnackBar(
+          customSuccessBar("Order status updated to $orderStatus"));
+      ref.refresh(singleProductFutureProvider);
+      setState(() {
+        _showCircularIndicator = false;
+      });
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(customErrorBar("Unable to update order"));
+      setState(() {
+        _showCircularIndicator = false;
+      });
+      ref.refresh(singleProductFutureProvider);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,32 +67,6 @@ class _ConfirmationPageState extends ConsumerState<ConfirmationPage> {
 
     final orderDetails = ref.watch(singleProductFutureProvider);
     bool confirmOrder = false;
-    bool _showCircularIndicator = false;
-
-    void _confirmDelivery(String orderId, String orderStatus) async {
-      setState(() {
-        _showCircularIndicator = true;
-      });
-      final request = SetDeliveryStatusRequestModel(order_status: orderStatus);
-
-      final response = await UpdateDeliveryStatus(orderId).status(request);
-
-      if (response.status == "success") {
-        ScaffoldMessenger.of(context).showSnackBar(
-            customSuccessBar("Order status updated to $orderStatus"));
-        ref.refresh(singleProductFutureProvider);
-        setState(() {
-          _showCircularIndicator = false;
-        });
-      } else {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(customErrorBar("Unable to update order"));
-        setState(() {
-          _showCircularIndicator = false;
-        });
-        ref.refresh(singleProductFutureProvider);
-      }
-    }
 
     List<String> buttonClick = [
       "accepted",
@@ -255,7 +255,7 @@ class _ConfirmationPageState extends ConsumerState<ConfirmationPage> {
                       deliveryFee = data.data["deliveryFee"];
                       total = data.data["total"];
                       vat = data.data["vat"];
-                      account = data.data["account"];
+                      account = "";
                       status = data.data["status"];
 
                       return ListView(

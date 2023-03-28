@@ -101,7 +101,7 @@ class MyOrders extends ConsumerWidget {
                         completedOrders[index]["total"],
                         completedOrders[index]["deliveryFee"],
                         completedOrders[index]["vat"],
-                        completedOrders[index]["account"],
+                        "",
                         completedOrders[index]["status"],
                       ),
                     );
