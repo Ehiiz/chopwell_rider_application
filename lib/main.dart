@@ -1,3 +1,4 @@
+import 'package:chopwell_rider_application/authentication/token-utils.dart';
 import 'package:chopwell_rider_application/constants/constants.dart';
 import 'package:chopwell_rider_application/screens/Nav_Pages/homePage.dart';
 import 'package:chopwell_rider_application/screens/Nav_Pages/ordersPage.dart';
@@ -22,46 +23,81 @@ void main() {
   OneSignal.shared.getDeviceState().then((value) => {print(value!.userId)});
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
+
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  late Future<String?> _token;
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      _token = AuthToken.getAuthToken();
+    });
+  }
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
-        theme: ThemeData(
-            primarySwatch: Colors.blue,
-            fontFamily: "Montserrat",
-            primaryTextTheme: TextTheme(
-              titleLarge: TextStyle(
-                fontFamily: "Questrial",
-                fontSize: 30.0,
-                color: KConstants.baseDarkColor,
-              ),
-              titleMedium: TextStyle(
-                color: KConstants.baseDarkColor,
-                fontFamily: "Montserrat",
-                fontSize: 25.0,
-              ),
+      debugShowCheckedModeBanner: false,
+      title: 'Chopwell Rider',
+      theme: ThemeData(
+          primarySwatch: Colors.blue,
+          fontFamily: "Montserrat",
+          primaryTextTheme: TextTheme(
+            titleLarge: TextStyle(
+              fontFamily: "Questrial",
+              fontSize: 30.0,
+              color: KConstants.baseDarkColor,
             ),
-            textTheme: TextTheme(
-              bodySmall: TextStyle(
-                fontFamily: "Montserrat",
-                fontSize: 14.0,
-                fontWeight: FontWeight.w600,
-                color: KConstants.baseThreeDarkColor,
-              ),
+            titleMedium: TextStyle(
+              color: KConstants.baseDarkColor,
+              fontFamily: "Montserrat",
+              fontSize: 25.0,
             ),
-            buttonTheme: ButtonThemeData(
-              buttonColor: KConstants.baseTwoRedColor,
-              padding:
-                  const EdgeInsets.symmetric(vertical: 2.0, horizontal: 5.0),
-              disabledColor: KConstants.baseThreeDarkColor,
-              splashColor: KConstants.baseFourRedColor,
-            )),
-        home: LoginPage());
+          ),
+          textTheme: TextTheme(
+            bodySmall: TextStyle(
+              fontFamily: "Montserrat",
+              fontSize: 14.0,
+              fontWeight: FontWeight.w600,
+              color: KConstants.baseThreeDarkColor,
+            ),
+          ),
+          buttonTheme: ButtonThemeData(
+            buttonColor: KConstants.baseTwoRedColor,
+            padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 5.0),
+            disabledColor: KConstants.baseThreeDarkColor,
+            splashColor: KConstants.baseFourRedColor,
+          )),
+      home: FutureBuilder<String?>(
+        future: _token,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            // Show a loading indicator while we wait for the token to be retrieved
+            return Scaffold(
+              body: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          } else {
+            // If the token is not present, redirect to the login page
+            if (snapshot.data == null) {
+              return LoginPage();
+            } else {
+              // If the token is present, redirect to the home page
+              return BottomNavBar();
+            }
+          }
+        },
+      ),
+    );
   }
 }
 

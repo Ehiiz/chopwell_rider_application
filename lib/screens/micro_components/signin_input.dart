@@ -17,9 +17,9 @@ class SignInput extends StatelessWidget {
         color: KConstants.baseFourRedColor,
       ),
       child: TextField(
-        style: const TextStyle(
+        style: TextStyle(
           fontFamily: "Questrial",
-          color: Colors.white,
+          color: KConstants.baseRedColor,
           fontSize: 15.0,
           fontWeight: FontWeight.bold,
         ),
@@ -28,7 +28,7 @@ class SignInput extends StatelessWidget {
         textInputAction: TextInputAction.done,
         decoration: InputDecoration(
           floatingLabelBehavior: FloatingLabelBehavior.never,
-          fillColor: KConstants.baseRedColor,
+          fillColor: KConstants.baseTwoRedColor,
           enabledBorder: const OutlineInputBorder(
             borderRadius: BorderRadius.all(
               Radius.circular(100.0),
