@@ -38,6 +38,7 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
   bool _imageSet = false;
   double latitude = 0.0;
   double longitude = 0.0;
+  String dateOfBirth = "";
 
   bool _isButtonDisabled = true;
 
@@ -98,6 +99,8 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
       longitude: longitude,
       latitude: latitude,
       profile_picture: image,
+      bvn: bvn,
+      dateOfBirth: dateOfBirth,
     );
     final response = await CompleteAccountService.setup(request);
 
@@ -169,6 +172,7 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
         setState(() {
           _nameController.text = "$firstName $middleName $lastName";
           _showLocationIndicator = false;
+          dateOfBirth = response.data["dateOfBirth"];
         });
 
         ScaffoldMessenger.of(context)
