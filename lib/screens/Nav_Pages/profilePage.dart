@@ -1,31 +1,24 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:chopwell_rider_application/authentication/token-utils.dart';
 import 'package:chopwell_rider_application/models/request_models/update_rider_status_request_model.dart';
 import 'package:chopwell_rider_application/models/response_models/map_based_response_model.dart';
 import 'package:chopwell_rider_application/models/request_models/set_location_request_model.dart';
 import 'package:chopwell_rider_application/screens/Nav_Pages/ordersPage.dart';
 import 'package:chopwell_rider_application/screens/micro_components/profile_buttons.dart';
-import 'package:chopwell_rider_application/screens/registration_page/confirmEmailPage.dart';
 import 'package:chopwell_rider_application/services/fetch_user_detail_service.dart';
-import 'package:chopwell_rider_application/services/third_party_services/google_location_service.dart';
 import 'package:chopwell_rider_application/services/update_location_service.dart';
 import 'package:chopwell_rider_application/constants/constants.dart';
-import 'package:chopwell_rider_application/models/request_models/set_location_request_model.dart';
-import 'package:chopwell_rider_application/models/response_models/map_based_response_model.dart';
-import 'package:chopwell_rider_application/screens/micro_components/profile_buttons.dart';
-import 'package:chopwell_rider_application/services/update_location_service.dart';
 import 'package:chopwell_rider_application/screens/subPages/bankWithdrawalDetailsPage.dart';
 import 'package:chopwell_rider_application/screens/subPages/orderHistoryPage.dart';
 import 'package:chopwell_rider_application/screens/subPages/payoutHistoryPage.dart';
 import 'package:chopwell_rider_application/services/update_rider_status_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:chopwell_rider_application/constants/constants.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../services/fetch_user_detail_service.dart';
 import '../registration_page/loginPage.dart';
 
 final fetchUserDetailFutureProvider =
@@ -360,7 +353,24 @@ class _NewProfilePageState extends ConsumerState<NewProfilePage> {
                               "Delivery History", OrderHistoryPage()),
                           ProfileButtons("assets/withdrawal.svg",
                               "Payout History", PayoutHistoryPage()),
-                          ProfileButtons("assets/help.svg", "Help", MyOrders())
+                          ProfileButtons("assets/help.svg", "Help", MyOrders()),
+                          TextButton(
+                            onPressed: () async {
+                              await AuthToken.clearAuthToken();
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return LoginPage();
+                              }));
+                            },
+                            child: Text(
+                              "Logout",
+                              style: TextStyle(
+                                color: KConstants.baseThreeRedColor,
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ],

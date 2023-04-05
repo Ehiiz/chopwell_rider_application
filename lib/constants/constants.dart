@@ -1889,7 +1889,8 @@ List<Map<String, dynamic>> defaultBankList = [
 RegExp emailRegExp = RegExp(
     r'^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$');
 RegExp passwordRegex =
-    RegExp(r'^(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{12,}$');
+    RegExp(r'^(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[.,!@#\$&*~]).{12,}$');
+
 RegExp nameRegex = RegExp(r'[a-zA-Z]');
 RegExp otpRegex = RegExp(r'^[a-zA-Z0-9]{1,5}$');
 RegExp phoneRegex = RegExp(r'^\d{11}$');
