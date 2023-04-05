@@ -92,6 +92,7 @@ class _ConfirmEmailPageState extends State<ConfirmEmailPage> {
                           "email",
                           "incorrect email",
                           "user@gmail.com",
+                          true,
                           regExp: emailRegExp,
                           controller: _emailController,
                         ),

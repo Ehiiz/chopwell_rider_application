@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 
 class SignInput extends StatefulWidget {
-  SignInput(this.icon, this.label, this.errorMessage, this.hint,
+  SignInput(this.icon, this.label, this.errorMessage, this.hint, this.status,
       {required this.controller, required this.regExp});
 
   IconData icon;
@@ -12,6 +12,7 @@ class SignInput extends StatefulWidget {
   TextEditingController controller;
   RegExp regExp;
   String errorMessage;
+  bool status;
 
   @override
   _SignInputState createState() => _SignInputState();
@@ -23,6 +24,7 @@ class _SignInputState extends State<SignInput> {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      enabled: widget.status,
       onChanged: (value) {
         if (!widget.regExp.hasMatch(value)) {
           setState(() {
@@ -71,6 +73,10 @@ class _SignInputState extends State<SignInput> {
           hintText: widget.hint,
           errorText: !_isValid ? widget.errorMessage : null,
           focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(100.0),
+            borderSide: BorderSide.none,
+          ),
+          disabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(100.0),
             borderSide: BorderSide.none,
           ),

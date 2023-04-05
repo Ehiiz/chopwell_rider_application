@@ -103,6 +103,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                           "email",
                           "incorrect email",
                           "user@gmail.com",
+                          true,
                           regExp: passwordRegex,
                           controller: _newPasswordController,
                         ),

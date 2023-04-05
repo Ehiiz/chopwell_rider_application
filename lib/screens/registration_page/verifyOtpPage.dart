@@ -99,6 +99,7 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
                           "otp",
                           "invalid otp",
                           "user@gmail.com",
+                          true,
                           regExp: otpRegex,
                           controller: _otpController,
                         ),

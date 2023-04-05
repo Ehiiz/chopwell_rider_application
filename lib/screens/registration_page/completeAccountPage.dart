@@ -2,11 +2,13 @@
 import 'dart:io';
 
 import 'package:chopwell_rider_application/constants/constants.dart';
+import 'package:chopwell_rider_application/models/request_models/bvn_enquiry_request_model.dart';
 import 'package:chopwell_rider_application/models/request_models/complete_account_request_model.dart';
 import 'package:chopwell_rider_application/screens/bottom_sheets/updateLocationCard.dart';
 import 'package:chopwell_rider_application/screens/micro_components/signin_input.dart';
 import 'package:chopwell_rider_application/screens/registration_page/loginPage.dart';
 import 'package:chopwell_rider_application/services/complete_account_service.dart';
+import 'package:chopwell_rider_application/services/fetch_bank_list_service.dart';
 import 'package:chopwell_rider_application/utils/image_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -29,7 +31,7 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
   final TextEditingController _imageController = TextEditingController();
-  final TextEditingController _searchController = TextEditingController();
+  final TextEditingController _bvnController = TextEditingController();
 
   bool _showProgressIndicator = false;
   bool _showLocationIndicator = false;
@@ -46,6 +48,8 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
     _stateController.addListener(_validateInput);
     _nameController.addListener(_validateInput);
     _locationController.addListener(_validateInput);
+    _bvnController.addListener(_fetchUserDetails);
+    _bvnController.addListener(_validateInput);
   }
 
   Future<File?> _getImage() async {
@@ -80,6 +84,7 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
     final location = _locationController.text;
     final phone = _phoneController.text;
     final image = _imageController.text;
+    final bvn = _bvnController.text;
 
     setState(() {
       _showProgressIndicator = true;
@@ -139,11 +144,45 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
     final stateValid = nameRegex.hasMatch(_stateController.text);
     final locationValid = nameRegex.hasMatch(_locationController.text);
     final nameValid = nameRegex.hasMatch(_nameController.text);
-
+    final bvnValid = bvnRegex.hasMatch(_bvnController.text);
     setState(() {
       _isButtonDisabled =
-          !(phoneValid && stateValid && locationValid && nameValid);
+          !(phoneValid && stateValid && locationValid && nameValid && bvnValid);
     });
+  }
+
+  void _fetchUserDetails() async {
+    if (_bvnController.text.length == 11) {
+      setState(() {
+        _showLocationIndicator = true;
+      });
+      final request = BvnEnquiryRequestModel(bvn: _bvnController.text);
+
+      final response = await BankEnquiryService().bvnEnquiry(request);
+      if (response.status == "success") {
+        // include toast notification
+
+        final firstName = response.data["firstName"];
+        final middleName = response.data["middleName"];
+        final lastName = response.data["lastName"];
+
+        setState(() {
+          _nameController.text = "$firstName $middleName $lastName";
+          _showLocationIndicator = false;
+        });
+
+        ScaffoldMessenger.of(context)
+            .showSnackBar(customSuccessBar("Name Verified"));
+      } else {
+        setState(() {
+          _showLocationIndicator = false;
+        });
+        ScaffoldMessenger.of(context)
+            .showSnackBar(customErrorBar("Failed to Verify Name"));
+      }
+    } else {
+      print("I nor work");
+    }
   }
 
   @override
@@ -152,6 +191,7 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
     _stateController.dispose();
     _nameController.dispose();
     _phoneController.dispose();
+    _bvnController.dispose();
     super.dispose();
   }
 
@@ -179,7 +219,7 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
                 const SizedBox(
                   height: 15,
                 ),
-                Container(
+                SizedBox(
                   width: width * .8,
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -197,7 +237,23 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
                                       NetworkImage(_imageController.text),
                                 ),
                         ),
-                        SizedBox(
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Padding(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: width * .05),
+                          child: SignInput(
+                            Icons.code,
+                            "bvn",
+                            "invalid BVN Details",
+                            "enter your BVN",
+                            true,
+                            regExp: bvnRegex,
+                            controller: _bvnController,
+                          ),
+                        ),
+                        const SizedBox(
                           height: 10,
                         ),
                         Padding(
@@ -208,6 +264,7 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
                             "name",
                             "full name",
                             "",
+                            false,
                             regExp: nameRegex,
                             controller: _nameController,
                           ),
@@ -223,6 +280,7 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
                             "phone",
                             "must be a valid phone number",
                             "",
+                            true,
                             regExp: phoneRegex,
                             controller: _phoneController,
                           ),
@@ -238,6 +296,7 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
                             "state",
                             "incorrect state",
                             "Abuja",
+                            true,
                             regExp: nameRegex,
                             controller: _stateController,
                           ),
@@ -245,19 +304,18 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
                         const SizedBox(
                           height: 15,
                         ),
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: width * .05, vertical: 20),
-                          child: Text(
-                            _locationController.text,
-                            style: TextStyle(
-                              color: KConstants.baseRedColor,
-                              fontWeight: FontWeight.bold,
-                            ),
+                        Padding(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: width * .05),
+                          child: SignInput(
+                            Icons.my_location_outlined,
+                            "address",
+                            "invalid location",
+                            "Abuja",
+                            false,
+                            regExp: nameRegex,
+                            controller: _locationController,
                           ),
-                          decoration: BoxDecoration(
-                              color: KConstants.baseFourRedColor,
-                              borderRadius: BorderRadius.circular(100.0)),
                         ),
                         const SizedBox(
                           height: 10,
@@ -287,7 +345,7 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
                             },
                             // ignore: prefer_const_constructors
                             child: Text(
-                              'set location',
+                              'set address',
                               style: TextStyle(
                                 fontFamily: "Questrial",
                                 color: KConstants.baseDarkColor,
@@ -354,10 +412,10 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
               ],
             ),
             if (_showLocationIndicator)
-              const Positioned.fill(
+              Positioned.fill(
                 child: Center(
                   child: CircularProgressIndicator(
-                    color: Colors.white,
+                    color: KConstants.baseRedColor,
                   ),
                 ),
               ),
