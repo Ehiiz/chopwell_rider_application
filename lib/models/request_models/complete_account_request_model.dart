@@ -10,7 +10,7 @@ class CompleteAccountRequestModel {
   final String phone;
   final double latitude;
   final double longitude;
-  final String image;
+  final String profile_picture;
 
   CompleteAccountRequestModel({
     required this.name,
@@ -19,7 +19,7 @@ class CompleteAccountRequestModel {
     required this.phone,
     required this.latitude,
     required this.longitude,
-    required this.image,
+    required this.profile_picture,
   });
 
   factory CompleteAccountRequestModel.fromJson(Map<String, dynamic> json) =>

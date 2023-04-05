@@ -17,6 +17,13 @@ class _ConfirmEmailPageState extends State<ConfirmEmailPage> {
   final TextEditingController _emailController = TextEditingController();
 
   bool _showProgressIndicator = false;
+  bool _isButtonDisabled = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _emailController.addListener(_validateInput);
+  }
 
   void _handleEmailConfirmation(BuildContext context) async {
     final email = _emailController.text;
@@ -36,6 +43,13 @@ class _ConfirmEmailPageState extends State<ConfirmEmailPage> {
           .showSnackBar(customErrorBar("Unable to confirm email"));
     }
     // Do something with the email and password values
+  }
+
+  void _validateInput() {
+    final emailValid = emailRegExp.hasMatch(_emailController.text);
+    setState(() {
+      _isButtonDisabled = !(emailValid);
+    });
   }
 
   @override
@@ -74,9 +88,11 @@ class _ConfirmEmailPageState extends State<ConfirmEmailPage> {
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: width * .05),
                         child: SignInput(
-                          Icons.email_rounded,
-                          "enter your registered email",
+                          Icons.email_outlined,
+                          "email",
+                          "incorrect email",
                           "user@gmail.com",
+                          regExp: emailRegExp,
                           controller: _emailController,
                         ),
                       ),
@@ -92,11 +108,15 @@ class _ConfirmEmailPageState extends State<ConfirmEmailPage> {
                             width: 200,
                             height: 48,
                             child: OutlinedButton(
-                                onPressed: () =>
-                                    _handleEmailConfirmation(context),
+                                onPressed: _isButtonDisabled
+                                    ? null
+                                    : () => _handleEmailConfirmation(context),
                                 style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(
-                                      KConstants.baseDarkColor),
+                                  backgroundColor: _isButtonDisabled
+                                      ? MaterialStateProperty.all(
+                                          KConstants.baseThreeGreyColor)
+                                      : MaterialStateProperty.all(
+                                          KConstants.baseDarkColor),
                                   shape: MaterialStateProperty.all(
                                       RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(30.0),

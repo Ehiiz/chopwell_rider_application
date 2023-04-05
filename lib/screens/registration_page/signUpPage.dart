@@ -17,6 +17,14 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController _passwordController = TextEditingController();
 
   bool _showProgressIndicator = false;
+  bool _isButtonDisabled = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _emailController.addListener(_validateInput);
+    _passwordController.addListener(_validateInput);
+  }
 
   void _handleSignUp(BuildContext context) async {
     final email = _emailController.text;
@@ -38,10 +46,21 @@ class _SignUpPageState extends State<SignUpPage> {
         return LoginPage();
       }));
     } else {
-      print(response);
+      setState(() {
+        _showProgressIndicator = false;
+      });
+
       ScaffoldMessenger.of(context)
           .showSnackBar(customErrorBar("Failed to sign up"));
     }
+  }
+
+  void _validateInput() {
+    final emailValid = emailRegExp.hasMatch(_emailController.text);
+    final passwordValid = passwordRegex.hasMatch(_passwordController.text);
+    setState(() {
+      _isButtonDisabled = !(emailValid && passwordValid);
+    });
   }
 
   @override
@@ -104,9 +123,11 @@ class _SignUpPageState extends State<SignUpPage> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: width * .05),
                 child: SignInput(
-                  Icons.email_rounded,
+                  Icons.email_outlined,
                   "email",
+                  "incorrect email",
                   "user@gmail.com",
+                  regExp: emailRegExp,
                   controller: _emailController,
                 ),
               ),
@@ -118,7 +139,9 @@ class _SignUpPageState extends State<SignUpPage> {
                 child: SignInput(
                   Icons.password_rounded,
                   "password",
-                  "Password123",
+                  "password must have at least one letter, one number and one special character",
+                  "create a strong password",
+                  regExp: passwordRegex,
                   controller: _passwordController,
                 ),
               ),
@@ -136,7 +159,9 @@ class _SignUpPageState extends State<SignUpPage> {
                             width: 200,
                             height: 48,
                             child: OutlinedButton(
-                                onPressed: () => _handleSignUp(context),
+                                onPressed: _isButtonDisabled
+                                    ? null
+                                    : () => _handleSignUp(context),
                                 style: ButtonStyle(
                                   backgroundColor: MaterialStateProperty.all(
                                       KConstants.baseDarkColor),

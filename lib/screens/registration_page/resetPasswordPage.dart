@@ -24,6 +24,13 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   String otp;
 
   bool _showProgressIndicator = false;
+  bool _isButtonDisabled = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _newPasswordController.addListener(_validateInput);
+  }
 
   void _handleSetPassword() async {
     _showProgressIndicator = true;
@@ -45,6 +52,13 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
           .showSnackBar(customErrorBar("Unable to reset password"));
     }
     // Do something with the email and password values
+  }
+
+  void _validateInput() {
+    final passwordValid = passwordRegex.hasMatch(_newPasswordController.text);
+    setState(() {
+      _isButtonDisabled = !(passwordValid);
+    });
   }
 
   @override
@@ -85,17 +99,16 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: width * .05),
                         child: SignInput(
-                          Icons.email_rounded,
-                          "enter new password",
-                          "",
+                          Icons.email_outlined,
+                          "email",
+                          "incorrect email",
+                          "user@gmail.com",
+                          regExp: passwordRegex,
                           controller: _newPasswordController,
                         ),
                       ),
                       const SizedBox(
                         height: 15,
-                      ),
-                      const SizedBox(
-                        height: 30,
                       ),
                       Stack(
                         children: [
@@ -105,8 +118,11 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                             child: OutlinedButton(
                                 onPressed: () => _handleSetPassword(),
                                 style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(
-                                      KConstants.baseDarkColor),
+                                  backgroundColor: _isButtonDisabled
+                                      ? MaterialStateProperty.all(
+                                          KConstants.baseThreeGreyColor)
+                                      : MaterialStateProperty.all(
+                                          KConstants.baseDarkColor),
                                   shape: MaterialStateProperty.all(
                                       RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(30.0),

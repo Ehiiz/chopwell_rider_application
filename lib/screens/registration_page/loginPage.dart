@@ -20,6 +20,14 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _showProgressIndicator = false;
+  bool _isButtonDisabled = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _emailController.addListener(_validateInput);
+    _passwordController.addListener(_validateInput);
+  }
 
   void _handleSignIn(BuildContext context) async {
     setState(() {
@@ -40,7 +48,6 @@ class _LoginPageState extends State<LoginPage> {
 
     if (response.status == "success") {
       // ignore: use_build_context_synchronously
-      print(response.data["status"]);
 
       if (response.data["status"]) {
         // ignore: use_build_context_synchronously
@@ -58,7 +65,6 @@ class _LoginPageState extends State<LoginPage> {
         }));
       }
     } else {
-      print(response);
       setState(() {
         _showProgressIndicator = false;
       });
@@ -68,6 +74,14 @@ class _LoginPageState extends State<LoginPage> {
       //pop up error
     }
     // Do something with the email and password values
+  }
+
+  void _validateInput() {
+    final emailValid = emailRegExp.hasMatch(_emailController.text);
+    final passwordValid = passwordRegex.hasMatch(_passwordController.text);
+    setState(() {
+      _isButtonDisabled = !(emailValid && passwordValid);
+    });
   }
 
   @override
@@ -135,7 +149,9 @@ class _LoginPageState extends State<LoginPage> {
                 child: SignInput(
                   Icons.email_outlined,
                   "email",
+                  "incorrect email",
                   "user@gmail.com",
+                  regExp: emailRegExp,
                   controller: _emailController,
                 ),
               ),
@@ -147,7 +163,9 @@ class _LoginPageState extends State<LoginPage> {
                 child: SignInput(
                   Icons.password_rounded,
                   "password",
-                  "",
+                  "invalid password",
+                  "input your password",
+                  regExp: passwordRegex,
                   controller: _passwordController,
                 ),
               ),
@@ -186,10 +204,15 @@ class _LoginPageState extends State<LoginPage> {
                             width: 200,
                             height: 48,
                             child: OutlinedButton(
-                                onPressed: () => _handleSignIn(context),
+                                onPressed: _isButtonDisabled
+                                    ? null
+                                    : () => _handleSignIn(context),
                                 style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(
-                                      KConstants.baseDarkColor),
+                                  backgroundColor: _isButtonDisabled
+                                      ? MaterialStateProperty.all(
+                                          KConstants.baseThreeGreyColor)
+                                      : MaterialStateProperty.all(
+                                          KConstants.baseDarkColor),
                                   shape: MaterialStateProperty.all(
                                       RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(30.0),

@@ -6,6 +6,11 @@ class AuthToken {
     prefs.setString("customer", authToken);
   }
 
+  static Future<void> clearAuthToken(String authToken) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.clear();
+  }
+
   static Future<String?> getAuthToken() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('customer');

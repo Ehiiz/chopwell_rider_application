@@ -23,6 +23,13 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
   bool _showProgressIndicator = false;
 
   String email;
+  bool _isButtonDisabled = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _otpController.addListener(_validateInput);
+  }
 
   void _handleVerifyOTP(BuildContext context) async {
     final otp = _otpController.text;
@@ -45,8 +52,16 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
     // Do something with the email and password values
   }
 
+  void _validateInput() {
+    final otpValid = emailRegExp.hasMatch(_otpController.text);
+    setState(() {
+      _isButtonDisabled = !(otpValid);
+    });
+  }
+
   @override
   void dispose() {
+    _otpController.dispose();
     super.dispose();
   }
 
@@ -80,9 +95,11 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: width * .05),
                         child: SignInput(
-                          Icons.email_rounded,
-                          "enter your OTP",
-                          "",
+                          Icons.numbers_outlined,
+                          "otp",
+                          "invalid otp",
+                          "user@gmail.com",
+                          regExp: otpRegex,
                           controller: _otpController,
                         ),
                       ),
@@ -98,7 +115,9 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
                             width: 200,
                             height: 48,
                             child: OutlinedButton(
-                                onPressed: () => _handleVerifyOTP(context),
+                                onPressed: _isButtonDisabled
+                                    ? null
+                                    : () => _handleVerifyOTP(context),
                                 style: ButtonStyle(
                                   backgroundColor: MaterialStateProperty.all(
                                       KConstants.baseDarkColor),

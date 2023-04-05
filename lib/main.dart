@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:chopwell_rider_application/authentication/token-utils.dart';
 import 'package:chopwell_rider_application/constants/constants.dart';
 import 'package:chopwell_rider_application/screens/Nav_Pages/homePage.dart';
@@ -5,26 +7,76 @@ import 'package:chopwell_rider_application/screens/Nav_Pages/ordersPage.dart';
 import 'package:chopwell_rider_application/screens/Nav_Pages/profilePage.dart';
 import 'package:chopwell_rider_application/screens/registration_page/loginPage.dart';
 import 'package:chopwell_rider_application/screens/registration_page/signUpPage.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
-  runApp(const ProviderScope(child: MyApp()));
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(ProviderScope(child: MaterialApp(home: MyApp(navigatorKey))));
   OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
   OneSignal.shared.setAppId("ae02ca85-5f1a-40d7-95ef-794f6db70a28");
   OneSignal.shared
       .promptUserForPushNotificationPermission()
       .then((accepted) => print("Accepted Permission: $accepted"));
   OneSignal.shared.getDeviceState().then((value) => {print(value!.userId)});
+
+  OneSignal.shared.setNotificationWillShowInForegroundHandler((event) {
+    final notification = event.notification;
+
+    if (notification.body == "Successfully paid order") {
+      _showPaymentMadeDialog(navigatorKey.currentState!.overlay!.context);
+      event.complete(notification);
+    } else {
+      event.complete(null);
+    }
+
+    print("this is notification title: ${notification.title}");
+    print("this is notification body:  ${notification.body}");
+  });
+
+  OneSignal.shared
+      .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
+    // fix title to match
+    if (result.notification.title == "Payment Made") {
+      _showPaymentMadeDialog(navigatorKey.currentState!.overlay!.context);
+    } else {}
+  });
+}
+
+void _showPaymentMadeDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text("Payment Made"),
+        content: Text("You have made a payment."),
+        actions: <Widget>[
+          TextButton(
+            child: Text("OK"),
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return BottomNavBar();
+              }));
+            },
+          ),
+        ],
+      );
+    },
+  );
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+  final GlobalKey<NavigatorState> navigatorKey;
+
+  const MyApp(this.navigatorKey);
 
   @override
   _MyAppState createState() => _MyAppState();
@@ -32,19 +84,69 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   late Future<String?> _token;
+  late StreamSubscription subscription;
+  var isDeviceConnected = false;
+  bool isAlertSet = false;
 
   @override
   void initState() {
+    getConnectivity();
     super.initState();
     setState(() {
       _token = AuthToken.getAuthToken();
     });
   }
 
+  getConnectivity() {
+    subscription = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) async {
+      isDeviceConnected = await InternetConnectionChecker().hasConnection;
+      print(isDeviceConnected);
+      if (!isDeviceConnected && isAlertSet == false) {
+        showDialogBox();
+        setState(() {
+          isAlertSet = true;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    subscription.cancel();
+    super.dispose();
+  }
+
+  showDialogBox() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: Text("No Connection"),
+        content: Text("Please check your internet connection"),
+        actions: [
+          TextButton(
+              onPressed: () async {
+                Navigator.pop(context, "Cancel");
+                setState(() => isAlertSet = false);
+                isDeviceConnected =
+                    await InternetConnectionChecker().hasConnection;
+                if (!isDeviceConnected) {
+                  showDialogBox();
+                  setState(() => isAlertSet = true);
+                }
+              },
+              child: Text("OK"))
+        ],
+      ),
+    );
+  }
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
       title: 'Chopwell Rider',
       theme: ThemeData(

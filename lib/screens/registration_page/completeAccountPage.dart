@@ -37,6 +37,17 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
   double latitude = 0.0;
   double longitude = 0.0;
 
+  bool _isButtonDisabled = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _phoneController.addListener(_validateInput);
+    _stateController.addListener(_validateInput);
+    _nameController.addListener(_validateInput);
+    _locationController.addListener(_validateInput);
+  }
+
   Future<File?> _getImage() async {
     final pickedFile =
         await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -59,7 +70,6 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
       longitude = long;
       _locationController.text = addr;
     });
-    print("These are my details $lat, $long, $addr");
   }
 
   bool submitForm = false;
@@ -82,7 +92,7 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
       phone: phone,
       longitude: longitude,
       latitude: latitude,
-      image: image,
+      profile_picture: image,
     );
     final response = await CompleteAccountService.setup(request);
 
@@ -122,6 +132,18 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
     }
 
     return await Geolocator.getCurrentPosition();
+  }
+
+  void _validateInput() {
+    final phoneValid = phoneRegex.hasMatch(_phoneController.text);
+    final stateValid = nameRegex.hasMatch(_stateController.text);
+    final locationValid = nameRegex.hasMatch(_locationController.text);
+    final nameValid = nameRegex.hasMatch(_nameController.text);
+
+    setState(() {
+      _isButtonDisabled =
+          !(phoneValid && stateValid && locationValid && nameValid);
+    });
   }
 
   @override
@@ -175,13 +197,18 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
                                       NetworkImage(_imageController.text),
                                 ),
                         ),
+                        SizedBox(
+                          height: 10,
+                        ),
                         Padding(
                           padding:
                               EdgeInsets.symmetric(horizontal: width * .05),
                           child: SignInput(
                             Icons.person,
                             "name",
+                            "full name",
                             "",
+                            regExp: nameRegex,
                             controller: _nameController,
                           ),
                         ),
@@ -194,7 +221,9 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
                           child: SignInput(
                             Icons.phone_android_rounded,
                             "phone",
+                            "must be a valid phone number",
                             "",
+                            regExp: phoneRegex,
                             controller: _phoneController,
                           ),
                         ),
@@ -205,35 +234,38 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
                           padding:
                               EdgeInsets.symmetric(horizontal: width * .05),
                           child: SignInput(
-                            Icons.map_rounded,
+                            Icons.location_city_rounded,
                             "state",
-                            "",
+                            "incorrect state",
+                            "Abuja",
+                            regExp: nameRegex,
                             controller: _stateController,
                           ),
                         ),
                         const SizedBox(
                           height: 15,
                         ),
-                        Padding(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: width * .05),
-                          child: SignInput(
-                            Icons.location_city,
-                            "location",
-                            "",
-                            controller: _locationController,
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: width * .05, vertical: 20),
+                          child: Text(
+                            _locationController.text,
+                            style: TextStyle(
+                              color: KConstants.baseRedColor,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        const SizedBox(
-                          height: 15,
+                          decoration: BoxDecoration(
+                              color: KConstants.baseFourRedColor,
+                              borderRadius: BorderRadius.circular(100.0)),
                         ),
                         const SizedBox(
                           height: 10,
                         ),
-                        ElevatedButton(
+                        TextButton(
                             style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all(
-                                Colors.white,
+                                Colors.transparent,
                               ),
                             ),
                             onPressed: () async {
@@ -255,10 +287,10 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
                             },
                             // ignore: prefer_const_constructors
                             child: Text(
-                              'use current location',
-                              style: const TextStyle(
+                              'set location',
+                              style: TextStyle(
                                 fontFamily: "Questrial",
-                                color: Colors.red,
+                                color: KConstants.baseDarkColor,
                                 fontSize: 18.0,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -272,14 +304,19 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
                               width: 200,
                               height: 48,
                               child: OutlinedButton(
-                                  onPressed: () => _hanldeCompleteAccount(
-                                        context,
-                                        longitude,
-                                        latitude,
-                                      ),
+                                  onPressed: _isButtonDisabled
+                                      ? null
+                                      : () => _hanldeCompleteAccount(
+                                            context,
+                                            longitude,
+                                            latitude,
+                                          ),
                                   style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                        KConstants.baseDarkColor),
+                                    backgroundColor: _isButtonDisabled
+                                        ? MaterialStateProperty.all(
+                                            KConstants.baseThreeGreyColor)
+                                        : MaterialStateProperty.all(
+                                            KConstants.baseDarkColor),
                                     shape: MaterialStateProperty.all(
                                         RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(30.0),
