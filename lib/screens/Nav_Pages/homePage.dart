@@ -9,6 +9,7 @@ import 'package:chopwell_rider_application/services/home_details_service.dart';
 import 'package:flutter/material.dart';
 import 'package:chopwell_rider_application/constants/constants.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../services/wallet_balance_service.dart';
@@ -19,19 +20,12 @@ final orderSummaryFutureProvider =
   return orderSummaryDetails.summary();
 });
 
-final walletBalanceFutureProvider =
-    FutureProvider.autoDispose<MapDataResponseModel>(
+final walletBalanceFutureProvider = FutureProvider<MapDataResponseModel>(
   (ref) async {
     final walletBalanceDetails = ref.watch(walletBalanceProvider);
     return walletBalanceDetails.fetchBalance();
   },
 );
-
-final topProductsFutureProvider =
-    FutureProvider.autoDispose<ListDataResponseModel>((ref) async {
-  final topProductDetails = ref.watch(homeDetailsProvider);
-  return topProductDetails.products();
-});
 
 class MyHomePage extends ConsumerStatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
@@ -49,11 +43,42 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     final orderSummaryRef = ref.watch(orderSummaryFutureProvider);
-    final topProductsRef = ref.watch(topProductsFutureProvider);
+
     final walletBalanceRef = ref.watch(walletBalanceFutureProvider);
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
+        appBar: AppBar(
+          elevation: 0.0,
+          backgroundColor: Colors.white,
+          actions: [
+            Container(
+              width: screenWidth,
+              color: Colors.transparent,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 10),
+                    child: Text(
+                      '',
+                      style: Theme.of(context).primaryTextTheme.titleLarge,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {},
+                    icon: SvgPicture.asset(
+                      "assets/notification-svgrepo-com.svg",
+                      color: KConstants.baseTwoDarkColor,
+                      width: 35.0,
+                      height: 35.0,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
         body: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.symmetric(
@@ -63,7 +88,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Row(
+                const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
@@ -88,7 +113,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                     // ])
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 walletBalanceRef.when(data: (data) {
@@ -293,18 +318,18 @@ class balanceBox extends StatelessWidget {
           children: [
             Text(
               figure,
-              style: TextStyle(
+              style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
-                  fontSize: 40,
+                  fontSize: 25,
                   fontFamily: "Montserrat"),
             ),
-            SizedBox(
+            const SizedBox(
               height: 5.0,
             ),
             Text(
               label,
-              style: TextStyle(
+              style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                   fontSize: 15,
