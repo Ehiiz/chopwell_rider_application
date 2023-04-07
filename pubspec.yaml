@@ -60,6 +60,7 @@ dependencies:
   connectivity_plus: ^3.0.3
   internet_connection_checker: ^1.0.0+1
   flutter_native_splash: ^2.2.19
+  flutter_dotenv: ^5.0.2
 
 dev_dependencies:
   flutter_test:
@@ -80,6 +81,7 @@ flutter:
   assets:
     - images/
     - assets/
+    - .env
 
   fonts:
     - family: Montserrat

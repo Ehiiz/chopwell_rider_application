@@ -1,9 +1,10 @@
 import "dart:convert" as convert;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 
 class LocationService {
-  static final String key = 'AIzaSyCZWvq_wEs-NCmdNJ9CwDeTqqfy2oexrb4';
+  static final String key = dotenv.get('GOOGLE_MAP_KEY');
 
   static Future<String> getPlaceId(String input) async {
     print(input);

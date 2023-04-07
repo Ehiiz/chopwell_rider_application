@@ -10,6 +10,7 @@ import 'package:chopwell_rider_application/screens/registration_page/signUpPage.
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -19,13 +20,18 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-void main() {
+Future main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   runApp(ProviderScope(child: MaterialApp(home: MyApp(navigatorKey))));
+
+  await dotenv.load(fileName: ".env");
+
+  String appID = dotenv.get('ONE_SIGNAL_APP_ID');
+
   OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
   FlutterNativeSplash.remove();
-  OneSignal.shared.setAppId("ae02ca85-5f1a-40d7-95ef-794f6db70a28");
+  OneSignal.shared.setAppId(appID);
   OneSignal.shared
       .promptUserForPushNotificationPermission()
       .then((accepted) => print("Accepted Permission: $accepted"));
