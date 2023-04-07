@@ -236,12 +236,20 @@ class _NewProfilePageState extends ConsumerState<NewProfilePage> {
                                 ),
                                 userDetailRef.when(data: (data) {
                                   final userDetail = data.data;
-                                  return Text(
-                                    userDetail["location"]["address"],
-                                    style: const TextStyle(
-                                      fontSize: 17,
-                                      fontFamily: 'Montserrat',
-                                      fontWeight: FontWeight.normal,
+                                  return Center(
+                                    //   alignment: Alignment.center,
+                                    child: SizedBox(
+                                      width: screenWidth * .8,
+                                      child: Text(
+                                        userDetail["location"]["address"],
+                                        maxLines: 1,
+                                        overflow: TextOverflow.clip,
+                                        style: const TextStyle(
+                                          fontSize: 17,
+                                          fontFamily: 'Montserrat',
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                      ),
                                     ),
                                   );
                                 }, error: (error, _) {
