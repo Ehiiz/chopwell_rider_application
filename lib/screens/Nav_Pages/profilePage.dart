@@ -237,9 +237,10 @@ class _NewProfilePageState extends ConsumerState<NewProfilePage> {
                                 userDetailRef.when(data: (data) {
                                   final userDetail = data.data;
                                   return Center(
-                                    //   alignment: Alignment.center,
-                                    child: SizedBox(
-                                      width: screenWidth * .8,
+                                    // alignment: Alignment.center,
+                                    child: Expanded(
+                                        child: SizedBox(
+                                      width: screenWidth * .65,
                                       child: Text(
                                         userDetail["location"]["address"],
                                         maxLines: 1,
@@ -250,7 +251,7 @@ class _NewProfilePageState extends ConsumerState<NewProfilePage> {
                                           fontWeight: FontWeight.normal,
                                         ),
                                       ),
-                                    ),
+                                    )),
                                   );
                                 }, error: (error, _) {
                                   return Text(error.toString());
