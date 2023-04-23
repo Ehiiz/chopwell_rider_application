@@ -65,6 +65,7 @@ class CompleteAccountService {
       final responseMap = json.decode(response.body);
       if (responseMap["data"] != null) {
         final decodedResponse = MapDataResponseModel.fromJson(responseMap);
+        await AuthToken.setAuthToken(decodedResponse.data["token"]);
         return decodedResponse;
       }
 

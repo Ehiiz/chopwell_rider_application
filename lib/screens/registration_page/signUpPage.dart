@@ -1,6 +1,7 @@
 import 'package:chopwell_rider_application/constants/constants.dart';
 import 'package:chopwell_rider_application/models/request_models/signup_request_model.dart';
 import 'package:chopwell_rider_application/screens/micro_components/signin_input.dart';
+import 'package:chopwell_rider_application/screens/registration_page/completeAccountPage.dart';
 import 'package:chopwell_rider_application/screens/registration_page/loginPage.dart';
 import 'package:chopwell_rider_application/services/signup_service.dart';
 import 'package:flutter/material.dart';
@@ -43,7 +44,7 @@ class _SignUpPageState extends State<SignUpPage> {
       ScaffoldMessenger.of(context)
           .showSnackBar(customSuccessBar("Signup Successful. Log in"));
       Navigator.push(context, MaterialPageRoute(builder: (context) {
-        return LoginPage();
+        return CompleteAccountPage(userEmail: email);
       }));
     } else {
       setState(() {

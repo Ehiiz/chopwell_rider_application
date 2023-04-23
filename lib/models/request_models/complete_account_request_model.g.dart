@@ -18,6 +18,7 @@ CompleteAccountRequestModel _$CompleteAccountRequestModelFromJson(
       profile_picture: json['profile_picture'] as String,
       dateOfBirth: json['dateOfBirth'] as String,
       bvn: json['bvn'] as String,
+      email: json['email'] as String,
     );
 
 Map<String, dynamic> _$CompleteAccountRequestModelToJson(
@@ -32,4 +33,5 @@ Map<String, dynamic> _$CompleteAccountRequestModelToJson(
       'profile_picture': instance.profile_picture,
       'dateOfBirth': instance.dateOfBirth,
       'bvn': instance.bvn,
+      'email': instance.email,
     };

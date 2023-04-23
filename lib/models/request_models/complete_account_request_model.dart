@@ -13,6 +13,7 @@ class CompleteAccountRequestModel {
   final String profile_picture;
   final String dateOfBirth;
   final String bvn;
+  final String email;
 
   CompleteAccountRequestModel({
     required this.name,
@@ -24,6 +25,7 @@ class CompleteAccountRequestModel {
     required this.profile_picture,
     required this.dateOfBirth,
     required this.bvn,
+    required this.email,
   });
 
   factory CompleteAccountRequestModel.fromJson(Map<String, dynamic> json) =>

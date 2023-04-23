@@ -17,8 +17,18 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+bool isTokenExpired(String? token) {
+  if (token != null) {
+    Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
+    bool isTokenExpired = JwtDecoder.isExpired(token);
+    return isTokenExpired;
+  }
+  return false;
+}
 
 Future main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -202,8 +212,13 @@ class _MyAppState extends State<MyApp> {
             if (snapshot.data == null) {
               return LoginPage();
             } else {
-              // If the token is present, redirect to the home page
-              return BottomNavBar();
+              if (isTokenExpired(snapshot.data)) {
+                // Redirect to the login page if the token has expired
+                return LoginPage();
+              } else {
+                // Redirect to the home page if the token is still valid
+                return BottomNavBar();
+              }
             }
           }
         },

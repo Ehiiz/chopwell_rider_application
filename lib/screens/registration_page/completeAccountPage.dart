@@ -19,7 +19,9 @@ import '../../../main.dart';
 import '../../../services/third_party_services/google_location_service.dart';
 
 class CompleteAccountPage extends StatefulWidget {
-  const CompleteAccountPage({Key? key}) : super(key: key);
+  CompleteAccountPage({Key? key, required this.userEmail}) : super(key: key);
+
+  final String userEmail;
 
   @override
   State<CompleteAccountPage> createState() => _CompleteAccountPageState();
@@ -27,6 +29,9 @@ class CompleteAccountPage extends StatefulWidget {
 
 class _CompleteAccountPageState extends State<CompleteAccountPage> {
   final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _middleNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _stateController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
@@ -39,6 +44,7 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
   double latitude = 0.0;
   double longitude = 0.0;
   String dateOfBirth = "";
+  bool detailsMatch = false;
 
   bool _isButtonDisabled = true;
 
@@ -48,6 +54,9 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
     _phoneController.addListener(_validateInput);
     _stateController.addListener(_validateInput);
     _nameController.addListener(_validateInput);
+    _firstNameController.addListener(_validateInput);
+    _lastNameController.addListener(_validateInput);
+    _middleNameController.addListener(_validateInput);
     _locationController.addListener(_validateInput);
     _bvnController.addListener(_fetchUserDetails);
     _bvnController.addListener(_validateInput);
@@ -86,22 +95,23 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
     final phone = _phoneController.text;
     final image = _imageController.text;
     final bvn = _bvnController.text;
+    final email = widget.userEmail;
 
     setState(() {
       _showProgressIndicator = true;
     });
 
     final request = CompleteAccountRequestModel(
-      name: name,
-      address: location,
-      state: state,
-      phone: phone,
-      longitude: longitude,
-      latitude: latitude,
-      profile_picture: image,
-      bvn: bvn,
-      dateOfBirth: dateOfBirth,
-    );
+        name: name,
+        address: location,
+        state: state,
+        phone: phone,
+        longitude: longitude,
+        latitude: latitude,
+        profile_picture: image,
+        bvn: bvn,
+        dateOfBirth: dateOfBirth,
+        email: email);
     final response = await CompleteAccountService.setup(request);
 
     if (response.status == "success") {
@@ -149,8 +159,12 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
     final nameValid = nameRegex.hasMatch(_nameController.text);
     final bvnValid = bvnRegex.hasMatch(_bvnController.text);
     setState(() {
-      _isButtonDisabled =
-          !(phoneValid && stateValid && locationValid && nameValid && bvnValid);
+      _isButtonDisabled = !(phoneValid &&
+          stateValid &&
+          locationValid &&
+          nameValid &&
+          bvnValid &&
+          detailsMatch);
     });
   }
 
@@ -169,24 +183,33 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
         final middleName = response.data["middleName"];
         final lastName = response.data["lastName"];
 
-        setState(() {
-          _nameController.text = "$firstName $middleName $lastName";
-          _showLocationIndicator = false;
-          dateOfBirth = response.data["dateOfBirth"];
-        });
+        if (firstName.toLowerCase() ==
+                _firstNameController.text.toLowerCase() &&
+            lastName.toLowerCase() == _lastNameController.text.toLowerCase()) {
+          setState(() {
+            detailsMatch = true;
+            _nameController.text = "$firstName $lastName $middleName";
+            _showLocationIndicator = false;
+            dateOfBirth = response.data["dateOfBirth"];
+          });
 
-        ScaffoldMessenger.of(context)
-            .showSnackBar(customSuccessBar("Name Verified"));
+          ScaffoldMessenger.of(context).showSnackBar(
+              customSuccessBar("BVN details successfully matched"));
+        } else {
+          setState(() {
+            _showLocationIndicator = false;
+          });
+          ScaffoldMessenger.of(context).showSnackBar(
+              customErrorBar("BVN details does not match biodata provided"));
+        }
       } else {
         setState(() {
           _showLocationIndicator = false;
         });
         ScaffoldMessenger.of(context)
-            .showSnackBar(customErrorBar("Failed to Verify Name"));
+            .showSnackBar(customErrorBar("Invalid to BVN details"));
       }
-    } else {
-      print("I nor work");
-    }
+    } else {}
   }
 
   @override
@@ -248,29 +271,45 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
                           padding:
                               EdgeInsets.symmetric(horizontal: width * .05),
                           child: SignInput(
-                            Icons.code,
-                            "bvn",
-                            "invalid BVN Details",
-                            "enter your BVN",
+                            Icons.person,
+                            "first name",
+                            "first name",
+                            "",
                             true,
-                            regExp: bvnRegex,
-                            controller: _bvnController,
+                            regExp: nameRegex,
+                            controller: _firstNameController,
                           ),
                         ),
                         const SizedBox(
-                          height: 10,
+                          height: 15,
                         ),
                         Padding(
                           padding:
                               EdgeInsets.symmetric(horizontal: width * .05),
                           child: SignInput(
                             Icons.person,
-                            "name",
-                            "full name",
+                            "middle name",
+                            "middle name",
                             "",
-                            false,
+                            true,
                             regExp: nameRegex,
-                            controller: _nameController,
+                            controller: _middleNameController,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        Padding(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: width * .05),
+                          child: SignInput(
+                            Icons.person,
+                            "last name",
+                            "last name",
+                            "",
+                            true,
+                            regExp: nameRegex,
+                            controller: _lastNameController,
                           ),
                         ),
                         const SizedBox(
@@ -291,6 +330,22 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
                         ),
                         const SizedBox(
                           height: 15,
+                        ),
+                        Padding(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: width * .05),
+                          child: SignInput(
+                            Icons.code,
+                            "bvn",
+                            "invalid BVN Details",
+                            "enter your BVN",
+                            true,
+                            regExp: bvnRegex,
+                            controller: _bvnController,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
                         ),
                         Padding(
                           padding:
