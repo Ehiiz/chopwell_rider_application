@@ -81,9 +81,13 @@ void _showPaymentMadeDialog(BuildContext context) {
           TextButton(
             child: Text("OK"),
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return BottomNavBar();
-              }));
+              pushNewScreen(
+                context,
+                screen: BottomNavBar(),
+                withNavBar: false, // OPTIONAL VALUE. True by default.
+                pageTransitionAnimation: PageTransitionAnimation.cupertino,
+              );
+              ;
             },
           ),
         ],

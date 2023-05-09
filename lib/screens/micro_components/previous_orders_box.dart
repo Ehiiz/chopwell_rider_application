@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 
 class PreviousOrderBox extends ConsumerWidget {
   PreviousOrderBox(this.date, this.amount, this.restaurantName, this.orderId);
@@ -23,9 +24,15 @@ class PreviousOrderBox extends ConsumerWidget {
         onTap: () {
           ref.read(orderIdProvider.notifier).state = orderId;
 
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return ConfirmationPage(orderId: orderId);
-          }));
+          pushNewScreen(
+            context,
+            screen: ConfirmationPage(
+              orderId: orderId,
+            ),
+            withNavBar: false, // OPTIONAL VALUE. True by default.
+            pageTransitionAnimation: PageTransitionAnimation.cupertino,
+          );
+          ;
         },
         child: Container(
           decoration: const BoxDecoration(

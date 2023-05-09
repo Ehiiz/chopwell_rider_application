@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/widgets.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 
 import '../../../main.dart';
 import '../../../services/third_party_services/google_location_service.dart';
@@ -120,10 +121,12 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
       setState(() {
         _showProgressIndicator = false;
       });
-
-      Navigator.push(context, MaterialPageRoute(builder: (context) {
-        return BottomNavBar();
-      }));
+      pushNewScreen(
+        context,
+        screen: BottomNavBar(),
+        withNavBar: false, // OPTIONAL VALUE. True by default.
+        pageTransitionAnimation: PageTransitionAnimation.cupertino,
+      );
     } else {
       ScaffoldMessenger.of(context)
           .showSnackBar(customErrorBar("Account setup failed"));

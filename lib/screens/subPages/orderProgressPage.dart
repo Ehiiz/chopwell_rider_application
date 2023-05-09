@@ -10,6 +10,7 @@ import 'package:chopwell_rider_application/screens/subPages/singleOrderDetailsPa
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:shimmer/shimmer.dart';
 
 final singleProductFutureProvider =
@@ -193,9 +194,9 @@ class _ConfirmationPageState extends ConsumerState<ConfirmationPage> {
                       ),
                       TextButton(
                         onPressed: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return SingleOrderDetailsPage(
+                          pushNewScreen(
+                            context,
+                            screen: SingleOrderDetailsPage(
                               orderStatus: orderStatus,
                               mealDetails: mealDetails,
                               date: date,
@@ -207,8 +208,12 @@ class _ConfirmationPageState extends ConsumerState<ConfirmationPage> {
                               deliveryFee: deliveryFee,
                               account: account,
                               status: status,
-                            );
-                          }));
+                            ),
+                            withNavBar:
+                                false, // OPTIONAL VALUE. True by default.
+                            pageTransitionAnimation:
+                                PageTransitionAnimation.cupertino,
+                          );
                         },
                         child: Text(
                           "order details",

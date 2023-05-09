@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chopwell_rider_application/authentication/token-utils.dart';
+import 'package:chopwell_rider_application/authentication/user-utils.dart';
 import 'package:chopwell_rider_application/models/request_models/update_rider_status_request_model.dart';
 import 'package:chopwell_rider_application/models/response_models/map_based_response_model.dart';
 import 'package:chopwell_rider_application/models/request_models/set_location_request_model.dart';
@@ -17,6 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../registration_page/loginPage.dart';
@@ -37,6 +39,16 @@ class NewProfilePage extends ConsumerStatefulWidget {
 
 class _NewProfilePageState extends ConsumerState<NewProfilePage> {
   bool _updateRIderProgress = false;
+
+  late Future<Object?> _user;
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      _user = UserInfo.getUserInfo();
+    });
+  }
 
   void _updateLocation(
     BuildContext context,
@@ -115,283 +127,266 @@ class _NewProfilePageState extends ConsumerState<NewProfilePage> {
     bool riderStatus = false;
     String requestStatus = "";
 
-    return SafeArea(
-      child: Scaffold(
-        extendBody: true,
-        appBar: AppBar(
-          elevation: 0.0,
-          backgroundColor: Colors.white,
-          actions: [
-            Container(
-              width: screenWidth,
-              color: Colors.transparent,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: 10),
-                    child: Text(
-                      'Profile',
-                      style: Theme.of(context).primaryTextTheme.titleLarge,
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: SvgPicture.asset(
-                      "assets/notification-svgrepo-com.svg",
-                      color: KConstants.baseTwoDarkColor,
-                      width: 35.0,
-                      height: 35.0,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        body: Center(
-            child: Padding(
-                padding: EdgeInsets.symmetric(
-                  vertical: screenHeight * 0.01,
-                  horizontal: screenWidth * 0.02,
+    return MaterialApp(
+      home: FutureBuilder(
+          future: _user,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Scaffold(
+                body: Center(
+                  child: CircularProgressIndicator(),
                 ),
-                child: Stack(children: [
-                  ListView(
-                    children: [
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      SizedBox(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
+              );
+            } else if (snapshot.data != null) {
+              final userDetail = snapshot.data as Map<String, dynamic>;
+              return SafeArea(
+                child: Scaffold(
+                  extendBody: true,
+                  appBar: AppBar(
+                    elevation: 0.0,
+                    backgroundColor: Colors.white,
+                    actions: [
+                      Container(
+                        width: screenWidth,
+                        color: Colors.transparent,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            userDetailRef.when(data: (data) {
-                              final userDetail = data.data;
-                              return CircleAvatar(
-                                radius: 50,
-                                backgroundImage:
-                                    NetworkImage(userDetail["profile_picture"]),
-                                backgroundColor: KConstants.baseGreenColor,
-                              );
-                            }, error: (error, _) {
-                              return Image.network(
-                                "http://via.placeholder.com/350x150",
-                              );
-                            }, loading: () {
-                              return const CircleAvatar(
-                                  radius: 50,
-                                  backgroundImage: CachedNetworkImageProvider(
-                                    ("http://via.placeholder.com/350x150"),
-                                  ));
-                            }),
-                            const SizedBox(
-                              height: 10,
+                            Padding(
+                              padding: EdgeInsets.only(left: 10),
+                              child: Text(
+                                'Profile',
+                                style: Theme.of(context)
+                                    .primaryTextTheme
+                                    .titleLarge,
+                              ),
                             ),
-                            userDetailRef.when(data: (data) {
-                              final userDetail = data.data;
-                              return Text(
-                                userDetail["name"].toString(),
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: KConstants.baseTwoDarkColor,
-                                  fontSize: 18,
-                                  fontFamily: 'Montserrat',
-                                ),
-                              );
-                            }, error: (error, _) {
-                              return Text(error.toString());
-                            }, loading: () {
-                              return Shimmer.fromColors(
-                                  // ignore: sort_child_properties_last
-                                  child: Container(
-                                      height: 10,
-                                      width: 150,
-                                      margin: const EdgeInsets.symmetric(
-                                          vertical: 5.0),
-                                      decoration: const BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(20.0)))),
-                                  baseColor: KConstants.baseFourGreyColor,
-                                  highlightColor: KConstants.baseFourDarkColor);
-                            }),
-                            const SizedBox(
-                              height: 10,
-                            ),
-
-                            // ignore: prefer_const_constructors
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SvgPicture.asset(
-                                  "assets/location.svg",
-                                  width: 25,
-                                  height: 25,
-                                ),
-                                const SizedBox(
-                                  width: 10.0,
-                                ),
-                                userDetailRef.when(data: (data) {
-                                  final userDetail = data.data;
-                                  return Center(
-                                    // alignment: Alignment.center,
-                                    child: Expanded(
-                                        child: SizedBox(
-                                      width: screenWidth * .65,
-                                      child: Text(
-                                        userDetail["location"]["address"],
-                                        maxLines: 1,
-                                        overflow: TextOverflow.clip,
-                                        style: const TextStyle(
-                                          fontSize: 17,
-                                          fontFamily: 'Montserrat',
-                                          fontWeight: FontWeight.normal,
-                                        ),
-                                      ),
-                                    )),
-                                  );
-                                }, error: (error, _) {
-                                  return Text(error.toString());
-                                }, loading: () {
-                                  return Shimmer.fromColors(
-                                    baseColor: KConstants.baseFourGreyColor,
-                                    highlightColor:
-                                        KConstants.baseFourDarkColor,
-                                    child: Container(
-                                        height: 10,
-                                        width: 150,
-                                        margin:
-                                            EdgeInsets.symmetric(vertical: 5.0),
-                                        decoration: const BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(20.0)))),
-                                  );
-                                }),
-                              ],
-                            ),
-                            const SizedBox(
-                              width: 10.0,
-                            ),
-                            Text(
-                              'edit',
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'Montserrat',
-                                  color: KConstants.baseGreenColor),
+                            IconButton(
+                              onPressed: () {},
+                              icon: SvgPicture.asset(
+                                "assets/notification-svgrepo-com.svg",
+                                color: KConstants.baseTwoDarkColor,
+                                width: 35.0,
+                                height: 35.0,
+                              ),
                             ),
                           ],
                         ),
                       ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Column(
-                        children: [
-                          Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    ],
+                  ),
+                  body: Center(
+                      child: Padding(
+                          padding: EdgeInsets.symmetric(
+                            vertical: screenHeight * 0.01,
+                            horizontal: screenWidth * 0.02,
+                          ),
+                          child: Stack(children: [
+                            ListView(
                               children: [
-                                // ignore: prefer_const_constructors
-                                Container(
-                                  margin: EdgeInsets.symmetric(vertical: 5.0),
-                                  child: const Row(
+                                const SizedBox(
+                                  height: 30,
+                                ),
+                                SizedBox(
+                                  child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: [
-                                      IconButton(
-                                          onPressed: null,
-                                          icon: Icon(CupertinoIcons.flag)),
-                                      SizedBox(
-                                        width: 10,
+                                      CircleAvatar(
+                                        radius: 50,
+                                        backgroundImage: NetworkImage(
+                                            userDetail?["profile_picture"]),
+                                        backgroundColor:
+                                            KConstants.baseGreenColor,
+                                      ),
+
+                                      const SizedBox(
+                                        height: 10,
                                       ),
                                       Text(
-                                        "change status",
+                                        userDetail["name"].toString(),
                                         style: TextStyle(
-                                          fontSize: 20,
                                           fontWeight: FontWeight.bold,
+                                          color: KConstants.baseTwoDarkColor,
+                                          fontSize: 18,
                                           fontFamily: 'Montserrat',
                                         ),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+
+                                      // ignore: prefer_const_constructors
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          SvgPicture.asset(
+                                            "assets/location.svg",
+                                            width: 25,
+                                            height: 25,
+                                          ),
+                                          const SizedBox(
+                                            width: 10.0,
+                                          ),
+                                          Center(
+                                            // alignment: Alignment.center,
+                                            child: Expanded(
+                                                child: SizedBox(
+                                              width: screenWidth * .65,
+                                              child: Text(
+                                                userDetail["location"]
+                                                    ["address"],
+                                                maxLines: 1,
+                                                overflow: TextOverflow.clip,
+                                                style: const TextStyle(
+                                                  fontSize: 17,
+                                                  fontFamily: 'Montserrat',
+                                                  fontWeight: FontWeight.normal,
+                                                ),
+                                              ),
+                                            )),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(
+                                        width: 10.0,
+                                      ),
+                                      Text(
+                                        'edit',
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                            fontFamily: 'Montserrat',
+                                            color: KConstants.baseGreenColor),
                                       ),
                                     ],
                                   ),
                                 ),
-                                userDetailRef.when(data: (data) {
-                                  final status = data.data["status"];
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                Column(
+                                  children: [
+                                    Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          // ignore: prefer_const_constructors
+                                          Container(
+                                            margin: EdgeInsets.symmetric(
+                                                vertical: 5.0),
+                                            child: const Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                IconButton(
+                                                    onPressed: null,
+                                                    icon: Icon(
+                                                        CupertinoIcons.flag)),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Text(
+                                                  "change status",
+                                                  style: TextStyle(
+                                                    fontSize: 20,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontFamily: 'Montserrat',
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          userDetailRef.when(data: (data) {
+                                            final status = data.data["status"];
 
-                                  if (status == "online") {
-                                    riderStatus = true;
-                                    requestStatus = "offline";
-                                  }
+                                            if (status == "online") {
+                                              riderStatus = true;
+                                              requestStatus = "offline";
+                                            }
 
-                                  if (status == "offline") {
-                                    riderStatus = false;
-                                    requestStatus = "online";
-                                  }
-                                  print(requestStatus);
-                                  return Switch(
-                                      value: riderStatus,
-                                      onChanged: (value) {
-                                        _updateRiderStatus(
-                                            context, requestStatus);
-                                        setState(() {
-                                          riderStatus = value;
-                                        });
-                                      });
-                                }, error: (error, _) {
-                                  return Text("");
-                                }, loading: () {
-                                  return Shimmer.fromColors(
-                                    baseColor: KConstants.baseFiveGreyColor,
-                                    highlightColor:
-                                        KConstants.baseFiveGreyColor,
-                                    child: Container(
-                                      color: Colors.white,
-                                      height: 10,
-                                      width: 10,
+                                            if (status == "offline") {
+                                              riderStatus = false;
+                                              requestStatus = "online";
+                                            }
+                                            print(requestStatus);
+                                            return Switch(
+                                                value: riderStatus,
+                                                onChanged: (value) {
+                                                  _updateRiderStatus(
+                                                      context, requestStatus);
+                                                  setState(() {
+                                                    riderStatus = value;
+                                                  });
+                                                });
+                                          }, error: (error, _) {
+                                            return Text("");
+                                          }, loading: () {
+                                            return Shimmer.fromColors(
+                                              baseColor:
+                                                  KConstants.baseFiveGreyColor,
+                                              highlightColor:
+                                                  KConstants.baseFiveGreyColor,
+                                              child: Container(
+                                                color: Colors.white,
+                                                height: 10,
+                                                width: 10,
+                                              ),
+                                            );
+                                          })
+                                        ]),
+                                    ProfileButtons(
+                                        "assets/coupon.svg",
+                                        "Payment Details",
+                                        BankWithdrawalDetailsPage()),
+                                    ProfileButtons("assets/helmet.svg",
+                                        "Delivery History", OrderHistoryPage()),
+                                    ProfileButtons("assets/withdrawal.svg",
+                                        "Payout History", PayoutHistoryPage()),
+                                    ProfileButtons(
+                                        "assets/help.svg", "Help", MyOrders()),
+                                    TextButton(
+                                      onPressed: () async {
+                                        await AuthToken.clearAuthToken();
+                                        pushNewScreen(
+                                          context,
+                                          screen: LoginPage(),
+                                          withNavBar:
+                                              false, // OPTIONAL VALUE. True by default.
+                                          pageTransitionAnimation:
+                                              PageTransitionAnimation.cupertino,
+                                        );
+                                      },
+                                      child: Text(
+                                        "Logout",
+                                        style: TextStyle(
+                                          color: KConstants.baseThreeRedColor,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
                                     ),
-                                  );
-                                })
-                              ]),
-                          ProfileButtons("assets/coupon.svg", "Payment Details",
-                              BankWithdrawalDetailsPage()),
-                          ProfileButtons("assets/helmet.svg",
-                              "Delivery History", OrderHistoryPage()),
-                          ProfileButtons("assets/withdrawal.svg",
-                              "Payout History", PayoutHistoryPage()),
-                          ProfileButtons("assets/help.svg", "Help", MyOrders()),
-                          TextButton(
-                            onPressed: () async {
-                              await AuthToken.clearAuthToken();
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return LoginPage();
-                              }));
-                            },
-                            child: Text(
-                              "Logout",
-                              style: TextStyle(
-                                color: KConstants.baseThreeRedColor,
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                              ),
+                                  ],
+                                ),
+                              ],
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  if (_updateRIderProgress)
-                    Center(
-                      child: CircularProgressIndicator(
-                        color: Colors.red,
-                      ),
-                    ),
-                ]))),
-      ),
+                            if (_updateRIderProgress)
+                              Center(
+                                child: CircularProgressIndicator(
+                                  color: Colors.red,
+                                ),
+                              ),
+                          ]))),
+                ),
+              );
+            } else {
+              return LoginPage();
+            }
+          }),
     );
   }
 }

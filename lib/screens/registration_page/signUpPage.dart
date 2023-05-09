@@ -5,6 +5,7 @@ import 'package:chopwell_rider_application/screens/registration_page/completeAcc
 import 'package:chopwell_rider_application/screens/registration_page/loginPage.dart';
 import 'package:chopwell_rider_application/services/signup_service.dart';
 import 'package:flutter/material.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
@@ -43,9 +44,13 @@ class _SignUpPageState extends State<SignUpPage> {
       });
       ScaffoldMessenger.of(context)
           .showSnackBar(customSuccessBar("Signup Successful. Log in"));
-      Navigator.push(context, MaterialPageRoute(builder: (context) {
-        return CompleteAccountPage(userEmail: email);
-      }));
+      pushNewScreen(
+        context,
+        screen: CompleteAccountPage(userEmail: email),
+        withNavBar: false, // OPTIONAL VALUE. True by default.
+        pageTransitionAnimation: PageTransitionAnimation.cupertino,
+      );
+      ;
     } else {
       setState(() {
         _showProgressIndicator = false;
@@ -204,10 +209,14 @@ class _SignUpPageState extends State<SignUpPage> {
                 child: SizedBox(
                   child: GestureDetector(
                     onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return LoginPage();
-                      }));
+                      pushNewScreen(
+                        context,
+                        screen: LoginPage(),
+                        withNavBar: false, // OPTIONAL VALUE. True by default.
+                        pageTransitionAnimation:
+                            PageTransitionAnimation.cupertino,
+                      );
+                      ;
                     },
                     child: Text(
                       //backgroundColor: MaterialStateProperty.all(KConstants.baseRedColor),

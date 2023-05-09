@@ -5,6 +5,7 @@ import 'package:chopwell_rider_application/screens/registration_page/loginPage.d
 import 'package:chopwell_rider_application/screens/registration_page/verifyOtpPage.dart';
 import 'package:chopwell_rider_application/services/password_reset_email_service.dart';
 import 'package:flutter/material.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 
 class ConfirmEmailPage extends StatefulWidget {
   const ConfirmEmailPage({Key? key}) : super(key: key);
@@ -34,9 +35,12 @@ class _ConfirmEmailPageState extends State<ConfirmEmailPage> {
     print(response);
     if (response.status == "success") {
       _showProgressIndicator = false;
-      Navigator.push(context, MaterialPageRoute(builder: (context) {
-        return VerifyOtpPage(email: email);
-      }));
+      pushNewScreen(
+        context,
+        screen: VerifyOtpPage(email: email),
+        withNavBar: false, // OPTIONAL VALUE. True by default.
+        pageTransitionAnimation: PageTransitionAnimation.cupertino,
+      );
     } else {
       print(response);
       ScaffoldMessenger.of(context)

@@ -2,6 +2,7 @@ import 'package:chopwell_rider_application/constants/constants.dart';
 import 'package:chopwell_rider_application/screens/registration_page/loginPage.dart';
 import 'package:chopwell_rider_application/services/set_new_password_service.dart';
 import 'package:flutter/material.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 
 import '../../models/request_models/set_new_password_request_model.dart';
 import '../micro_components/signin_input.dart';
@@ -43,9 +44,13 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
     if (response.status == "success") {
       //Add toast notfication
       _showProgressIndicator = false;
-      Navigator.push(context, MaterialPageRoute(builder: (context) {
-        return LoginPage();
-      }));
+      pushNewScreen(
+        context,
+        screen: LoginPage(),
+        withNavBar: false, // OPTIONAL VALUE. True by default.
+        pageTransitionAnimation: PageTransitionAnimation.cupertino,
+      );
+      ;
     } else {
       print(response);
       ScaffoldMessenger.of(context)

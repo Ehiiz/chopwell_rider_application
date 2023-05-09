@@ -5,6 +5,7 @@ import 'package:chopwell_rider_application/screens/registration_page/loginPage.d
 import 'package:chopwell_rider_application/screens/registration_page/resetPasswordPage.dart';
 import 'package:chopwell_rider_application/services/verify_otp_service.dart';
 import 'package:flutter/material.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 
 class VerifyOtpPage extends StatefulWidget {
   VerifyOtpPage({Key? key, required this.email}) : super(key: key);
@@ -41,9 +42,13 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
     if (response.status == "success") {
       //Add toast notfication
       _showProgressIndicator = false;
-      Navigator.push(context, MaterialPageRoute(builder: (context) {
-        return ResetPasswordPage(email: email, otp: otp);
-      }));
+      pushNewScreen(
+        context,
+        screen: ResetPasswordPage(email: email, otp: otp),
+        withNavBar: false, // OPTIONAL VALUE. True by default.
+        pageTransitionAnimation: PageTransitionAnimation.cupertino,
+      );
+      ;
     } else {
       print(response);
       ScaffoldMessenger.of(context)

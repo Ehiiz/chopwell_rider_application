@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:chopwell_rider_application/constants/constants.dart';
 import 'package:chopwell_rider_application/screens/subPages/changePaymentDetailsPage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:shimmer/shimmer.dart';
 
 final walletBalanceFutureProvider =
@@ -328,10 +329,14 @@ class _BankWithdrawalDetailsPageState
                             padding: MaterialStatePropertyAll(
                                 EdgeInsets.only(top: 0.0))),
                         onPressed: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return const ChangePaymentDetailsPage();
-                          }));
+                          pushNewScreen(
+                            context,
+                            screen: ChangePaymentDetailsPage(),
+                            withNavBar:
+                                false, // OPTIONAL VALUE. True by default.
+                            pageTransitionAnimation:
+                                PageTransitionAnimation.cupertino,
+                          );
                         },
                         child: Text(
                           "update bank details",

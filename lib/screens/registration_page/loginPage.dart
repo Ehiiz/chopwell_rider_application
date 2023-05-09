@@ -1,3 +1,4 @@
+import 'package:chopwell_rider_application/authentication/user-utils.dart';
 import 'package:chopwell_rider_application/constants/constants.dart';
 import 'package:chopwell_rider_application/main.dart';
 import 'package:chopwell_rider_application/models/request_models/signin_request_model.dart';
@@ -8,6 +9,7 @@ import 'package:chopwell_rider_application/screens/registration_page/signUpPage.
 import 'package:chopwell_rider_application/services/signin_service.dart';
 import 'package:flutter/material.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -29,7 +31,7 @@ class _LoginPageState extends State<LoginPage> {
     _passwordController.addListener(_validateInput);
   }
 
-  void _handleSignIn(BuildContext context) async {
+  Future<Object?> _handleSignIn(BuildContext context) async {
     setState(() {
       _showProgressIndicator = true;
     });
@@ -55,14 +57,19 @@ class _LoginPageState extends State<LoginPage> {
         setState(() {
           _showProgressIndicator = false;
         });
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return BottomNavBar();
-        }));
+        pushNewScreen(
+          context,
+          screen: BottomNavBar(),
+          withNavBar: false, // OPTIONAL VALUE. True by default.
+          pageTransitionAnimation: PageTransitionAnimation.cupertino,
+        );
       } else {
-        // ignore: use_build_context_synchronously
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return CompleteAccountPage( userEmail : email);
-        }));
+        pushNewScreen(
+          context,
+          screen: CompleteAccountPage(userEmail: email),
+          withNavBar: false, // OPTIONAL VALUE. True by default.
+          pageTransitionAnimation: PageTransitionAnimation.cupertino,
+        );
       }
     } else {
       setState(() {
@@ -184,10 +191,15 @@ class _LoginPageState extends State<LoginPage> {
                           alignment: Alignment.topLeft,
                           child: TextButton(
                               onPressed: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return ConfirmEmailPage();
-                                }));
+                                pushNewScreen(
+                                  context,
+                                  screen: ConfirmEmailPage(),
+                                  withNavBar:
+                                      false, // OPTIONAL VALUE. True by default.
+                                  pageTransitionAnimation:
+                                      PageTransitionAnimation.cupertino,
+                                );
+                                ;
                               },
                               child: Text("forgot password",
                                   style: TextStyle(
@@ -208,7 +220,10 @@ class _LoginPageState extends State<LoginPage> {
                             child: OutlinedButton(
                                 onPressed: _isButtonDisabled
                                     ? null
-                                    : () => _handleSignIn(context),
+                                    : () async {
+                                        final user = _handleSignIn(context);
+                                        UserInfo.setUserInfo(user!);
+                                      },
                                 style: ButtonStyle(
                                   backgroundColor: _isButtonDisabled
                                       ? MaterialStateProperty.all(
@@ -251,10 +266,14 @@ class _LoginPageState extends State<LoginPage> {
                 child: SizedBox(
                   child: GestureDetector(
                     onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return SignUpPage();
-                      }));
+                      pushNewScreen(
+                        context,
+                        screen: SignUpPage(),
+                        withNavBar: false, // OPTIONAL VALUE. True by default.
+                        pageTransitionAnimation:
+                            PageTransitionAnimation.cupertino,
+                      );
+                      ;
                     },
                     child: Text(
                       //backgroundColor: MaterialStateProperty.all(KConstants.baseRedColor),
