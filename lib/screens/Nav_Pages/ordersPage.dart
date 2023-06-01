@@ -26,226 +26,221 @@ class MyOrders extends ConsumerWidget {
     final cart = ref.watch(cartStateNotifierProvider);
 
     return Scaffold(
-        appBar: AppBar(
-          elevation: 0.0,
-          backgroundColor: Colors.white,
-          actions: [
-            Container(
-              width: screenWidth,
-              color: Colors.transparent,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: 10),
-                    child: Text(
-                      'Orders',
-                      style: TextStyle(
-                        fontFamily: "Questrial",
-                        fontSize: 30.0,
-                        color: KConstants.baseDarkColor,
-                      ),
+      appBar: AppBar(
+        elevation: 0.0,
+        backgroundColor: Colors.white,
+        actions: [
+          Container(
+            width: screenWidth,
+            color: Colors.transparent,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: 10),
+                  child: Text(
+                    'Orders',
+                    style: TextStyle(
+                      fontFamily: "Questrial",
+                      fontSize: 30.0,
+                      color: KConstants.baseDarkColor,
                     ),
                   ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: SvgPicture.asset(
-                      "assets/notification-svgrepo-com.svg",
-                      color: KConstants.baseTwoDarkColor,
-                      width: 35.0,
-                      height: 35.0,
-                    ),
+                ),
+                IconButton(
+                  onPressed: () {},
+                  icon: SvgPicture.asset(
+                    "assets/notification-svgrepo-com.svg",
+                    color: KConstants.baseTwoDarkColor,
+                    width: 35.0,
+                    height: 35.0,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
-        body: RefreshIndicator(
-            child: Padding(
-                padding: EdgeInsets.symmetric(
-                    vertical: screenHeight * 0.01,
-                    horizontal: screenWidth * 0.02),
-                child: DefaultTabController(
-                    length: 2,
-                    child: Column(
-                      children: [
-                        SizedBox(height: 10),
-                        Container(
-                          padding: EdgeInsets.symmetric(vertical: 5),
-                          decoration: BoxDecoration(
-                            color: KConstants.baseFourGreyColor,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: TabBar(
-                              labelPadding: EdgeInsets.symmetric(vertical: 5),
-                              indicator: BoxDecoration(
-                                  color: KConstants.baseDarkColor,
-                                  borderRadius: BorderRadius.circular(10)),
-                              labelStyle: TextStyle(
-                                color: KConstants.baseDarkColor,
-                                fontFamily: "Montserrat",
-                                fontSize: 17,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              labelColor: Colors.white, // set label text color
-                              unselectedLabelColor: KConstants
-                                  .baseTwoGreyColor, // set unselected label text color
-                              indicatorColor: KConstants
-                                  .baseDarkColor, // set indicator color
-                              indicatorWeight: 3,
-                              tabs: [
-                                Text(
-                                  "ongoing",
-                                ),
-                                Text(
-                                  "completed",
-                                ),
-                              ]),
+          ),
+        ],
+      ),
+      body: Padding(
+          padding: EdgeInsets.symmetric(
+              vertical: screenHeight * 0.01, horizontal: screenWidth * 0.02),
+          child: DefaultTabController(
+              length: 2,
+              child: Column(
+                children: [
+                  SizedBox(height: 10),
+                  Container(
+                    padding: EdgeInsets.symmetric(vertical: 5),
+                    decoration: BoxDecoration(
+                      color: KConstants.baseFourGreyColor,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: TabBar(
+                        labelPadding: EdgeInsets.symmetric(vertical: 5),
+                        indicator: BoxDecoration(
+                            color: KConstants.baseDarkColor,
+                            borderRadius: BorderRadius.circular(10)),
+                        labelStyle: TextStyle(
+                          color: KConstants.baseDarkColor,
+                          fontFamily: "Montserrat",
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
                         ),
-                        SizedBox(height: 10),
-                        Expanded(
-                            child: TabBarView(children: [
-                          riderOrdersRef.when(
-                            data: (data) {
-                              final orderList = data.data;
-                              final List<Map<String, dynamic>> completedOrders =
-                                  [];
+                        labelColor: Colors.white, // set label text color
+                        unselectedLabelColor: KConstants
+                            .baseTwoGreyColor, // set unselected label text color
+                        indicatorColor:
+                            KConstants.baseDarkColor, // set indicator color
+                        indicatorWeight: 3,
+                        tabs: [
+                          Text(
+                            "ongoing",
+                          ),
+                          Text(
+                            "completed",
+                          ),
+                        ]),
+                  ),
+                  SizedBox(height: 10),
+                  Expanded(
+                      child: TabBarView(children: [
+                    riderOrdersRef.when(
+                      data: (data) {
+                        final orderList = data.data;
+                        final List<Map<String, dynamic>> completedOrders = [];
 
-                              orderList.forEach((element) {
-                                if (element["status"] != "completed") {
-                                  completedOrders.add(element);
-                                }
-                              });
+                        orderList.forEach((element) {
+                          if (element["status"] != "completed") {
+                            completedOrders.add(element);
+                          }
+                        });
 
-                              return ListView.builder(
-                                physics: const ClampingScrollPhysics(),
-                                shrinkWrap: true,
-                                scrollDirection: Axis.vertical,
-                                itemCount: completedOrders.length,
-                                itemBuilder:
-                                    (BuildContext context, int index) =>
-                                        OrderFavouritesBox(
-                                  false,
-                                  false,
-                                  completedOrders[index]["order_details"]
-                                      ["food"],
-                                  completedOrders[index]["created_at"],
-                                  completedOrders[index]["amount"].toString(),
-                                  completedOrders[index]["_id"],
-                                  completedOrders[index]["restaurant"]["name"],
-                                  completedOrders[index]["total"],
-                                  completedOrders[index]["deliveryFee"],
-                                  completedOrders[index]["vat"],
-                                  "",
-                                  completedOrders[index]["status"],
-                                ),
-                              );
-                            },
-                            error: (error, _) {
-                              return Text(error.toString());
-                            },
-                            loading: () {
-                              return SizedBox(
-                                width: 400,
+                        return RefreshIndicator(
+                            child: ListView.builder(
+                              physics: const ClampingScrollPhysics(),
+                              shrinkWrap: true,
+                              scrollDirection: Axis.vertical,
+                              itemCount: completedOrders.length,
+                              itemBuilder: (BuildContext context, int index) =>
+                                  OrderFavouritesBox(
+                                false,
+                                false,
+                                completedOrders[index]["order_details"]["food"],
+                                completedOrders[index]["created_at"],
+                                completedOrders[index]["amount"].toString(),
+                                completedOrders[index]["_id"],
+                                completedOrders[index]["restaurant"]["name"],
+                                completedOrders[index]["total"],
+                                completedOrders[index]["deliveryFee"],
+                                completedOrders[index]["vat"],
+                                "",
+                                completedOrders[index]["status"],
+                              ),
+                            ),
+                            onRefresh: () async {
+                              ref.refresh(riderOrderFutureProvider);
+                            });
+                      },
+                      error: (error, _) {
+                        return Text(error.toString());
+                      },
+                      loading: () {
+                        return SizedBox(
+                          width: 400,
+                          child: ListView.builder(
+                            physics: ClampingScrollPhysics(),
+                            shrinkWrap: true,
+                            scrollDirection: Axis.vertical,
+                            itemCount: 3,
+                            itemBuilder: (BuildContext context, int index) =>
+                                Shimmer.fromColors(
+                              baseColor: KConstants.baseFourGreyColor,
+                              highlightColor: KConstants.baseFourDarkColor,
+                              child: Container(
+                                  height: 200,
+                                  width: 150,
+                                  margin:
+                                      const EdgeInsets.symmetric(vertical: 5.0),
+                                  decoration: const BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(20.0),
+                                    ),
+                                  )),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    riderOrdersRef.when(
+                      data: (data) {
+                        final orderList = data.data;
+                        final List<Map<String, dynamic>> completedOrders = [];
+
+                        orderList.forEach((element) {
+                          if (element["status"] == "completed") {
+                            completedOrders.add(element);
+                          }
+                        });
+
+                        return completedOrders.isEmpty
+                            ? Container()
+                            : RefreshIndicator(
                                 child: ListView.builder(
-                                  physics: ClampingScrollPhysics(),
+                                  physics: const ClampingScrollPhysics(),
                                   shrinkWrap: true,
                                   scrollDirection: Axis.vertical,
-                                  itemCount: 3,
-                                  itemBuilder:
-                                      (BuildContext context, int index) =>
-                                          Shimmer.fromColors(
-                                    baseColor: KConstants.baseFourGreyColor,
-                                    highlightColor:
-                                        KConstants.baseFourDarkColor,
-                                    child: Container(
-                                        height: 200,
-                                        width: 150,
-                                        margin: const EdgeInsets.symmetric(
-                                            vertical: 5.0),
-                                        decoration: const BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(20.0),
-                                          ),
-                                        )),
-                                  ),
+                                  itemCount: completedOrders.length,
+                                  itemBuilder: (BuildContext context,
+                                          int index) =>
+                                      PreviousOrderBox(
+                                          completedOrders[index]["created_at"]
+                                              .toString(),
+                                          completedOrders[index]["amount"]
+                                              .toString(),
+                                          completedOrders[index]["restaurant"]
+                                                  ["name"]
+                                              .toString(),
+                                          completedOrders[index]["_id"]),
                                 ),
-                              );
-                            },
+                                onRefresh: () async {
+                                  ref.refresh(riderOrderFutureProvider);
+                                });
+                      },
+                      error: (error, _) {
+                        return Text(error.toString());
+                      },
+                      loading: () {
+                        return SizedBox(
+                          width: 400,
+                          child: ListView.builder(
+                            physics: ClampingScrollPhysics(),
+                            shrinkWrap: true,
+                            scrollDirection: Axis.vertical,
+                            itemCount: 3,
+                            itemBuilder: (BuildContext context, int index) =>
+                                Shimmer.fromColors(
+                              baseColor: KConstants.baseFourGreyColor,
+                              highlightColor: KConstants.baseFourDarkColor,
+                              child: Container(
+                                  height: 200,
+                                  width: 150,
+                                  margin:
+                                      const EdgeInsets.symmetric(vertical: 5.0),
+                                  decoration: const BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(20.0),
+                                    ),
+                                  )),
+                            ),
                           ),
-                          riderOrdersRef.when(
-                            data: (data) {
-                              final orderList = data.data;
-                              final List<Map<String, dynamic>> completedOrders =
-                                  [];
-
-                              orderList.forEach((element) {
-                                if (element["status"] == "completed") {
-                                  completedOrders.add(element);
-                                }
-                              });
-
-                              return completedOrders.isEmpty
-                                  ? Container()
-                                  : ListView.builder(
-                                      physics: const ClampingScrollPhysics(),
-                                      shrinkWrap: true,
-                                      scrollDirection: Axis.vertical,
-                                      itemCount: completedOrders.length,
-                                      itemBuilder: (BuildContext context,
-                                              int index) =>
-                                          PreviousOrderBox(
-                                              completedOrders[index]
-                                                      ["created_at"]
-                                                  .toString(),
-                                              completedOrders[index]["amount"]
-                                                  .toString(),
-                                              completedOrders[index]
-                                                      ["restaurant"]["name"]
-                                                  .toString(),
-                                              completedOrders[index]["_id"]),
-                                    );
-                            },
-                            error: (error, _) {
-                              return Text(error.toString());
-                            },
-                            loading: () {
-                              return SizedBox(
-                                width: 400,
-                                child: ListView.builder(
-                                  physics: ClampingScrollPhysics(),
-                                  shrinkWrap: true,
-                                  scrollDirection: Axis.vertical,
-                                  itemCount: 3,
-                                  itemBuilder:
-                                      (BuildContext context, int index) =>
-                                          Shimmer.fromColors(
-                                    baseColor: KConstants.baseFourGreyColor,
-                                    highlightColor:
-                                        KConstants.baseFourDarkColor,
-                                    child: Container(
-                                        height: 200,
-                                        width: 150,
-                                        margin: const EdgeInsets.symmetric(
-                                            vertical: 5.0),
-                                        decoration: const BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(20.0),
-                                          ),
-                                        )),
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ]))
-                      ],
-                    ))),
-            onRefresh: () async {
-              ref.refresh(riderOrderFutureProvider);
-            }));
+                        );
+                      },
+                    ),
+                  ]))
+                ],
+              ))),
+    );
   }
 }
