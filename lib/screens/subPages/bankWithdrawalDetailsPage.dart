@@ -91,15 +91,20 @@ class _BankWithdrawalDetailsPageState
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             walletRef.when(data: (data) {
-                              final walletBalance = data.data;
-                              final balance =
-                                  double.parse(data.data["accountBalance"]);
-                              final formattedBalance = balance.toStringAsFixed(
-                                  max(
-                                      0,
-                                      balance.truncateToDouble() == balance
-                                          ? 0
-                                          : 2));
+                              var formattedBalance = "";
+                              var client = "";
+                              if (data.status == "error") {
+                                formattedBalance = "-- -- ";
+                              } else {
+                                final balance =
+                                    double.parse(data.data["accountBalance"]);
+                                formattedBalance = balance.toStringAsFixed(max(
+                                    0,
+                                    balance.truncateToDouble() == balance
+                                        ? 0
+                                        : 2));
+                                client = data.data["client"];
+                              }
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -119,7 +124,7 @@ class _BankWithdrawalDetailsPageState
                                     width: screenWidth * .75,
                                     child: Expanded(
                                       child: Text(
-                                        walletBalance["client"],
+                                        client,
                                         style: const TextStyle(
                                           fontFamily: "Questrial",
                                           fontSize: 15,

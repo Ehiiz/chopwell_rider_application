@@ -31,7 +31,7 @@ class _LoginPageState extends State<LoginPage> {
     _passwordController.addListener(_validateInput);
   }
 
-  Future<Object?> _handleSignIn(BuildContext context) async {
+  void _handleSignIn(BuildContext context) async {
     setState(() {
       _showProgressIndicator = true;
     });
@@ -57,6 +57,11 @@ class _LoginPageState extends State<LoginPage> {
         setState(() {
           _showProgressIndicator = false;
         });
+
+        final user = response.data["rider"];
+
+        await UserInfo.setUserInfo(user!);
+
         pushNewScreen(
           context,
           screen: BottomNavBar(),
@@ -102,199 +107,205 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
-    return SafeArea(
-      child: Scaffold(
-        body: SizedBox(
-          height: height,
-          width: width,
-          child: ListView(
-            scrollDirection: Axis.vertical,
-            children: [
-              ClipPath(
-                clipper: MyClipper(),
-                child: Container(
-                  height: height * .5,
-                  width: width,
-                  decoration: BoxDecoration(
-                    color: KConstants.baseRedColor,
-                  ),
-                  child: Center(
-                    child: Column(
-                      children: [
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        const Image(
-                          image: AssetImage(
-                            'images/chopwell mascot enjoyment.png',
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Container(
-                          child: const Text(
-                            'Enjoy Great Meals At Your Door Steps',
-                            style: TextStyle(
-                              fontSize: 15,
-                              color: Colors.white,
-                              fontFamily: "Questrial",
-                              fontWeight: FontWeight.bold,
+    return WillPopScope(
+        child: SafeArea(
+          child: Scaffold(
+            body: SizedBox(
+              height: height,
+              width: width,
+              child: ListView(
+                scrollDirection: Axis.vertical,
+                children: [
+                  ClipPath(
+                    clipper: MyClipper(),
+                    child: Container(
+                      height: height * .5,
+                      width: width,
+                      decoration: BoxDecoration(
+                        color: KConstants.baseRedColor,
+                      ),
+                      child: Center(
+                        child: Column(
+                          children: [
+                            const SizedBox(
+                              height: 20,
                             ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: width * .05),
-                child: SignInput(
-                  Icons.email_outlined,
-                  "email",
-                  "incorrect email",
-                  "user@gmail.com",
-                  true,
-                  regExp: emailRegExp,
-                  controller: _emailController,
-                ),
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: width * .05),
-                child: SignInput(
-                  Icons.password_rounded,
-                  "password",
-                  "invalid password",
-                  "input your password",
-                  true,
-                  regExp: passwordRegex,
-                  controller: _passwordController,
-                ),
-              ),
-              Container(
-                width: width * .8,
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: width * .05,
-                        ),
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: TextButton(
-                              onPressed: () {
-                                pushNewScreen(
-                                  context,
-                                  screen: ConfirmEmailPage(),
-                                  withNavBar:
-                                      false, // OPTIONAL VALUE. True by default.
-                                  pageTransitionAnimation:
-                                      PageTransitionAnimation.cupertino,
-                                );
-                                ;
-                              },
-                              child: Text("forgot password",
-                                  style: TextStyle(
-                                      fontFamily: "Questrial",
-                                      fontSize: 18.0,
-                                      fontWeight: FontWeight.bold,
-                                      color: KConstants.baseDarkColor))),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      Stack(
-                        children: [
-                          SizedBox(
-                            width: 200,
-                            height: 48,
-                            child: OutlinedButton(
-                                onPressed: _isButtonDisabled
-                                    ? null
-                                    : () async {
-                                        final user = _handleSignIn(context);
-                                        UserInfo.setUserInfo(user!);
-                                      },
-                                style: ButtonStyle(
-                                  backgroundColor: _isButtonDisabled
-                                      ? MaterialStateProperty.all(
-                                          KConstants.baseThreeGreyColor)
-                                      : MaterialStateProperty.all(
-                                          KConstants.baseDarkColor),
-                                  shape: MaterialStateProperty.all(
-                                      RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30.0),
-                                  )),
-                                ),
-                                child: Text(
-                                  _showProgressIndicator ? '' : "sign in",
-                                  // ignore: prefer_const_constructors
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    fontFamily: "Montserrat",
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                )),
-                          ),
-                          if (_showProgressIndicator)
-                            const Positioned.fill(
-                              child: Center(
-                                child: CircularProgressIndicator(
+                            const Image(
+                              image: AssetImage(
+                                'images/chopwell mascot enjoyment.png',
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            Container(
+                              child: const Text(
+                                'Enjoy Great Meals At Your Door Steps',
+                                style: TextStyle(
+                                  fontSize: 15,
                                   color: Colors.white,
+                                  fontFamily: "Questrial",
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ]),
-              ),
-              const SizedBox(
-                height: 50,
-              ),
-              Align(
-                alignment: Alignment.center,
-                child: SizedBox(
-                  child: GestureDetector(
-                    onTap: () {
-                      pushNewScreen(
-                        context,
-                        screen: SignUpPage(),
-                        withNavBar: false, // OPTIONAL VALUE. True by default.
-                        pageTransitionAnimation:
-                            PageTransitionAnimation.cupertino,
-                      );
-                      ;
-                    },
-                    child: Text(
-                      //backgroundColor: MaterialStateProperty.all(KConstants.baseRedColor),
-                      'don\'t have an account? Sign up',
-                      style: TextStyle(
-                          color: KConstants.baseTwoDarkColor,
-                          fontSize: 20,
-                          fontFamily: "Questrial",
-                          fontWeight: FontWeight.bold),
                     ),
                   ),
-                ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: width * .05),
+                    child: SignInput(
+                      Icons.email_outlined,
+                      "email",
+                      "incorrect email",
+                      "user@gmail.com",
+                      true,
+                      regExp: emailRegExp,
+                      controller: _emailController,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: width * .05),
+                    child: SignInput(
+                      Icons.password_rounded,
+                      "password",
+                      "invalid password",
+                      "input your password",
+                      true,
+                      regExp: passwordRegex,
+                      controller: _passwordController,
+                    ),
+                  ),
+                  Container(
+                    width: width * .8,
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: width * .05,
+                            ),
+                            child: Align(
+                              alignment: Alignment.topLeft,
+                              child: TextButton(
+                                  onPressed: () {
+                                    pushNewScreen(
+                                      context,
+                                      screen: ConfirmEmailPage(),
+                                      withNavBar:
+                                          false, // OPTIONAL VALUE. True by default.
+                                      pageTransitionAnimation:
+                                          PageTransitionAnimation.cupertino,
+                                    );
+                                    ;
+                                  },
+                                  child: Text("forgot password",
+                                      style: TextStyle(
+                                          fontFamily: "Questrial",
+                                          fontSize: 18.0,
+                                          fontWeight: FontWeight.bold,
+                                          color: KConstants.baseDarkColor))),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          Stack(
+                            children: [
+                              SizedBox(
+                                width: 200,
+                                height: 48,
+                                child: OutlinedButton(
+                                    onPressed: _isButtonDisabled
+                                        ? null
+                                        : () async {
+                                            _handleSignIn(context);
+                                          },
+                                    style: ButtonStyle(
+                                      backgroundColor: _isButtonDisabled
+                                          ? MaterialStateProperty.all(
+                                              KConstants.baseThreeGreyColor)
+                                          : MaterialStateProperty.all(
+                                              KConstants.baseDarkColor),
+                                      shape: MaterialStateProperty.all(
+                                          RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(30.0),
+                                      )),
+                                    ),
+                                    child: Text(
+                                      _showProgressIndicator ? '' : "sign in",
+                                      // ignore: prefer_const_constructors
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                        fontFamily: "Montserrat",
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    )),
+                              ),
+                              if (_showProgressIndicator)
+                                const Positioned.fill(
+                                  child: Center(
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ]),
+                  ),
+                  const SizedBox(
+                    height: 50,
+                  ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: SizedBox(
+                      child: GestureDetector(
+                        onTap: () {
+                          pushNewScreen(
+                            context,
+                            screen: SignUpPage(),
+                            withNavBar:
+                                false, // OPTIONAL VALUE. True by default.
+                            pageTransitionAnimation:
+                                PageTransitionAnimation.cupertino,
+                          );
+                          ;
+                        },
+                        child: Text(
+                          //backgroundColor: MaterialStateProperty.all(KConstants.baseRedColor),
+                          'don\'t have an account? Sign up',
+                          style: TextStyle(
+                              color: KConstants.baseTwoDarkColor,
+                              fontSize: 20,
+                              fontFamily: "Questrial",
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                ],
               ),
-              const SizedBox(
-                height: 30,
-              ),
-            ],
+            ),
           ),
         ),
-      ),
-    );
+        onWillPop: () async {
+          // Disable back button press
+          return false;
+        });
   }
 }
 

@@ -117,9 +117,14 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                   height: 20,
                 ),
                 walletBalanceRef.when(data: (data) {
-                  final balance = double.parse(data.data["accountBalance"]);
-                  final formattedBalance = balance.toStringAsFixed(
-                      max(0, balance.truncateToDouble() == balance ? 0 : 2));
+                  var formattedBalance = "";
+                  if (data.status == "error") {
+                    formattedBalance = "-- -- ";
+                  } else {
+                    final balance = double.parse(data.data["accountBalance"]);
+                    formattedBalance = balance.toStringAsFixed(
+                        max(0, balance.truncateToDouble() == balance ? 0 : 2));
+                  }
                   return balanceBox(
                     label: "balance",
                     figure: "₦$formattedBalance",
