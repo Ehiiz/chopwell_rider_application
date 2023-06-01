@@ -156,9 +156,11 @@ class _NewProfilePageState extends ConsumerState<NewProfilePage> {
                               padding: EdgeInsets.only(left: 10),
                               child: Text(
                                 'Profile',
-                                style: Theme.of(context)
-                                    .primaryTextTheme
-                                    .titleLarge,
+                                style: TextStyle(
+                                  fontFamily: "Questrial",
+                                  fontSize: 30.0,
+                                  color: KConstants.baseDarkColor,
+                                ),
                               ),
                             ),
                             IconButton(

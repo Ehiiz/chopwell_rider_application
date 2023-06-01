@@ -266,13 +266,13 @@ class _OrderFavouritesBoxState extends ConsumerState<OrderFavouritesBox> {
                 textSize: 20.0,
               ),
               const SizedBox(height: 20),
-              TextsWidgets(
-                text: "account",
-                textPrice: account,
-                textColor: KConstants.baseTwoDarkColor,
-                textWeight: FontWeight.w600,
-                textSize: 20.0,
-              ),
+              // TextsWidgets(
+              //   text: "account",
+              //   textPrice: account,
+              //   textColor: KConstants.baseTwoDarkColor,
+              //   textWeight: FontWeight.w600,
+              //   textSize: 20.0,
+              // ),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

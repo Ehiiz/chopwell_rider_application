@@ -40,7 +40,11 @@ class MyOrders extends ConsumerWidget {
                     padding: EdgeInsets.only(left: 10),
                     child: Text(
                       'Orders',
-                      style: Theme.of(context).primaryTextTheme.titleLarge,
+                      style: TextStyle(
+                        fontFamily: "Questrial",
+                        fontSize: 30.0,
+                        color: KConstants.baseDarkColor,
+                      ),
                     ),
                   ),
                   IconButton(

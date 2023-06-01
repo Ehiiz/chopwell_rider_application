@@ -117,7 +117,16 @@ class _ConfirmationPageState extends ConsumerState<ConfirmationPage> {
     String status = "";
     String statusRequest = "completed";
     String currentId = "";
-
+    Map<String, dynamic> location = {
+      'address': '',
+      'longitude': 0.0,
+      'latitude': 0.0,
+    };
+    Map<String, dynamic> deliveryLocation = {
+      'deliveryAddress': '',
+      'deliveryLongitude': 0.0,
+      'deliveryLatitude': 0.0,
+    };
     bool clickButtonValue = false;
 
     return SafeArea(
@@ -148,7 +157,11 @@ class _ConfirmationPageState extends ConsumerState<ConfirmationPage> {
                 children: [
                   Text(
                     'Order Progress',
-                    style: Theme.of(context).primaryTextTheme.titleLarge,
+                    style: TextStyle(
+                      fontFamily: "Questrial",
+                      fontSize: 30.0,
+                      color: KConstants.baseDarkColor,
+                    ),
                   ),
                   const SizedBox(
                     height: 5,
@@ -167,6 +180,9 @@ class _ConfirmationPageState extends ConsumerState<ConfirmationPage> {
                               address = data.data["location"]["address"];
                               setState(() {
                                 currentId = data.data["_id"];
+                                location = data.data["location"];
+                                deliveryLocation =
+                                    data.data["deliveryLocation"];
                               });
                               return SizedBox(
                                 width: screenWidth * .65,
@@ -208,6 +224,8 @@ class _ConfirmationPageState extends ConsumerState<ConfirmationPage> {
                               deliveryFee: deliveryFee,
                               account: account,
                               status: status,
+                              location: location,
+                              deliveryLocation: deliveryLocation,
                             ),
                             withNavBar:
                                 false, // OPTIONAL VALUE. True by default.

@@ -61,8 +61,12 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                   Padding(
                     padding: EdgeInsets.only(left: 10),
                     child: Text(
-                      '',
-                      style: Theme.of(context).primaryTextTheme.titleLarge,
+                      'Home',
+                      style: TextStyle(
+                        fontFamily: "Questrial",
+                        fontSize: 30.0,
+                        color: KConstants.baseDarkColor,
+                      ),
                     ),
                   ),
                   IconButton(
