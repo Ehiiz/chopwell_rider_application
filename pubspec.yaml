@@ -47,6 +47,7 @@ dependencies:
   flutter_native_splash: ^2.2.19
   flutter_dotenv: ^5.0.2
   jwt_decoder: ^2.0.1
+  flutter_phone_direct_caller: ^2.1.1
 
 dev_dependencies:
   flutter_test:

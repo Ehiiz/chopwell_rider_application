@@ -9,6 +9,7 @@ import 'package:chopwell_rider_application/services/update_delivery_status_servi
 import 'package:chopwell_rider_application/screens/subPages/singleOrderDetailsPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
@@ -141,6 +142,10 @@ class _ConfirmationPageState extends ConsumerState<ConfirmationPage> {
       'deliveryLatitude': 0.0,
     };
     bool clickButtonValue = false;
+
+    void _callNumber(number) async {
+      bool? res = await FlutterPhoneDirectCaller.callNumber(number);
+    }
 
     return SafeArea(
       child: Scaffold(
@@ -290,7 +295,8 @@ class _ConfirmationPageState extends ConsumerState<ConfirmationPage> {
                               children: [
                                 IconButton(
                                     onPressed: () async {
-                                      _launchPhone(phoneNumber);
+                                      _callNumber(phoneNumber);
+                                      // _launchPhone(riderPhoneNumber);
                                     },
                                     icon: Icon(
                                       CupertinoIcons.phone_fill_arrow_up_right,
@@ -312,7 +318,8 @@ class _ConfirmationPageState extends ConsumerState<ConfirmationPage> {
                               children: [
                                 IconButton(
                                     onPressed: () async {
-                                      _launchPhone(restaurantPhoneNumber);
+                                      _callNumber(restaurantPhoneNumber);
+                                      // _launchPhone(riderPhoneNumber);
                                     },
                                     icon: Icon(
                                       CupertinoIcons.phone_fill_arrow_up_right,
