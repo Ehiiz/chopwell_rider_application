@@ -164,421 +164,425 @@ class _ConfirmationPageState extends ConsumerState<ConfirmationPage> {
               vertical: screenHeight * 0.01,
               horizontal: screenWidth * 0.02,
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Order Progress',
-                  style: TextStyle(
-                    fontFamily: "Questrial",
-                    fontSize: 30.0,
-                    color: KConstants.baseDarkColor,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Order Progress',
+                    style: TextStyle(
+                      fontFamily: "Questrial",
+                      fontSize: 30.0,
+                      color: KConstants.baseDarkColor,
+                    ),
                   ),
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                orderDetails.when(data: (data) {
-                  String status = data.data["status"];
-                  bool acceptBoxValue = acceptBox.contains(status);
-                  bool readyBoxValue = readyBox.contains(status);
-                  bool deliveringBoxValue = deliveringBox.contains(status);
-                  bool deliveredBoxValue = deliveredBox.contains(status);
-                  clickButtonValue = buttonClick.contains(status);
-                  if (status == "accepted") {
-                    statusRequest = "picked";
-                  }
-                  if (status == "ready") {
-                    statusRequest = "picked";
-                  }
-                  if (status == "picked") {
-                    statusRequest = "delivering";
-                  }
-                  if (status == "delivering") {
-                    statusRequest = "delivered";
-                  }
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  orderDetails.when(data: (data) {
+                    String status = data.data["status"];
+                    bool acceptBoxValue = acceptBox.contains(status);
+                    bool readyBoxValue = readyBox.contains(status);
+                    bool deliveringBoxValue = deliveringBox.contains(status);
+                    bool deliveredBoxValue = deliveredBox.contains(status);
+                    clickButtonValue = buttonClick.contains(status);
+                    if (status == "accepted") {
+                      statusRequest = "picked";
+                    }
+                    if (status == "ready") {
+                      statusRequest = "picked";
+                    }
+                    if (status == "picked") {
+                      statusRequest = "delivering";
+                    }
+                    if (status == "delivering") {
+                      statusRequest = "delivered";
+                    }
 
-                  String phoneNumber = data.data["phoneNumber"];
-                  address = data.data["location"]["address"];
-                  mealDetails = data.data["order_details"]["food"];
-                  date = data.data["created_at"].toString();
-                  orderId = data.data["_id"];
-                  amount = data.data["amount"].toString();
-                  restaurantName = data.data["restaurant"]["name"].toString();
-                  restaurantPhoneNumber =
-                      data.data["restaurant"]["phoneNumber"].toString();
-                  deliveryFee = data.data["deliveryFee"];
-                  total = data.data["total"];
-                  vat = data.data["vat"];
-                  account = "";
-                  status = data.data["status"];
+                    String phoneNumber = data.data["phoneNumber"];
+                    address = data.data["location"]["address"];
+                    mealDetails = data.data["order_details"]["food"];
+                    date = data.data["created_at"].toString();
+                    orderId = data.data["_id"];
+                    amount = data.data["amount"].toString();
+                    restaurantName = data.data["restaurant"]["name"].toString();
+                    restaurantPhoneNumber =
+                        data.data["restaurant"]["phoneNumber"].toString();
+                    deliveryFee = data.data["deliveryFee"];
+                    total = data.data["total"];
+                    vat = data.data["vat"];
+                    account = "";
+                    status = data.data["status"];
 
-                  return Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SizedBox(
-                            child: Row(
-                              children: [
-                                SvgPicture.asset("assets/location.svg"),
-                                const SizedBox(
-                                  width: 5,
-                                ),
-                                Container(
-                                  width: screenWidth * .65,
-                                  child: Expanded(
-                                    child: Text(
-                                      address,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.clip,
-                                      style: const TextStyle(
-                                          fontSize: 15,
-                                          fontFamily: 'Montserrat'),
-                                    ),
+                    return Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
+                              child: Row(
+                                children: [
+                                  SvgPicture.asset("assets/location.svg"),
+                                  const SizedBox(
+                                    width: 5,
                                   ),
-                                )
+                                  Container(
+                                    width: screenWidth * .45,
+                                    child: Expanded(
+                                      child: Text(
+                                        address,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.clip,
+                                        style: const TextStyle(
+                                            fontSize: 15,
+                                            fontFamily: 'Montserrat'),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                pushNewScreen(
+                                  context,
+                                  screen: SingleOrderDetailsPage(
+                                    orderStatus: orderStatus,
+                                    mealDetails: mealDetails,
+                                    date: date,
+                                    amount: amount,
+                                    orderId: orderId,
+                                    restaurantName: restaurantName,
+                                    total: total,
+                                    vat: vat,
+                                    deliveryFee: deliveryFee,
+                                    account: account,
+                                    status: status,
+                                    location: location,
+                                    deliveryLocation: deliveryLocation,
+                                  ),
+                                  withNavBar:
+                                      false, // OPTIONAL VALUE. True by default.
+                                  pageTransitionAnimation:
+                                      PageTransitionAnimation.cupertino,
+                                );
+                              },
+                              child: Text(
+                                "order details",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontFamily: 'Questrial',
+                                  fontWeight: FontWeight.bold,
+                                  color: KConstants.baseTwoRedColor,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                IconButton(
+                                    onPressed: () async {
+                                      _launchPhone(phoneNumber);
+                                    },
+                                    icon: Icon(
+                                      CupertinoIcons.phone_fill_arrow_up_right,
+                                      color: KConstants.baseRedColor,
+                                    )),
+                                Text(
+                                  "call customer",
+                                  style: TextStyle(
+                                    fontFamily: "Montserrat",
+                                    color: KConstants.baseRedColor,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12,
+                                  ),
+                                ),
                               ],
                             ),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              pushNewScreen(
-                                context,
-                                screen: SingleOrderDetailsPage(
-                                  orderStatus: orderStatus,
-                                  mealDetails: mealDetails,
-                                  date: date,
-                                  amount: amount,
-                                  orderId: orderId,
-                                  restaurantName: restaurantName,
-                                  total: total,
-                                  vat: vat,
-                                  deliveryFee: deliveryFee,
-                                  account: account,
-                                  status: status,
-                                  location: location,
-                                  deliveryLocation: deliveryLocation,
-                                ),
-                                withNavBar:
-                                    false, // OPTIONAL VALUE. True by default.
-                                pageTransitionAnimation:
-                                    PageTransitionAnimation.cupertino,
-                              );
-                            },
-                            child: Text(
-                              "order details",
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontFamily: 'Questrial',
-                                fontWeight: FontWeight.bold,
-                                color: KConstants.baseTwoRedColor,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              IconButton(
-                                  onPressed: () async {
-                                    _launchPhone(phoneNumber);
-                                  },
-                                  icon: Icon(
-                                    CupertinoIcons.phone_arrow_up_right,
-                                    color: Colors.black,
-                                  )),
-                              Text(
-                                "call customer",
-                                style: TextStyle(
-                                  fontFamily: "Montserrat",
-                                  color: KConstants.baseRedColor,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              IconButton(
-                                  onPressed: () async {
-                                    _launchPhone(restaurantPhoneNumber);
-                                  },
-                                  icon: const Icon(
-                                    CupertinoIcons.phone_arrow_up_right,
-                                    color: Colors.black,
-                                  )),
-                              Text(
-                                "call restaurant",
-                                style: TextStyle(
-                                  fontFamily: "Montserrat",
-                                  color: KConstants.baseRedColor,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      Flexible(
-                          child: ListView(
-                        children: [
-                          OrderProgressBar(
-                            acceptBoxValue
-                                ? KConstants.baseShadowColor
-                                : Colors.transparent,
-                            const Offset(5, 5),
-                            "assets/Restaurant.svg",
-                            "Restaurant Accepted",
-                            "Your order is being prepared",
-                            "done",
-                            acceptBoxValue
-                                ? KConstants.baseTwoRedColor
-                                : KConstants.baseFourGreyColor,
-                            acceptBoxValue
-                                ? KConstants.baseDarkColor
-                                : KConstants.baseFourGreyColor,
-                          ),
-                          Center(
-                            child: Container(
-                              height: 7,
-                              width: 2,
-                              decoration: BoxDecoration(
-                                border: Border(
-                                  left: BorderSide(
-                                    color: KConstants.baseGreyColor,
-                                    width: 1,
-                                    style: BorderStyle.solid,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                IconButton(
+                                    onPressed: () async {
+                                      _launchPhone(restaurantPhoneNumber);
+                                    },
+                                    icon: Icon(
+                                      CupertinoIcons.phone_fill_arrow_up_right,
+                                      color: KConstants.baseRedColor,
+                                    )),
+                                Text(
+                                  "call restaurant",
+                                  style: TextStyle(
+                                    fontFamily: "Montserrat",
+                                    color: KConstants.baseRedColor,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                              ),
-                            ),
-                          ),
-                          OrderProgressBar(
-                            readyBoxValue
-                                ? KConstants.baseShadowColor
-                                : Colors.transparent,
-                            const Offset(5, 5),
-                            "assets/Food.svg",
-                            "Order Ready",
-                            "Your order is ready for pick up",
-                            "done",
-                            readyBoxValue
-                                ? KConstants.baseTwoRedColor
-                                : KConstants.baseFourGreyColor,
-                            readyBoxValue
-                                ? KConstants.baseDarkColor
-                                : KConstants.baseFourGreyColor,
-                          ),
-                          Center(
-                            child: Container(
-                              height: 7,
-                              width: 2,
-                              decoration: BoxDecoration(
-                                border: Border(
-                                  left: BorderSide(
-                                    color: KConstants.baseGreyColor,
-                                    width: 1,
-                                    style: BorderStyle.solid,
+                              ],
+                            )
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        Container(
+                            height: screenHeight * .52,
+                            child: ListView(
+                              children: [
+                                OrderProgressBar(
+                                  acceptBoxValue
+                                      ? KConstants.baseShadowColor
+                                      : Colors.transparent,
+                                  const Offset(5, 5),
+                                  "assets/Restaurant.svg",
+                                  "Restaurant Accepted",
+                                  "Your order is being prepared",
+                                  "done",
+                                  acceptBoxValue
+                                      ? KConstants.baseTwoRedColor
+                                      : KConstants.baseFourGreyColor,
+                                  acceptBoxValue
+                                      ? KConstants.baseDarkColor
+                                      : KConstants.baseFourGreyColor,
+                                ),
+                                Center(
+                                  child: Container(
+                                    height: 7,
+                                    width: 2,
+                                    decoration: BoxDecoration(
+                                      border: Border(
+                                        left: BorderSide(
+                                          color: KConstants.baseGreyColor,
+                                          width: 1,
+                                          style: BorderStyle.solid,
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ),
-                          ),
-                          OrderProgressBar(
-                            deliveringBoxValue
-                                ? KConstants.baseShadowColor
-                                : Colors.transparent,
-                            const Offset(5, 5),
-                            "assets/person-biking-dark-skin-tone-svgrepo-com.svg",
-                            "Rider Picked up",
-                            "Rider is on his way to you",
-                            "done",
-                            deliveringBoxValue
-                                ? KConstants.baseTwoRedColor
-                                : KConstants.baseFourGreyColor,
-                            deliveringBoxValue
-                                ? KConstants.baseDarkColor
-                                : KConstants.baseFourGreyColor,
-                          ),
-                          Center(
-                            child: Container(
-                              height: 7,
-                              width: 2,
-                              decoration: BoxDecoration(
-                                border: Border(
-                                  left: BorderSide(
-                                    color: KConstants.baseGreyColor,
-                                    width: 1,
-                                    style: BorderStyle.solid,
+                                OrderProgressBar(
+                                  readyBoxValue
+                                      ? KConstants.baseShadowColor
+                                      : Colors.transparent,
+                                  const Offset(5, 5),
+                                  "assets/Food.svg",
+                                  "Order Ready",
+                                  "Your order is ready for pick up",
+                                  "done",
+                                  readyBoxValue
+                                      ? KConstants.baseTwoRedColor
+                                      : KConstants.baseFourGreyColor,
+                                  readyBoxValue
+                                      ? KConstants.baseDarkColor
+                                      : KConstants.baseFourGreyColor,
+                                ),
+                                Center(
+                                  child: Container(
+                                    height: 7,
+                                    width: 2,
+                                    decoration: BoxDecoration(
+                                      border: Border(
+                                        left: BorderSide(
+                                          color: KConstants.baseGreyColor,
+                                          width: 1,
+                                          style: BorderStyle.solid,
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ),
-                          ),
-                          OrderProgressBar(
-                            deliveredBoxValue
-                                ? KConstants.baseFourGreyColor
-                                : Colors.transparent,
-                            const Offset(0, 0),
-                            "assets/Smiley.svg",
-                            "Order Delivered",
-                            "Your order has been delivered",
-                            "done",
-                            deliveredBoxValue
-                                ? KConstants.baseTwoRedColor
-                                : KConstants.baseFourGreyColor,
-                            deliveredBoxValue
-                                ? KConstants.baseDarkColor
-                                : KConstants.baseFourGreyColor,
-                          ),
-                        ],
-                      )),
-                    ],
-                  );
-                }, error: (error, _) {
-                  return Text(error.toString());
-                }, loading: () {
-                  return Column(
-                    children: [
-                      Shimmer.fromColors(
-                        child: Container(width: 10),
-                        baseColor: KConstants.baseFourGreyColor,
-                        highlightColor: KConstants.baseThreeGreyColor,
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      Shimmer.fromColors(
-                        baseColor: KConstants.baseFourGreyColor,
-                        highlightColor: KConstants.baseThreeGreyColor,
-                        child: Container(
-                          decoration: const BoxDecoration(
-                              color: Colors.white,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0))),
-                          width: screenWidth * .7,
-                          height: screenHeight * .1,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      Shimmer.fromColors(
-                        baseColor: KConstants.baseFourGreyColor,
-                        highlightColor: KConstants.baseThreeGreyColor,
-                        child: Container(
-                          decoration: const BoxDecoration(
-                              color: Colors.white,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0))),
-                          width: screenWidth * .7,
-                          height: screenHeight * .1,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      Shimmer.fromColors(
-                        baseColor: KConstants.baseFourGreyColor,
-                        highlightColor: KConstants.baseThreeGreyColor,
-                        child: Container(
-                          decoration: const BoxDecoration(
-                              color: Colors.white,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0))),
-                          width: screenWidth * .7,
-                          height: screenHeight * .1,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      Shimmer.fromColors(
-                        baseColor: KConstants.baseFourGreyColor,
-                        highlightColor: KConstants.baseThreeGreyColor,
-                        child: Container(
-                          decoration: const BoxDecoration(
-                              color: Colors.white,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0))),
-                          width: screenWidth * .7,
-                          height: screenHeight * .1,
-                        ),
-                      )
-                    ],
-                  );
-                }),
-                const SizedBox(
-                  height: 25,
-                ),
-                Center(
-                    child: Stack(
-                  children: [
-                    SizedBox(
-                      width: 300,
-                      height: 50,
-                      child: ElevatedButton(
-                        onPressed: clickButtonValue
-                            ? () async {
-                                _confirmDelivery(
-                                  currentId,
-                                  statusRequest,
-                                );
-                              }
-                            : null,
-                        style: ButtonStyle(
-                            backgroundColor: clickButtonValue
-                                ? MaterialStateProperty.all(
-                                    KConstants.baseTwoRedColor,
-                                  )
-                                : MaterialStateProperty.all(
-                                    KConstants.baseFourDarkColor,
+                                OrderProgressBar(
+                                  deliveringBoxValue
+                                      ? KConstants.baseShadowColor
+                                      : Colors.transparent,
+                                  const Offset(5, 5),
+                                  "assets/person-biking-dark-skin-tone-svgrepo-com.svg",
+                                  "Rider Picked up",
+                                  "Rider is on his way to you",
+                                  "done",
+                                  deliveringBoxValue
+                                      ? KConstants.baseTwoRedColor
+                                      : KConstants.baseFourGreyColor,
+                                  deliveringBoxValue
+                                      ? KConstants.baseDarkColor
+                                      : KConstants.baseFourGreyColor,
+                                ),
+                                Center(
+                                  child: Container(
+                                    height: 7,
+                                    width: 2,
+                                    decoration: BoxDecoration(
+                                      border: Border(
+                                        left: BorderSide(
+                                          color: KConstants.baseGreyColor,
+                                          width: 1,
+                                          style: BorderStyle.solid,
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20.0),
-                              ),
+                                ),
+                                OrderProgressBar(
+                                  deliveredBoxValue
+                                      ? KConstants.baseFourGreyColor
+                                      : Colors.transparent,
+                                  const Offset(0, 0),
+                                  "assets/Smiley.svg",
+                                  "Order Delivered",
+                                  "Your order has been delivered",
+                                  "done",
+                                  deliveredBoxValue
+                                      ? KConstants.baseTwoRedColor
+                                      : KConstants.baseFourGreyColor,
+                                  deliveredBoxValue
+                                      ? KConstants.baseDarkColor
+                                      : KConstants.baseFourGreyColor,
+                                ),
+                              ],
                             )),
-                        child: Text(
-                          _showCircularIndicator ? "" : statusRequest,
-                          // ignore: prefer_const_constructors
-                          style: TextStyle(
-                            fontFamily: "Montserrat",
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
+                      ],
+                    );
+                  }, error: (error, _) {
+                    return Text(error.toString());
+                  }, loading: () {
+                    return Column(
+                      children: [
+                        Shimmer.fromColors(
+                          child: Container(width: 10),
+                          baseColor: KConstants.baseFourGreyColor,
+                          highlightColor: KConstants.baseThreeGreyColor,
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        Shimmer.fromColors(
+                          baseColor: KConstants.baseFourGreyColor,
+                          highlightColor: KConstants.baseThreeGreyColor,
+                          child: Container(
+                            decoration: const BoxDecoration(
+                                color: Colors.white,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10.0))),
+                            width: screenWidth * .7,
+                            height: screenHeight * .1,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        Shimmer.fromColors(
+                          baseColor: KConstants.baseFourGreyColor,
+                          highlightColor: KConstants.baseThreeGreyColor,
+                          child: Container(
+                            decoration: const BoxDecoration(
+                                color: Colors.white,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10.0))),
+                            width: screenWidth * .7,
+                            height: screenHeight * .1,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        Shimmer.fromColors(
+                          baseColor: KConstants.baseFourGreyColor,
+                          highlightColor: KConstants.baseThreeGreyColor,
+                          child: Container(
+                            decoration: const BoxDecoration(
+                                color: Colors.white,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10.0))),
+                            width: screenWidth * .7,
+                            height: screenHeight * .1,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        Shimmer.fromColors(
+                          baseColor: KConstants.baseFourGreyColor,
+                          highlightColor: KConstants.baseThreeGreyColor,
+                          child: Container(
+                            decoration: const BoxDecoration(
+                                color: Colors.white,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10.0))),
+                            width: screenWidth * .7,
+                            height: screenHeight * .1,
+                          ),
+                        )
+                      ],
+                    );
+                  }),
+                  const SizedBox(
+                    height: 25,
+                  ),
+                  Center(
+                      child: Stack(
+                    children: [
+                      SizedBox(
+                        width: 300,
+                        height: 50,
+                        child: ElevatedButton(
+                          onPressed: clickButtonValue
+                              ? () async {
+                                  _confirmDelivery(
+                                    currentId,
+                                    statusRequest,
+                                  );
+                                }
+                              : null,
+                          style: ButtonStyle(
+                              backgroundColor: clickButtonValue
+                                  ? MaterialStateProperty.all(
+                                      KConstants.baseTwoRedColor,
+                                    )
+                                  : MaterialStateProperty.all(
+                                      KConstants.baseFourDarkColor,
+                                    ),
+                              shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                              )),
+                          child: Text(
+                            _showCircularIndicator ? "" : statusRequest,
+                            // ignore: prefer_const_constructors
+                            style: TextStyle(
+                              fontFamily: "Montserrat",
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    if (_showCircularIndicator)
-                      // ignore: dead_code
-                      const Positioned.fill(
-                        child: Center(
-                          child: CircularProgressIndicator(
-                            color: Colors.white,
+                      if (_showCircularIndicator)
+                        // ignore: dead_code
+                        const Positioned.fill(
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                            ),
                           ),
                         ),
-                      ),
-                  ],
-                )),
-                const SizedBox(
-                  height: 25,
-                )
-              ],
+                    ],
+                  )),
+                  const SizedBox(
+                    height: 25,
+                  )
+                ],
+              ),
             ),
           )),
     );
