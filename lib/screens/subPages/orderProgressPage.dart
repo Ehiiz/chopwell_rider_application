@@ -7,11 +7,14 @@ import 'package:chopwell_rider_application/screens/registration_page/loginPage.d
 import 'package:chopwell_rider_application/services/single_order_detail_service.dart';
 import 'package:chopwell_rider_application/services/update_delivery_status_service.dart';
 import 'package:chopwell_rider_application/screens/subPages/singleOrderDetailsPage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 final singleProductFutureProvider =
     FutureProvider.autoDispose<MapDataResponseModel>((ref) async {
@@ -58,6 +61,15 @@ class _ConfirmationPageState extends ConsumerState<ConfirmationPage> {
         _showCircularIndicator = false;
       });
       ref.refresh(singleProductFutureProvider);
+    }
+  }
+
+  void _launchPhone(String phoneNumber) async {
+    final phoneUrl = 'tel:$phoneNumber';
+    if (await canLaunchUrlString(phoneUrl)) {
+      await launchUrlString(phoneUrl);
+    } else {
+      throw 'Could not launch $phoneUrl';
     }
   }
 
@@ -115,6 +127,7 @@ class _ConfirmationPageState extends ConsumerState<ConfirmationPage> {
     String account = "";
     String address = "";
     String status = "";
+    String restaurantPhoneNumber = "";
     String statusRequest = "completed";
     String currentId = "";
     Map<String, dynamic> location = {
@@ -130,158 +143,196 @@ class _ConfirmationPageState extends ConsumerState<ConfirmationPage> {
     bool clickButtonValue = false;
 
     return SafeArea(
-      child: SafeArea(
-        child: Scaffold(
-            appBar: AppBar(
-              backgroundColor: Colors.white,
-              shadowColor: Colors.white,
-              elevation: 0,
-              leading: IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: const Icon(
-                  Icons.arrow_back_ios,
-                  color: Colors.black,
-                  size: 25,
-                ),
+      child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            shadowColor: Colors.white,
+            elevation: 0,
+            leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: const Icon(
+                Icons.arrow_back_ios,
+                color: Colors.black,
+                size: 25,
               ),
             ),
-            body: Padding(
-              padding: EdgeInsets.symmetric(
-                vertical: screenHeight * 0.01,
-                horizontal: screenWidth * 0.02,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Order Progress',
-                    style: TextStyle(
-                      fontFamily: "Questrial",
-                      fontSize: 30.0,
-                      color: KConstants.baseDarkColor,
-                    ),
+          ),
+          body: Padding(
+            padding: EdgeInsets.symmetric(
+              vertical: screenHeight * 0.01,
+              horizontal: screenWidth * 0.02,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Order Progress',
+                  style: TextStyle(
+                    fontFamily: "Questrial",
+                    fontSize: 30.0,
+                    color: KConstants.baseDarkColor,
                   ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                orderDetails.when(data: (data) {
+                  String status = data.data["status"];
+                  bool acceptBoxValue = acceptBox.contains(status);
+                  bool readyBoxValue = readyBox.contains(status);
+                  bool deliveringBoxValue = deliveringBox.contains(status);
+                  bool deliveredBoxValue = deliveredBox.contains(status);
+                  clickButtonValue = buttonClick.contains(status);
+                  if (status == "accepted") {
+                    statusRequest = "picked";
+                  }
+                  if (status == "ready") {
+                    statusRequest = "picked";
+                  }
+                  if (status == "picked") {
+                    statusRequest = "delivering";
+                  }
+                  if (status == "delivering") {
+                    statusRequest = "delivered";
+                  }
+
+                  String phoneNumber = data.data["phoneNumber"];
+                  address = data.data["location"]["address"];
+                  mealDetails = data.data["order_details"]["food"];
+                  date = data.data["created_at"].toString();
+                  orderId = data.data["_id"];
+                  amount = data.data["amount"].toString();
+                  restaurantName = data.data["restaurant"]["name"].toString();
+                  restaurantPhoneNumber =
+                      data.data["restaurant"]["phoneNumber"].toString();
+                  deliveryFee = data.data["deliveryFee"];
+                  total = data.data["total"];
+                  vat = data.data["vat"];
+                  account = "";
+                  status = data.data["status"];
+
+                  return Column(
                     children: [
-                      SizedBox(
-                        child: Row(
-                          children: [
-                            SvgPicture.asset("assets/location.svg"),
-                            const SizedBox(
-                              width: 5,
-                            ),
-                            orderDetails.when(data: (data) {
-                              address = data.data["location"]["address"];
-                              setState(() {
-                                currentId = data.data["_id"];
-                                location = data.data["location"];
-                                deliveryLocation =
-                                    data.data["deliveryLocation"];
-                              });
-                              return SizedBox(
-                                width: screenWidth * .65,
-                                child: Expanded(
-                                  child: Text(
-                                    address,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.clip,
-                                    style: const TextStyle(
-                                        fontSize: 15, fontFamily: 'Montserrat'),
-                                  ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            child: Row(
+                              children: [
+                                SvgPicture.asset("assets/location.svg"),
+                                const SizedBox(
+                                  width: 5,
                                 ),
-                              );
-                            }, error: (error, _) {
-                              return Text(error.toString());
-                            }, loading: () {
-                              return Shimmer.fromColors(
-                                child: Container(width: 10),
-                                baseColor: KConstants.baseFourGreyColor,
-                                highlightColor: KConstants.baseThreeGreyColor,
-                              );
-                            }),
-                          ],
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          pushNewScreen(
-                            context,
-                            screen: SingleOrderDetailsPage(
-                              orderStatus: orderStatus,
-                              mealDetails: mealDetails,
-                              date: date,
-                              amount: amount,
-                              orderId: orderId,
-                              restaurantName: restaurantName,
-                              total: total,
-                              vat: vat,
-                              deliveryFee: deliveryFee,
-                              account: account,
-                              status: status,
-                              location: location,
-                              deliveryLocation: deliveryLocation,
+                                Container(
+                                  width: screenWidth * .65,
+                                  child: Expanded(
+                                    child: Text(
+                                      address,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.clip,
+                                      style: const TextStyle(
+                                          fontSize: 15,
+                                          fontFamily: 'Montserrat'),
+                                    ),
+                                  ),
+                                )
+                              ],
                             ),
-                            withNavBar:
-                                false, // OPTIONAL VALUE. True by default.
-                            pageTransitionAnimation:
-                                PageTransitionAnimation.cupertino,
-                          );
-                        },
-                        child: Text(
-                          "order details",
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontFamily: 'Questrial',
-                            fontWeight: FontWeight.bold,
-                            color: KConstants.baseTwoRedColor,
                           ),
-                        ),
+                          TextButton(
+                            onPressed: () {
+                              pushNewScreen(
+                                context,
+                                screen: SingleOrderDetailsPage(
+                                  orderStatus: orderStatus,
+                                  mealDetails: mealDetails,
+                                  date: date,
+                                  amount: amount,
+                                  orderId: orderId,
+                                  restaurantName: restaurantName,
+                                  total: total,
+                                  vat: vat,
+                                  deliveryFee: deliveryFee,
+                                  account: account,
+                                  status: status,
+                                  location: location,
+                                  deliveryLocation: deliveryLocation,
+                                ),
+                                withNavBar:
+                                    false, // OPTIONAL VALUE. True by default.
+                                pageTransitionAnimation:
+                                    PageTransitionAnimation.cupertino,
+                              );
+                            },
+                            child: Text(
+                              "order details",
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontFamily: 'Questrial',
+                                fontWeight: FontWeight.bold,
+                                color: KConstants.baseTwoRedColor,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  Expanded(
-                    child: orderDetails.when(data: (data) {
-                      String status = data.data["status"];
-                      bool acceptBoxValue = acceptBox.contains(status);
-                      bool readyBoxValue = readyBox.contains(status);
-                      bool deliveringBoxValue = deliveringBox.contains(status);
-                      bool deliveredBoxValue = deliveredBox.contains(status);
-                      clickButtonValue = buttonClick.contains(status);
-                      if (status == "accepted") {
-                        statusRequest = "picked";
-                      }
-                      if (status == "ready") {
-                        statusRequest = "picked";
-                      }
-                      if (status == "picked") {
-                        statusRequest = "delivering";
-                      }
-                      if (status == "delivering") {
-                        statusRequest = "delivered";
-                      }
-
-                      mealDetails = data.data["order_details"]["food"];
-                      date = data.data["created_at"].toString();
-                      orderId = data.data["_id"];
-                      amount = data.data["amount"].toString();
-                      restaurantName =
-                          data.data["restaurant"]["name"].toString();
-                      deliveryFee = data.data["deliveryFee"];
-                      total = data.data["total"];
-                      vat = data.data["vat"];
-                      account = "";
-                      status = data.data["status"];
-
-                      return ListView(
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              IconButton(
+                                  onPressed: () async {
+                                    _launchPhone(phoneNumber);
+                                  },
+                                  icon: Icon(
+                                    CupertinoIcons.phone_arrow_up_right,
+                                    color: Colors.black,
+                                  )),
+                              Text(
+                                "call customer",
+                                style: TextStyle(
+                                  fontFamily: "Montserrat",
+                                  color: KConstants.baseRedColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              IconButton(
+                                  onPressed: () async {
+                                    _launchPhone(restaurantPhoneNumber);
+                                  },
+                                  icon: const Icon(
+                                    CupertinoIcons.phone_arrow_up_right,
+                                    color: Colors.black,
+                                  )),
+                              Text(
+                                "call restaurant",
+                                style: TextStyle(
+                                  fontFamily: "Montserrat",
+                                  color: KConstants.baseRedColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      Flexible(
+                          child: ListView(
                         children: [
                           OrderProgressBar(
                             acceptBoxValue
@@ -393,135 +444,143 @@ class _ConfirmationPageState extends ConsumerState<ConfirmationPage> {
                                 : KConstants.baseFourGreyColor,
                           ),
                         ],
-                      );
-                    }, error: (error, _) {
-                      return Text(error.toString());
-                    }, loading: () {
-                      return ListView(
-                        children: [
-                          Shimmer.fromColors(
-                            baseColor: KConstants.baseFourGreyColor,
-                            highlightColor: KConstants.baseThreeGreyColor,
-                            child: Container(
-                              decoration: const BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10.0))),
-                              width: screenWidth * .7,
-                              height: screenHeight * .1,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 15,
-                          ),
-                          Shimmer.fromColors(
-                            baseColor: KConstants.baseFourGreyColor,
-                            highlightColor: KConstants.baseThreeGreyColor,
-                            child: Container(
-                              decoration: const BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10.0))),
-                              width: screenWidth * .7,
-                              height: screenHeight * .1,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 15,
-                          ),
-                          Shimmer.fromColors(
-                            baseColor: KConstants.baseFourGreyColor,
-                            highlightColor: KConstants.baseThreeGreyColor,
-                            child: Container(
-                              decoration: const BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10.0))),
-                              width: screenWidth * .7,
-                              height: screenHeight * .1,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 15,
-                          ),
-                          Shimmer.fromColors(
-                            baseColor: KConstants.baseFourGreyColor,
-                            highlightColor: KConstants.baseThreeGreyColor,
-                            child: Container(
-                              decoration: const BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10.0))),
-                              width: screenWidth * .7,
-                              height: screenHeight * .1,
-                            ),
-                          )
-                        ],
-                      );
-                    }),
-                  ),
-                  const SizedBox(
-                    height: 25,
-                  ),
-                  Center(
-                      child: Stack(
+                      )),
+                    ],
+                  );
+                }, error: (error, _) {
+                  return Text(error.toString());
+                }, loading: () {
+                  return Column(
                     children: [
-                      SizedBox(
-                        width: 300,
-                        height: 50,
-                        child: ElevatedButton(
-                          onPressed: clickButtonValue
-                              ? () async {
-                                  _confirmDelivery(
-                                    currentId,
-                                    statusRequest,
-                                  );
-                                }
-                              : null,
-                          style: ButtonStyle(
-                              backgroundColor: clickButtonValue
-                                  ? MaterialStateProperty.all(
-                                      KConstants.baseTwoRedColor,
-                                    )
-                                  : MaterialStateProperty.all(
-                                      KConstants.baseFourDarkColor,
-                                    ),
-                              shape: MaterialStateProperty.all<
-                                  RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                ),
-                              )),
-                          child: Text(
-                            _showCircularIndicator ? "" : statusRequest,
-                            // ignore: prefer_const_constructors
-                            style: TextStyle(
-                              fontFamily: "Montserrat",
+                      Shimmer.fromColors(
+                        child: Container(width: 10),
+                        baseColor: KConstants.baseFourGreyColor,
+                        highlightColor: KConstants.baseThreeGreyColor,
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Shimmer.fromColors(
+                        baseColor: KConstants.baseFourGreyColor,
+                        highlightColor: KConstants.baseThreeGreyColor,
+                        child: Container(
+                          decoration: const BoxDecoration(
                               color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0))),
+                          width: screenWidth * .7,
+                          height: screenHeight * .1,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      Shimmer.fromColors(
+                        baseColor: KConstants.baseFourGreyColor,
+                        highlightColor: KConstants.baseThreeGreyColor,
+                        child: Container(
+                          decoration: const BoxDecoration(
+                              color: Colors.white,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0))),
+                          width: screenWidth * .7,
+                          height: screenHeight * .1,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      Shimmer.fromColors(
+                        baseColor: KConstants.baseFourGreyColor,
+                        highlightColor: KConstants.baseThreeGreyColor,
+                        child: Container(
+                          decoration: const BoxDecoration(
+                              color: Colors.white,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0))),
+                          width: screenWidth * .7,
+                          height: screenHeight * .1,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      Shimmer.fromColors(
+                        baseColor: KConstants.baseFourGreyColor,
+                        highlightColor: KConstants.baseThreeGreyColor,
+                        child: Container(
+                          decoration: const BoxDecoration(
+                              color: Colors.white,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0))),
+                          width: screenWidth * .7,
+                          height: screenHeight * .1,
+                        ),
+                      )
+                    ],
+                  );
+                }),
+                const SizedBox(
+                  height: 25,
+                ),
+                Center(
+                    child: Stack(
+                  children: [
+                    SizedBox(
+                      width: 300,
+                      height: 50,
+                      child: ElevatedButton(
+                        onPressed: clickButtonValue
+                            ? () async {
+                                _confirmDelivery(
+                                  currentId,
+                                  statusRequest,
+                                );
+                              }
+                            : null,
+                        style: ButtonStyle(
+                            backgroundColor: clickButtonValue
+                                ? MaterialStateProperty.all(
+                                    KConstants.baseTwoRedColor,
+                                  )
+                                : MaterialStateProperty.all(
+                                    KConstants.baseFourDarkColor,
+                                  ),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                            )),
+                        child: Text(
+                          _showCircularIndicator ? "" : statusRequest,
+                          // ignore: prefer_const_constructors
+                          style: TextStyle(
+                            fontFamily: "Montserrat",
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
                           ),
                         ),
                       ),
-                      if (_showCircularIndicator)
-                        // ignore: dead_code
-                        const Positioned.fill(
-                          child: Center(
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                            ),
+                    ),
+                    if (_showCircularIndicator)
+                      // ignore: dead_code
+                      const Positioned.fill(
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
                           ),
                         ),
-                    ],
-                  )),
-                  const SizedBox(
-                    height: 25,
-                  )
-                ],
-              ),
-            )),
-      ),
+                      ),
+                  ],
+                )),
+                const SizedBox(
+                  height: 25,
+                )
+              ],
+            ),
+          )),
     );
   }
 }
