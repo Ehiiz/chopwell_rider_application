@@ -386,7 +386,16 @@ class _NewProfilePageState extends ConsumerState<NewProfilePage> {
                 ),
               );
             } else {
-              return LoginPage();
+               WidgetsBinding.instance?.addPostFrameCallback((_) {
+              // Navigate to login page without the navigation bar
+              pushNewScreen(
+                context,
+                screen: LoginPage(),
+                withNavBar: false, // OPTIONAL VALUE. True by default.
+                pageTransitionAnimation: PageTransitionAnimation.cupertino,
+              );
+            });
+            return Container(); // R
             }
           }),
     );
