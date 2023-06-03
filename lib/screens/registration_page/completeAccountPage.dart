@@ -45,6 +45,7 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
   double latitude = 0.0;
   double longitude = 0.0;
   String dateOfBirth = "";
+  String _selectedItem = "Edo";
   bool detailsMatch = false;
 
   bool _isButtonDisabled = true;
@@ -353,14 +354,85 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
                         Padding(
                           padding:
                               EdgeInsets.symmetric(horizontal: width * .05),
-                          child: SignInput(
-                            Icons.location_city_rounded,
-                            "state",
-                            "incorrect state",
-                            "Abuja",
-                            true,
-                            regExp: nameRegex,
-                            controller: _stateController,
+                          child: Container(
+                            padding:
+                                EdgeInsets.symmetric(horizontal: width * .05),
+                            width: width,
+                            decoration: BoxDecoration(
+                              color: KConstants.baseFourRedColor,
+                              borderRadius: BorderRadius.circular(100),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Icon(
+                                  Icons.location_city,
+                                  color: KConstants.baseRedColor,
+                                ),
+                                const SizedBox(
+                                  width: 5,
+                                ),
+                                Container(
+                                    decoration: BoxDecoration(
+                                      border: Border(
+                                        bottom: BorderSide(
+                                          color: KConstants.baseRedColor,
+                                          width: 1.0,
+                                        ),
+                                      ),
+                                    ),
+                                    child: DropdownButton(
+                                      underline: null,
+                                      value: _selectedItem,
+                                      items: <DropdownMenuItem<String>>[
+                                        DropdownMenuItem(
+                                          value: "Edo",
+                                          child: Text(
+                                            "Edo",
+                                            maxLines: 1,
+                                            overflow: TextOverflow.fade,
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontFamily: "Montserrat",
+                                              color: KConstants.baseTwoRedColor,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                        DropdownMenuItem(
+                                          value: "Abuja",
+                                          child: Text(
+                                            "Abuja",
+                                            maxLines: 1,
+                                            overflow: TextOverflow.fade,
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontFamily: "Montserrat",
+                                              color: KConstants.baseTwoRedColor,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _selectedItem = value as String;
+                                          _stateController.text =
+                                              value as String;
+                                        });
+                                      },
+                                    )),
+                                Text(
+                                  "select state",
+                                  style: TextStyle(
+                                    fontFamily: "Monsterrat",
+                                    fontSize: 12,
+                                    color: KConstants.baseTwoRedColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
                         ),
                         const SizedBox(
