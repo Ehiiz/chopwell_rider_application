@@ -54,7 +54,7 @@ Future main() async {
       _showPaymentMadeDialog(navigatorKey.currentState!.overlay!.context);
       event.complete(notification);
     } else {
-      event.complete(null);
+      event.complete(notification);
     }
 
     print("this is notification title: ${notification.title}");
