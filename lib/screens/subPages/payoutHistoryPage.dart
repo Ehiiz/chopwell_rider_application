@@ -2,6 +2,7 @@ import 'package:chopwell_rider_application/models/response_models/list_based_res
 import 'package:flutter/material.dart';
 import 'package:chopwell_rider_application/constants/constants.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../services/payout_history_service.dart';
@@ -55,105 +56,135 @@ class PayoutHistoryPage extends ConsumerWidget {
           const SizedBox(height: 10),
           Column(
               children: payoutsRef.when(data: (data) {
-            final payouts = data.data;
-            print(payouts);
-            return List.generate(
-                data.data.length,
-                (index) => Container(
-                      margin: const EdgeInsets.only(bottom: 10.0),
-                      height: 100.0,
-                      padding: const EdgeInsets.symmetric(horizontal: 5.0),
+            List<dynamic> payouts = data.data;
+            return payouts.isEmpty
+                ? [
+                    Center(
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          SizedBox(
-                            width: screenWidth * 0.2,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  payouts[index]["created"],
-                                  style: TextStyle(
-                                    fontFamily: "Montserrat",
-                                    fontSize: 13.0,
-                                    color: KConstants.baseDarkColor,
-                                  ),
-                                ),
-                                Text(
-                                  "",
-                                  style: TextStyle(
-                                    fontFamily: "Montserrat",
-                                    fontSize: 13.0,
-                                    color: KConstants.baseDarkColor,
-                                  ),
-                                )
-                              ],
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              height: screenHeight * .2,
                             ),
-                          ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            SvgPicture.asset(
+                              "assets/Burger.svg",
+                              width: 100,
+                              height: 100,
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            const Text("No completed orders... yettt",
+                                style: TextStyle(
+                                  fontFamily: "Montserrat",
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                )),
+                          ]),
+                    )
+                  ]
+                : List.generate(
+                    data.data.length,
+                    (index) => Container(
+                          margin: const EdgeInsets.only(bottom: 10.0),
+                          height: 100.0,
+                          padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               SizedBox(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                                width: screenWidth * 0.2,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      payouts[index]["paid_to"]["bankName"],
+                                      payouts[index]["created"],
                                       style: TextStyle(
                                         fontFamily: "Montserrat",
-                                        color: KConstants.baseRedColor,
-                                        fontSize: 15.0,
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 5.0,
-                                    ),
-                                    Text(
-                                      payouts[index]["paid_to"]["accountName"],
-                                      style: TextStyle(
-                                        fontFamily: "Montserrat",
+                                        fontSize: 13.0,
                                         color: KConstants.baseDarkColor,
-                                        fontSize: 15.0,
                                       ),
                                     ),
                                     Text(
-                                      payouts[index]["paid_to"]
-                                          ["accountNumber"],
+                                      "",
                                       style: TextStyle(
                                         fontFamily: "Montserrat",
+                                        fontSize: 13.0,
                                         color: KConstants.baseDarkColor,
-                                        fontSize: 15.0,
                                       ),
-                                    ),
+                                    )
                                   ],
                                 ),
                               ),
-                              Text(
-                                "₦${payouts[index]["paid_to"]["amount"]}",
-                                style: TextStyle(
-                                  fontFamily: "Montserrat",
-                                  color: KConstants.baseDarkColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20.0,
-                                ),
+                              const SizedBox(
+                                height: 5,
                               ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  SizedBox(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          payouts[index]["paid_to"]["bankName"],
+                                          style: TextStyle(
+                                            fontFamily: "Montserrat",
+                                            color: KConstants.baseRedColor,
+                                            fontSize: 15.0,
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 5.0,
+                                        ),
+                                        Text(
+                                          payouts[index]["paid_to"]
+                                              ["accountName"],
+                                          style: TextStyle(
+                                            fontFamily: "Montserrat",
+                                            color: KConstants.baseDarkColor,
+                                            fontSize: 15.0,
+                                          ),
+                                        ),
+                                        Text(
+                                          payouts[index]["paid_to"]
+                                              ["accountNumber"],
+                                          style: TextStyle(
+                                            fontFamily: "Montserrat",
+                                            color: KConstants.baseDarkColor,
+                                            fontSize: 15.0,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Text(
+                                    "₦${payouts[index]["paid_to"]["amount"]}",
+                                    style: TextStyle(
+                                      fontFamily: "Montserrat",
+                                      color: KConstants.baseDarkColor,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20.0,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              Divider(
+                                color: KConstants.baseGreyColor,
+                                thickness: 1,
+                                height: 10,
+                              )
                             ],
                           ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          Divider(
-                            color: KConstants.baseGreyColor,
-                            thickness: 1,
-                            height: 10,
-                          )
-                        ],
-                      ),
-                    ));
+                        ));
           }, error: (error, _) {
             return [Text(error.toString())];
           }, loading: () {

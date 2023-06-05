@@ -115,31 +115,58 @@ class MyOrders extends ConsumerWidget {
                           }
                         });
 
-                        return RefreshIndicator(
-                            child: ListView.builder(
-                              physics: const ClampingScrollPhysics(),
-                              shrinkWrap: true,
-                              scrollDirection: Axis.vertical,
-                              itemCount: completedOrders.length,
-                              itemBuilder: (BuildContext context, int index) =>
-                                  OrderFavouritesBox(
-                                false,
-                                false,
-                                completedOrders[index]["order_details"]["food"],
-                                completedOrders[index]["created_at"],
-                                completedOrders[index]["amount"].toString(),
-                                completedOrders[index]["_id"],
-                                completedOrders[index]["restaurant"]["name"],
-                                completedOrders[index]["total"],
-                                completedOrders[index]["deliveryFee"],
-                                completedOrders[index]["vat"],
-                                "",
-                                completedOrders[index]["status"],
-                              ),
-                            ),
-                            onRefresh: () async {
-                              ref.refresh(riderOrderFutureProvider);
-                            });
+                        return completedOrders.isNotEmpty
+                            ? RefreshIndicator(
+                                child: ListView.builder(
+                                  physics: const ClampingScrollPhysics(),
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.vertical,
+                                  itemCount: completedOrders.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) =>
+                                          OrderFavouritesBox(
+                                    false,
+                                    false,
+                                    completedOrders[index]["order_details"]
+                                        ["food"],
+                                    completedOrders[index]["created_at"],
+                                    completedOrders[index]["amount"].toString(),
+                                    completedOrders[index]["_id"],
+                                    completedOrders[index]["restaurant"]
+                                        ["name"],
+                                    completedOrders[index]["total"],
+                                    completedOrders[index]["deliveryFee"],
+                                    completedOrders[index]["vat"],
+                                    "",
+                                    completedOrders[index]["status"],
+                                  ),
+                                ),
+                                onRefresh: () async {
+                                  ref.refresh(riderOrderFutureProvider);
+                                })
+                            : Center(
+                                child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      SizedBox(
+                                        height: screenHeight * .2,
+                                      ),
+                                      SvgPicture.asset(
+                                        "assets/Burger.svg",
+                                        width: 100,
+                                        height: 100,
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      const Text("No completed orders... yettt",
+                                          style: TextStyle(
+                                            fontFamily: "Montserrat",
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold,
+                                          )),
+                                    ]),
+                              );
                       },
                       error: (error, _) {
                         return Text(error.toString());
@@ -184,7 +211,29 @@ class MyOrders extends ConsumerWidget {
                         });
 
                         return completedOrders.isEmpty
-                            ? Container()
+                            ? Center(
+                                child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      SizedBox(
+                                        height: screenHeight * .2,
+                                      ),
+                                      SvgPicture.asset(
+                                        "assets/Burger.svg",
+                                        width: 100,
+                                        height: 100,
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      const Text("No completed orders... yettt",
+                                          style: TextStyle(
+                                            fontFamily: "Montserrat",
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold,
+                                          )),
+                                    ]),
+                              )
                             : RefreshIndicator(
                                 child: ListView.builder(
                                   physics: const ClampingScrollPhysics(),

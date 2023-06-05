@@ -83,108 +83,138 @@ class OrderHistoryPage extends ConsumerWidget {
           Column(
             children: riderDeliveries.when(data: (data) {
               final deliveries = data.data;
-              return List.generate(
-                  deliveries.length,
-                  (index) => Container(
-                        height: 100.0,
-                        padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
+              return deliveries.isNotEmpty
+                  ? List.generate(
+                      deliveries.length,
+                      (index) => Container(
+                            height: 100.0,
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 5.0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                IntrinsicHeight(
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 0,
-                                        top: 10,
-                                        bottom: 10,
-                                        right: 10),
-                                    child: Image(
-                                      image: AssetImage(
-                                          //   deliveries[index]["restaurant_image"],
-                                          KConstants.foodImages[index]),
+                                Row(
+                                  children: [
+                                    IntrinsicHeight(
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 0,
+                                            top: 10,
+                                            bottom: 10,
+                                            right: 10),
+                                        child: Image(
+                                          image: AssetImage(
+                                              //   deliveries[index]["restaurant_image"],
+                                              KConstants.foodImages[index]),
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        DateFormat("dd MMM yyyy, hh:mm a")
-                                            .format(DateTime.parse(
-                                                deliveries[index]
-                                                    ["created_at"])),
-                                        style: TextStyle(
-                                          fontFamily: "Montserrat",
-                                          color: KConstants.baseThreeDarkColor,
-                                          fontSize: 12.0,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        height: 5.0,
-                                      ),
-                                      Text(
-                                        deliveries[index]["restaurant_name"],
-                                        style: TextStyle(
-                                          fontFamily: "Montserrat",
-                                          color: KConstants.baseRedColor,
-                                          fontSize: 12.0,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        height: 10.0,
-                                      ),
-                                      Row(
+                                    SizedBox(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
-                                          SvgPicture.asset(
-                                            "assets/location.svg",
-                                            width: 12,
-                                            height: 12,
+                                          Text(
+                                            DateFormat("dd MMM yyyy, hh:mm a")
+                                                .format(DateTime.parse(
+                                                    deliveries[index]
+                                                        ["created_at"])),
+                                            style: TextStyle(
+                                              fontFamily: "Montserrat",
+                                              color:
+                                                  KConstants.baseThreeDarkColor,
+                                              fontSize: 12.0,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
                                           const SizedBox(
-                                            width: 5.0,
+                                            height: 5.0,
                                           ),
-                                          Container(
-                                            width: screenWidth * .4,
-                                            child: Expanded(
-                                              child: Text(
-                                                deliveries[index]["location"]
-                                                    ["address"],
-                                                maxLines: 1,
-                                                style: const TextStyle(
-                                                  fontSize: 13,
-                                                  fontFamily: 'Montserrat',
+                                          Text(
+                                            deliveries[index]
+                                                ["restaurant_name"],
+                                            style: TextStyle(
+                                              fontFamily: "Montserrat",
+                                              color: KConstants.baseRedColor,
+                                              fontSize: 12.0,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            height: 10.0,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              SvgPicture.asset(
+                                                "assets/location.svg",
+                                                width: 12,
+                                                height: 12,
+                                              ),
+                                              const SizedBox(
+                                                width: 5.0,
+                                              ),
+                                              Container(
+                                                width: screenWidth * .4,
+                                                child: Expanded(
+                                                  child: Text(
+                                                    deliveries[index]
+                                                        ["location"]["address"],
+                                                    maxLines: 1,
+                                                    style: const TextStyle(
+                                                      fontSize: 13,
+                                                      fontFamily: 'Montserrat',
+                                                    ),
+                                                  ),
                                                 ),
                                               ),
-                                            ),
+                                            ],
                                           ),
                                         ],
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
+                                ),
+                                Text(
+                                  "₦${deliveries[index]["deliveryFee"]}",
+                                  style: TextStyle(
+                                      fontFamily: "Montserrat",
+                                      color: KConstants.baseDarkColor,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20.0),
                                 ),
                               ],
                             ),
-                            Text(
-                              "₦${deliveries[index]["deliveryFee"]}",
-                              style: TextStyle(
-                                  fontFamily: "Montserrat",
-                                  color: KConstants.baseDarkColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20.0),
-                            ),
-                          ],
-                        ),
-                      ));
+                          ))
+                  : [
+                      Center(
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                height: screenHeight * .2,
+                              ),
+                              SvgPicture.asset(
+                                "assets/Brownie.svg",
+                                width: 100,
+                                height: 100,
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              const Text("No completed orders... yettt",
+                                  style: TextStyle(
+                                    fontFamily: "Montserrat",
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                  )),
+                            ]),
+                      )
+                    ];
             }, error: (error, _) {
               return [Text(error.toString())];
             }, loading: () {
