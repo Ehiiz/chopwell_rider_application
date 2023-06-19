@@ -139,6 +139,10 @@ class MyOrders extends ConsumerWidget {
                                     completedOrders[index]["vat"],
                                     "",
                                     completedOrders[index]["status"],
+                                    completedOrders[index]["preOrder"]
+                                        ["status"],
+                                    completedOrders[index]["preOrder"]
+                                        ["deliveryTime"],
                                   ),
                                 ),
                                 onRefresh: () async {
@@ -240,17 +244,16 @@ class MyOrders extends ConsumerWidget {
                                   shrinkWrap: true,
                                   scrollDirection: Axis.vertical,
                                   itemCount: completedOrders.length,
-                                  itemBuilder: (BuildContext context,
-                                          int index) =>
-                                      PreviousOrderBox(
-                                          completedOrders[index]["created_at"]
-                                              .toString(),
-                                          completedOrders[index]["amount"]
-                                              .toString(),
-                                          completedOrders[index]["restaurant"]
-                                                  ["name"]
-                                              .toString(),
-                                          completedOrders[index]["_id"]),
+                                  itemBuilder:
+                                      (BuildContext context, int index) =>
+                                          PreviousOrderBox(
+                                    completedOrders[index]["created_at"]
+                                        .toString(),
+                                    completedOrders[index]["amount"].toString(),
+                                    completedOrders[index]["restaurant"]["name"]
+                                        .toString(),
+                                    completedOrders[index]["_id"],
+                                  ),
                                 ),
                                 onRefresh: () async {
                                   ref.refresh(riderOrderFutureProvider);

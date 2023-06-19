@@ -29,6 +29,8 @@ class OrderFavouritesBox extends ConsumerStatefulWidget {
     this.vat,
     this.account,
     this.status,
+    this.preOrder,
+    this.deliveryTime,
   );
   //
   bool favourite;
@@ -44,21 +46,26 @@ class OrderFavouritesBox extends ConsumerStatefulWidget {
   String vat;
   String account;
   String status;
+  bool preOrder;
+  int? deliveryTime;
 
   @override
   ConsumerState<OrderFavouritesBox> createState() => _OrderFavouritesBoxState(
-      this.favourite,
-      this.orderStatus,
-      this.mealDetails,
-      this.date,
-      this.amount,
-      this.orderId,
-      this.restaurantName,
-      this.total,
-      this.deliveryFee,
-      this.vat,
-      this.account,
-      this.status);
+        this.favourite,
+        this.orderStatus,
+        this.mealDetails,
+        this.date,
+        this.amount,
+        this.orderId,
+        this.restaurantName,
+        this.total,
+        this.deliveryFee,
+        this.vat,
+        this.account,
+        this.status,
+        this.preOrder,
+        this.deliveryTime,
+      );
 }
 
 class _OrderFavouritesBoxState extends ConsumerState<OrderFavouritesBox> {
@@ -75,6 +82,8 @@ class _OrderFavouritesBoxState extends ConsumerState<OrderFavouritesBox> {
     this.vat,
     this.account,
     this.status,
+    this.preOrder,
+    this.deliveryTime,
   );
 
   final bool favourite;
@@ -89,6 +98,8 @@ class _OrderFavouritesBoxState extends ConsumerState<OrderFavouritesBox> {
   final String vat;
   final String account;
   final String status;
+  final bool preOrder;
+  final int? deliveryTime;
 
   bool _showProgressIndicator = false;
   bool _showRejectIndicator = false;
@@ -176,6 +187,16 @@ class _OrderFavouritesBoxState extends ConsumerState<OrderFavouritesBox> {
           ], color: Colors.white, borderRadius: BorderRadius.circular(20.0)),
           child: Column(
             children: [
+              preOrder
+                  ? Text(
+                      "preorder",
+                      style: TextStyle(
+                        fontFamily: "Montserrat",
+                        color: KConstants.baseGreenColor,
+                        fontSize: 12.0,
+                      ),
+                    )
+                  : Container(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

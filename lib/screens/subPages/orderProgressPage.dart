@@ -128,6 +128,8 @@ class _ConfirmationPageState extends ConsumerState<ConfirmationPage> {
     String account = "";
     String address = "";
     String status = "";
+    bool preOrder = false;
+    int? deliveryTime;
     String restaurantPhoneNumber = "";
     String statusRequest = "completed";
     String currentId = "";
@@ -218,6 +220,8 @@ class _ConfirmationPageState extends ConsumerState<ConfirmationPage> {
                     vat = data.data["vat"];
                     account = "";
                     status = data.data["status"];
+                    preOrder = data.data["preOrder"]["status"] ?? false;
+                    deliveryTime = data.data["preOrder"]["deliveryTime"] ?? "";
 
                     return Column(
                       children: [
@@ -265,6 +269,8 @@ class _ConfirmationPageState extends ConsumerState<ConfirmationPage> {
                                     status: status,
                                     location: location,
                                     deliveryLocation: deliveryLocation,
+                                    preOrder: preOrder,
+                                    deliveryTime: deliveryTime,
                                   ),
                                   withNavBar:
                                       false, // OPTIONAL VALUE. True by default.

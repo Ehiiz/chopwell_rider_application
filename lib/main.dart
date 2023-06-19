@@ -18,6 +18,7 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:alarm/alarm.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -32,8 +33,10 @@ bool isTokenExpired(String? token) {
 
 Future main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   runApp(ProviderScope(child: MaterialApp(home: MyApp(navigatorKey))));
+  await Alarm.init();
 
   await dotenv.load(fileName: ".env");
 
