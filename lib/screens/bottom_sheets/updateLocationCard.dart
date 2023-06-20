@@ -80,133 +80,78 @@ class _SetLocationCardState extends ConsumerState<SetLocationCard> {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
-    return Material(
-      elevation: 2.0,
-      child: Container(
-        alignment: Alignment.center,
-        color: Colors.transparent,
-        width: screenWidth,
-        height: screenHeight * .3,
-        child: Stack(children: [
-          Positioned(
-            child: InkWell(
-              onTap: () async {
-                var place = await PlacesAutocomplete.show(
-                    context: context,
-                    apiKey: googleApikey,
-                    mode: Mode.fullscreen,
-                    types: [],
-                    strictbounds: false,
-                    components: [Component(Component.country, 'ng')],
-                    onError: (err) {
-                      print(err);
-                    });
+    return Stack(children: [
+      InkWell(
+        onTap: () async {
+          var place = await PlacesAutocomplete.show(
+              context: context,
+              apiKey: googleApikey,
+              mode: Mode.overlay,
+              types: [],
+              strictbounds: false,
+              components: [Component(Component.country, 'ng')],
+              onError: (err) {
+                print(err);
+              });
 
-                if (place != null) {
-                  setState(() {
-                    location = place.description.toString();
-                  });
+          if (place != null) {
+            setState(() {
+              location = place.description.toString();
+            });
 
-                  //form google_maps_webservice package
-                  final plist = GoogleMapsPlaces(
-                    apiKey: googleApikey,
-                    apiHeaders: await GoogleApiHeaders().getHeaders(),
-                    //from google_api_headers package
-                  );
-                  String placeid = place.placeId ?? "0";
-                  final detail = await plist.getDetailsByPlaceId(placeid);
-                  final geometry = detail.result.geometry!;
-                  setState(() {
-                    lat = geometry.location.lat;
-                    lang = geometry.location.lng;
-                  });
-                }
-              },
-              child: Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: Stack(
-                    children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Card(
-                            child: Container(
-                                padding: const EdgeInsets.all(0),
-                                width: screenWidth - 40,
-                                child: ListTile(
-                                  title: Text(
-                                    location,
-                                    style: const TextStyle(
-                                      fontSize: 15,
-                                    ),
-                                  ),
-                                  trailing: const Icon(CupertinoIcons.location),
-                                  dense: true,
-                                )),
-                          ),
-                          OutlinedButton(
-                              style: ButtonStyle(
-                                  backgroundColor: MaterialStatePropertyAll(
-                                    KConstants.baseDarkColor,
-                                  ),
-                                  shape: MaterialStateProperty.all(
-                                    RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30.0),
-                                    ),
-                                  ),
-                                  padding: const MaterialStatePropertyAll(
-                                    EdgeInsets.symmetric(
-                                        horizontal: 10, vertical: 15),
-                                  )),
-                              onPressed: accountSetup
-                                  ? () {
-                                      widget.onLocationChanged(
-                                          lat, lang, location);
-                                      Navigator.pop(context);
-                                    }
-                                  : () {
-                                      _updateLocation(
-                                        context,
-                                        location,
-                                        lat,
-                                        lang,
-                                      );
-                                      setState(() {
-                                        location = "";
-                                        lat = 0.0;
-                                        lat = 0.0;
-                                      });
-                                    },
-                              child: Text(
-                                _setLocationLoader
-                                    ? ""
-                                    : accountSetup
-                                        ? "Set location"
-                                        : "Update Location",
-                                style: const TextStyle(
-                                  fontFamily: "Questrial",
-                                  fontSize: 18.0,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ))
-                        ],
+            //form google_maps_webservice package
+            final plist = GoogleMapsPlaces(
+              apiKey: googleApikey,
+              apiHeaders: await GoogleApiHeaders().getHeaders(),
+              //from google_api_headers package
+            );
+            String placeid = place.placeId ?? "0";
+            final detail = await plist.getDetailsByPlaceId(placeid);
+            final geometry = detail.result.geometry!;
+
+            widget.onLocationChanged(
+                geometry.location.lat, geometry.location.lng, location);
+          }
+        },
+        child: Stack(
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    color: KConstants.baseFourRedColor,
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                  child: ListTile(
+                    title: Text(
+                      location,
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        color: KConstants.baseRedColor,
                       ),
-                      if (_setLocationLoader)
-                        const Positioned.fill(
-                          child: Center(
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                    ],
-                  )),
+                    ),
+                    leading: Icon(
+                      Icons.my_location_outlined,
+                      color: KConstants.baseRedColor,
+                    ),
+                    dense: true,
+                  ),
+                ),
+              ],
             ),
-          )
-        ]),
+            if (_setLocationLoader)
+              const Positioned.fill(
+                child: Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+          ],
+        ),
       ),
-    );
+    ]);
   }
 }

@@ -5,6 +5,7 @@ import 'package:chopwell_rider_application/models/request_models/update_rider_st
 import 'package:chopwell_rider_application/models/response_models/map_based_response_model.dart';
 import 'package:chopwell_rider_application/models/request_models/set_location_request_model.dart';
 import 'package:chopwell_rider_application/screens/Nav_Pages/ordersPage.dart';
+import 'package:chopwell_rider_application/screens/micro_components/location_bar.dart';
 import 'package:chopwell_rider_application/screens/micro_components/profile_buttons.dart';
 import 'package:chopwell_rider_application/services/fetch_user_detail_service.dart';
 import 'package:chopwell_rider_application/services/update_location_service.dart';
@@ -41,6 +42,18 @@ class _NewProfilePageState extends ConsumerState<NewProfilePage> {
   bool _updateRIderProgress = false;
 
   late Future<Object?> _user;
+  String location = "Search Location";
+
+  double latitude = 0.0;
+  double longitude = 0.0;
+
+  void changeValue(double lat, double long, String addr) {
+    setState(() {
+      latitude = lat;
+      longitude = long;
+      location = addr;
+    });
+  }
 
   @override
   void initState() {
@@ -234,24 +247,18 @@ class _NewProfilePageState extends ConsumerState<NewProfilePage> {
                                           const SizedBox(
                                             width: 10.0,
                                           ),
-                                          Center(
-                                            // alignment: Alignment.center,
-                                            child: Expanded(
-                                                child: SizedBox(
-                                              width: screenWidth * .65,
-                                              child: Text(
-                                                userDetail["location"]
-                                                    ["address"],
-                                                maxLines: 1,
-                                                overflow: TextOverflow.clip,
-                                                style: const TextStyle(
-                                                  fontSize: 17,
-                                                  fontFamily: 'Montserrat',
-                                                  fontWeight: FontWeight.normal,
-                                                ),
-                                              ),
-                                            )),
-                                          ),
+                                          Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                LocationBar(
+                                                    address:
+                                                        userDetail["location"]
+                                                            ["address"],
+                                                    onLocationChanged:
+                                                        changeValue,
+                                                    accountSetup: false),
+                                              ])
                                         ],
                                       ),
                                       const SizedBox(
@@ -386,16 +393,16 @@ class _NewProfilePageState extends ConsumerState<NewProfilePage> {
                 ),
               );
             } else {
-               WidgetsBinding.instance?.addPostFrameCallback((_) {
-              // Navigate to login page without the navigation bar
-              pushNewScreen(
-                context,
-                screen: LoginPage(),
-                withNavBar: false, // OPTIONAL VALUE. True by default.
-                pageTransitionAnimation: PageTransitionAnimation.cupertino,
-              );
-            });
-            return Container(); // R
+              WidgetsBinding.instance?.addPostFrameCallback((_) {
+                // Navigate to login page without the navigation bar
+                pushNewScreen(
+                  context,
+                  screen: LoginPage(),
+                  withNavBar: false, // OPTIONAL VALUE. True by default.
+                  pageTransitionAnimation: PageTransitionAnimation.cupertino,
+                );
+              });
+              return Container(); // R
             }
           }),
     );

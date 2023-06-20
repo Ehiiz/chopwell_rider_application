@@ -205,6 +205,7 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
           });
           ScaffoldMessenger.of(context).showSnackBar(
               customErrorBar("BVN details does not match biodata provided"));
+          _bvnController.clear();
         }
       } else {
         setState(() {
@@ -441,52 +442,10 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
                         Padding(
                           padding:
                               EdgeInsets.symmetric(horizontal: width * .05),
-                          child: SignInput(
-                            Icons.my_location_outlined,
-                            "address",
-                            "invalid location",
-                            "Abuja",
-                            false,
-                            regExp: nameRegex,
-                            controller: _locationController,
-                          ),
+                          child: SetLocationCard(
+                              onLocationChanged: changeValue,
+                              accountSetup: true),
                         ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        TextButton(
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
-                                Colors.transparent,
-                              ),
-                            ),
-                            onPressed: () async {
-                              showModalBottomSheet(
-                                context: context,
-                                isScrollControlled: true,
-                                builder: (BuildContext context) {
-                                  return StatefulBuilder(
-                                    builder: (BuildContext context,
-                                        StateSetter setState) {
-                                      return SetLocationCard(
-                                        onLocationChanged: changeValue,
-                                        accountSetup: true,
-                                      );
-                                    },
-                                  );
-                                },
-                              );
-                            },
-                            // ignore: prefer_const_constructors
-                            child: Text(
-                              'set address',
-                              style: TextStyle(
-                                fontFamily: "Questrial",
-                                color: KConstants.baseDarkColor,
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            )),
                         const SizedBox(
                           height: 30,
                         ),
