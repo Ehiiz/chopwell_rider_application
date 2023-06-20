@@ -84,7 +84,11 @@ class _LocationBarState extends ConsumerState<LocationBar> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     return Container(
-      width: screenWidth * .8,
+      decoration: BoxDecoration(
+        color: KConstants.baseDarkColor,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      width: screenWidth * .6,
       child: Stack(children: [
         InkWell(
           onTap: () async {
@@ -130,19 +134,19 @@ class _LocationBarState extends ConsumerState<LocationBar> {
                           "assets/location.svg",
                           width: 25,
                           height: 25,
-                          color: Colors.black,
+                          color: Colors.white,
                         ),
                         const SizedBox(
                           width: 10,
                         ),
                         SizedBox(
-                          width: screenWidth * .6,
+                          width: screenWidth * .5,
                           child: Text(
                             widget.address,
                             maxLines: 1,
                             style: const TextStyle(
                               fontSize: 15,
-                              color: Colors.black,
+                              color: Colors.white,
                               fontFamily: "Montserrat",
                               overflow: TextOverflow.clip,
                             ),
