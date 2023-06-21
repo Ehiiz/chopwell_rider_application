@@ -239,14 +239,6 @@ class _NewProfilePageState extends ConsumerState<NewProfilePage> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
-                                          SvgPicture.asset(
-                                            "assets/location.svg",
-                                            width: 25,
-                                            height: 25,
-                                          ),
-                                          const SizedBox(
-                                            width: 10.0,
-                                          ),
                                           Row(
                                               mainAxisAlignment:
                                                   MainAxisAlignment.center,
@@ -260,17 +252,6 @@ class _NewProfilePageState extends ConsumerState<NewProfilePage> {
                                                     accountSetup: false),
                                               ])
                                         ],
-                                      ),
-                                      const SizedBox(
-                                        width: 10.0,
-                                      ),
-                                      Text(
-                                        'edit',
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold,
-                                            fontFamily: 'Montserrat',
-                                            color: KConstants.baseGreenColor),
                                       ),
                                     ],
                                   ),

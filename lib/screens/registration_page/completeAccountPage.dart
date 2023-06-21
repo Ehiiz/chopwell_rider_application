@@ -211,6 +211,7 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
         setState(() {
           _showLocationIndicator = false;
         });
+        _bvnController.clear();
         ScaffoldMessenger.of(context)
             .showSnackBar(customErrorBar("Invalid to BVN details"));
       }
