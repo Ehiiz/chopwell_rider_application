@@ -1,4 +1,4 @@
-package com.example.chopwell_rider_application
+package chopwell.rider
 
 import io.flutter.embedding.android.FlutterActivity
 

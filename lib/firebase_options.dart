@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyDv_fdhVxvi8_e2B85wApdYIZt51lZr4q8',
-    appId: '1:789185323395:android:5187429e1bd3bf575216b6',
+    appId: '1:789185323395:android:96f7f3d4f1be9fe25216b6',
     messagingSenderId: '789185323395',
     projectId: 'chopwell-b8ae4',
     storageBucket: 'chopwell-b8ae4.appspot.com',
@@ -59,11 +59,11 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyDOd2D1toNMpVcYlYiTC_G4zMfKaLYrB5s',
-    appId: '1:789185323395:ios:8ccd63ceaebcbb585216b6',
+    appId: '1:789185323395:ios:aaab7a8270a742c15216b6',
     messagingSenderId: '789185323395',
     projectId: 'chopwell-b8ae4',
     storageBucket: 'chopwell-b8ae4.appspot.com',
-    iosClientId: '789185323395-m66kfjbdb3ovu5i63f3aoc0d6otc51kd.apps.googleusercontent.com',
-    iosBundleId: 'com.example.chopwellMerchantApplication',
+    iosClientId: '789185323395-dut8cr6qmabe6pq1jro8obha8cuav4ns.apps.googleusercontent.com',
+    iosBundleId: 'chopwell.rider',
   );
 }

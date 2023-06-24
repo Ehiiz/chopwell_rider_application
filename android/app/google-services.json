@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:789185323395:android:128cc0f2ed8f318d5216b6",
+        "mobilesdk_app_id": "1:789185323395:android:181fd87fa6464e5c5216b6",
         "android_client_info": {
-          "package_name": "com.example.chopwell_app"
+          "package_name": "chopwell.app"
         }
       },
       "oauth_client": [
@@ -31,10 +31,10 @@
               "client_type": 3
             },
             {
-              "client_id": "789185323395-kcsd26e4huo011u4vjfcvhibt13g08um.apps.googleusercontent.com",
+              "client_id": "789185323395-dut8cr6qmabe6pq1jro8obha8cuav4ns.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.chopwellApp"
+                "bundle_id": "chopwell.rider"
               }
             }
           ]
@@ -43,9 +43,9 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:789185323395:android:5187429e1bd3bf575216b6",
+        "mobilesdk_app_id": "1:789185323395:android:2d6bec936cec81185216b6",
         "android_client_info": {
-          "package_name": "com.example.chopwell_rider_application"
+          "package_name": "chopwell.merchant"
         }
       },
       "oauth_client": [
@@ -67,10 +67,46 @@
               "client_type": 3
             },
             {
-              "client_id": "789185323395-kcsd26e4huo011u4vjfcvhibt13g08um.apps.googleusercontent.com",
+              "client_id": "789185323395-dut8cr6qmabe6pq1jro8obha8cuav4ns.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.chopwellApp"
+                "bundle_id": "chopwell.rider"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:789185323395:android:96f7f3d4f1be9fe25216b6",
+        "android_client_info": {
+          "package_name": "chopwell.rider"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "789185323395-2pmnrjlcrhvea1s2a4arv4lfr58osfsp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDv_fdhVxvi8_e2B85wApdYIZt51lZr4q8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "789185323395-2pmnrjlcrhvea1s2a4arv4lfr58osfsp.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "789185323395-dut8cr6qmabe6pq1jro8obha8cuav4ns.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "chopwell.rider"
               }
             }
           ]
