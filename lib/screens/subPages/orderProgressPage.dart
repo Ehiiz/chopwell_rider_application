@@ -221,7 +221,7 @@ class _ConfirmationPageState extends ConsumerState<ConfirmationPage> {
                     account = "";
                     status = data.data["status"];
                     preOrder = data.data["preOrder"]["status"] ?? false;
-                    deliveryTime = data.data["preOrder"]["deliveryTime"] ?? "";
+                    deliveryTime = data.data["preOrder"]["deliveryTime"] ?? 0;
 
                     return Column(
                       children: [
