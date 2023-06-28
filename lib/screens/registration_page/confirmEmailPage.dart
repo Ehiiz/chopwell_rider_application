@@ -1,5 +1,5 @@
 import 'package:chopwell_rider_application/constants/constants.dart';
-import 'package:chopwell_rider_application/models/request_models/veirfy_phone_request_model.dart';
+import 'package:chopwell_rider_application/models/request_models/verify_phone_request_model.dart';
 import 'package:chopwell_rider_application/models/request_models/verify_email_request_model.dart';
 import 'package:chopwell_rider_application/screens/micro_components/signin_input.dart';
 import 'package:chopwell_rider_application/screens/registration_page/loginPage.dart';
