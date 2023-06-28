@@ -20,9 +20,9 @@ import '../../../main.dart';
 import '../../../services/third_party_services/google_location_service.dart';
 
 class CompleteAccountPage extends StatefulWidget {
-  CompleteAccountPage({Key? key, required this.userEmail}) : super(key: key);
+  CompleteAccountPage({Key? key, required this.phoneNumber}) : super(key: key);
 
-  final String userEmail;
+  final String phoneNumber;
 
   @override
   State<CompleteAccountPage> createState() => _CompleteAccountPageState();
@@ -34,7 +34,7 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
   final TextEditingController _middleNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _stateController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
   final TextEditingController _imageController = TextEditingController();
   final TextEditingController _bvnController = TextEditingController();
@@ -47,13 +47,14 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
   String dateOfBirth = "";
   String _selectedItem = "Edo";
   bool detailsMatch = false;
+  String bvnName = "";
 
   bool _isButtonDisabled = true;
 
   @override
   void initState() {
     super.initState();
-    _phoneController.addListener(_validateInput);
+    _emailController.addListener(_validateInput);
     _stateController.addListener(_validateInput);
     _nameController.addListener(_validateInput);
     _firstNameController.addListener(_validateInput);
@@ -94,26 +95,34 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
     final name = _nameController.text;
     final state = _stateController.text;
     final location = _locationController.text;
-    final phone = _phoneController.text;
+    final email = _emailController.text;
     final image = _imageController.text;
     final bvn = _bvnController.text;
-    final email = widget.userEmail;
+    final phone = "+234${widget.phoneNumber}";
 
     setState(() {
       _showProgressIndicator = true;
     });
 
+    if (bvnName.toLowerCase() != name.toLowerCase()) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(customErrorBar("BVN details does not match"));
+      _bvnController.clear();
+      return;
+    }
+
     final request = CompleteAccountRequestModel(
-        name: name,
-        address: location,
-        state: state,
-        phone: phone,
-        longitude: longitude,
-        latitude: latitude,
-        profile_picture: image,
-        bvn: bvn,
-        dateOfBirth: dateOfBirth,
-        email: email);
+      name: name,
+      address: location,
+      state: state,
+      phone: phone,
+      longitude: longitude,
+      latitude: latitude,
+      profile_picture: image,
+      bvn: bvn,
+      dateOfBirth: dateOfBirth,
+      email: email,
+    );
     final response = await CompleteAccountService.setup(request);
 
     if (response.status == "success") {
@@ -157,13 +166,13 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
   }
 
   void _validateInput() {
-    final phoneValid = phoneRegex.hasMatch(_phoneController.text);
+    final emailValid = emailRegExp.hasMatch(_emailController.text);
     final stateValid = nameRegex.hasMatch(_stateController.text);
     final locationValid = nameRegex.hasMatch(_locationController.text);
     final nameValid = nameRegex.hasMatch(_nameController.text);
     final bvnValid = bvnRegex.hasMatch(_bvnController.text);
     setState(() {
-      _isButtonDisabled = !(phoneValid &&
+      _isButtonDisabled = !(emailValid &&
           stateValid &&
           locationValid &&
           nameValid &&
@@ -186,27 +195,12 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
         final firstName = response.data["firstName"];
         final middleName = response.data["middleName"];
         final lastName = response.data["lastName"];
-
-        if (firstName.toLowerCase() ==
-                _firstNameController.text.toLowerCase() &&
-            lastName.toLowerCase() == _lastNameController.text.toLowerCase()) {
-          setState(() {
-            detailsMatch = true;
-            _nameController.text = "$firstName $lastName $middleName";
-            _showLocationIndicator = false;
-            dateOfBirth = response.data["dateOfBirth"];
-          });
-
-          ScaffoldMessenger.of(context).showSnackBar(
-              customSuccessBar("BVN details successfully matched"));
-        } else {
-          setState(() {
-            _showLocationIndicator = false;
-          });
-          ScaffoldMessenger.of(context).showSnackBar(
-              customErrorBar("BVN details does not match biodata provided"));
-          _bvnController.clear();
-        }
+        setState(() {
+          detailsMatch = true;
+          _nameController.text = "$firstName $lastName";
+          _showLocationIndicator = false;
+          dateOfBirth = response.data["dateOfBirth"];
+        });
       } else {
         setState(() {
           _showLocationIndicator = false;
@@ -215,7 +209,7 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
         ScaffoldMessenger.of(context)
             .showSnackBar(customErrorBar("Invalid to BVN details"));
       }
-    } else {}
+    }
   }
 
   @override
@@ -223,7 +217,7 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
     _locationController.dispose();
     _stateController.dispose();
     _nameController.dispose();
-    _phoneController.dispose();
+    _emailController.dispose();
     _bvnController.dispose();
     super.dispose();
   }
@@ -325,13 +319,13 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
                           padding:
                               EdgeInsets.symmetric(horizontal: width * .05),
                           child: SignInput(
-                            Icons.phone_android_rounded,
-                            "phone",
-                            "must be a valid phone number",
+                            Icons.email,
+                            "email",
+                            "must be a valid email",
                             "",
                             true,
-                            regExp: phoneRegex,
-                            controller: _phoneController,
+                            regExp: emailRegExp,
+                            controller: _emailController,
                           ),
                         ),
                         const SizedBox(

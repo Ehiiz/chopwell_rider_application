@@ -9,7 +9,7 @@ part of 'verify_otp_request_model.dart';
 VerifyOtpRequestModel _$VerifyOtpRequestModelFromJson(
         Map<String, dynamic> json) =>
     VerifyOtpRequestModel(
-      email: json['email'] as String,
+      phoneNumber: json['phoneNumber'] as String,
       otp: json['otp'] as String,
     );
 
@@ -17,5 +17,5 @@ Map<String, dynamic> _$VerifyOtpRequestModelToJson(
         VerifyOtpRequestModel instance) =>
     <String, dynamic>{
       'otp': instance.otp,
-      'email': instance.email,
+      'phoneNumber': instance.phoneNumber,
     };

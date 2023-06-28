@@ -57,10 +57,9 @@ class CompleteAccountService {
   static Future<MapDataResponseModel> setup(
       CompleteAccountRequestModel request) async {
     print("I enter");
-    final token = await AuthToken.getAuthToken();
     final response = await RequestModule.post(
         _completeAccountPath, request.toJson(),
-        headers: {"Authorization": "Bearer ${token!}"});
+        headers: {"": ""});
     if (response.statusCode == 200) {
       final responseMap = json.decode(response.body);
       if (responseMap["data"] != null) {

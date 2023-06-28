@@ -20,7 +20,6 @@ class SigninService {
       final responseMap = json.decode(response.body);
       if (responseMap["status"] != "error") {
         final decodedResponse = MapDataResponseModel.fromJson(responseMap);
-        await AuthToken.setAuthToken(decodedResponse.data["token"]);
         return decodedResponse;
       } else {
         final decodedResponse = ErrorResponseModel.fromJson(responseMap);

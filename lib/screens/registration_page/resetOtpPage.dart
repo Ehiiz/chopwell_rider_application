@@ -1,73 +1,76 @@
 import 'package:chopwell_rider_application/constants/constants.dart';
+import 'package:chopwell_rider_application/models/request_models/verify_otp_request_model.dart';
+import 'package:chopwell_rider_application/screens/micro_components/signin_input.dart';
+import 'package:chopwell_rider_application/screens/registration_page/completeAccountPage.dart';
 import 'package:chopwell_rider_application/screens/registration_page/loginPage.dart';
-import 'package:chopwell_rider_application/services/set_new_password_service.dart';
+import 'package:chopwell_rider_application/screens/registration_page/resetPasswordPage.dart';
+import 'package:chopwell_rider_application/services/verify_otp_service.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 
-import '../../models/request_models/set_new_password_request_model.dart';
-import '../micro_components/signin_input.dart';
-
-class ResetPasswordPage extends StatefulWidget {
-  ResetPasswordPage({Key? key, required this.phoneNumber, required this.otp})
-      : super(key: key);
+class ResetOtpPage extends StatefulWidget {
+  ResetOtpPage({Key? key, required this.phoneNumber}) : super(key: key);
 
   String phoneNumber;
-  String otp;
+
   @override
-  State<ResetPasswordPage> createState() =>
-      _ResetPasswordPageState(this.phoneNumber, this.otp);
+  State<ResetOtpPage> createState() => _ResetOtpPageState(this.phoneNumber);
 }
 
-class _ResetPasswordPageState extends State<ResetPasswordPage> {
-  final TextEditingController _newPasswordController = TextEditingController();
-  _ResetPasswordPageState(this.phoneNumber, this.otp);
-  String phoneNumber;
-  String otp;
+class _ResetOtpPageState extends State<ResetOtpPage> {
+  final TextEditingController _otpController = TextEditingController();
+
+  _ResetOtpPageState(this.phoneNumber);
 
   bool _showProgressIndicator = false;
+
+  String phoneNumber;
   bool _isButtonDisabled = true;
 
   @override
   void initState() {
     super.initState();
-    _newPasswordController.addListener(_validateInput);
+    _otpController.addListener(_validateInput);
   }
 
-  void _handleSetPassword() async {
+  void _handleVerifyOTP(BuildContext context) async {
+    final otp = _otpController.text;
     _showProgressIndicator = true;
-    final new_password = _newPasswordController.text;
 
-    final request = SetNewPasswordRequestModel(
-        phoneNumber: phoneNumber, otp: otp, new_password: new_password);
-    final response = await SetNewPasswordService.setNewPassword(request);
+    final request = VerifyOtpRequestModel(phoneNumber: phoneNumber, otp: otp);
+    final response = await VerifyOtpService.verifyotp(request);
 
     if (response.status == "success") {
       //Add toast notfication
       _showProgressIndicator = false;
+      ScaffoldMessenger.of(context).showSnackBar(
+          customSuccessBar("OTP Verification Successful, Sign In"));
+
       pushNewScreen(
         context,
-        screen: LoginPage(),
+        screen: ResetPasswordPage(phoneNumber: phoneNumber, otp: otp),
         withNavBar: false, // OPTIONAL VALUE. True by default.
         pageTransitionAnimation: PageTransitionAnimation.cupertino,
       );
       ;
     } else {
+      print(response);
       ScaffoldMessenger.of(context)
-          .showSnackBar(customErrorBar("Unable to reset password"));
+          .showSnackBar(customErrorBar("OTP Verification Failed"));
     }
     // Do something with the email and password values
   }
 
   void _validateInput() {
-    final passwordValid = passwordRegex.hasMatch(_newPasswordController.text);
+    final otpValid = otpRegex.hasMatch(_otpController.text);
     setState(() {
-      _isButtonDisabled = !(passwordValid);
+      _isButtonDisabled = !(otpValid);
     });
   }
 
   @override
   void dispose() {
-    _newPasswordController.dispose();
+    _otpController.dispose();
     super.dispose();
   }
 
@@ -75,10 +78,8 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
-    return MaterialApp(
-        home: SafeArea(
+    return SafeArea(
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
         body: SizedBox(
           child: ListView(
             children: [
@@ -103,17 +104,20 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: width * .05),
                         child: SignInput(
-                          Icons.email_outlined,
-                          "email",
-                          "incorrect email",
-                          "user@gmail.com",
+                          Icons.numbers_outlined,
+                          "otp",
+                          "invalid otp",
+                          "",
                           true,
-                          regExp: passwordRegex,
-                          controller: _newPasswordController,
+                          regExp: otpRegex,
+                          controller: _otpController,
                         ),
                       ),
                       const SizedBox(
                         height: 15,
+                      ),
+                      const SizedBox(
+                        height: 30,
                       ),
                       Stack(
                         children: [
@@ -121,13 +125,12 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                             width: 200,
                             height: 48,
                             child: OutlinedButton(
-                                onPressed: () => _handleSetPassword(),
+                                onPressed: _isButtonDisabled
+                                    ? null
+                                    : () => _handleVerifyOTP(context),
                                 style: ButtonStyle(
-                                  backgroundColor: _isButtonDisabled
-                                      ? MaterialStateProperty.all(
-                                          KConstants.baseThreeGreyColor)
-                                      : MaterialStateProperty.all(
-                                          KConstants.baseDarkColor),
+                                  backgroundColor: MaterialStateProperty.all(
+                                      KConstants.baseDarkColor),
                                   shape: MaterialStateProperty.all(
                                       RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(30.0),
@@ -163,7 +166,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
           ),
         ),
       ),
-    ));
+    );
   }
 }
 

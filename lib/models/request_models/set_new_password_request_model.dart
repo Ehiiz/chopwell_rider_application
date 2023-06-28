@@ -4,12 +4,14 @@ part 'set_new_password_request_model.g.dart';
 
 @JsonSerializable()
 class SetNewPasswordRequestModel {
-  final String email;
+  final String phoneNumber;
   final String otp;
   final String new_password;
 
   SetNewPasswordRequestModel(
-      {required this.email, required this.otp, required this.new_password});
+      {required this.phoneNumber,
+      required this.otp,
+      required this.new_password});
 
   factory SetNewPasswordRequestModel.fromJson(Map<String, dynamic> json) =>
       _$SetNewPasswordRequestModelFromJson(json);

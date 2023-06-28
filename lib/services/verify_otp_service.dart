@@ -7,10 +7,35 @@ import 'package:chopwell_rider_application/models/request_models/verify_otp_requ
 
 class VerifyOtpService {
   static const String _verifyOtpPath = '/rider/password-reset/otp';
+  static const String _verifyAccountOtpPath = '/rider/account/verify-otp';
 
   static Future<MapDataResponseModel> verifyotp(
       VerifyOtpRequestModel request) async {
     final response = await RequestModule.post(_verifyOtpPath, request.toJson(),
+        headers: {"": ""});
+
+    if (response.statusCode == 200) {
+      final responseMap = json.decode(response.body);
+      if (responseMap["data"] != null) {
+        final decodedResponse = MapDataResponseModel.fromJson(responseMap);
+        return decodedResponse;
+      }
+
+      final decodedResponse = ErrorResponseModel.fromJson(responseMap);
+      return convertErrorResponse(decodedResponse);
+    } else {
+      final responseMap = json.decode(response.body);
+
+      final decodedResponse = ErrorResponseModel.fromJson(responseMap);
+      return convertErrorResponse(decodedResponse);
+      // throw Exception("Unable to set up working hours");
+    }
+  }
+
+  static Future<MapDataResponseModel> accountOtp(
+      VerifyOtpRequestModel request) async {
+    final response = await RequestModule.post(
+        _verifyAccountOtpPath, request.toJson(),
         headers: {"": ""});
 
     if (response.statusCode == 200) {

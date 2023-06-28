@@ -1,7 +1,9 @@
 import 'package:chopwell_rider_application/constants/constants.dart';
+import 'package:chopwell_rider_application/models/request_models/veirfy_phone_request_model.dart';
 import 'package:chopwell_rider_application/models/request_models/verify_email_request_model.dart';
 import 'package:chopwell_rider_application/screens/micro_components/signin_input.dart';
 import 'package:chopwell_rider_application/screens/registration_page/loginPage.dart';
+import 'package:chopwell_rider_application/screens/registration_page/resetOtpPage.dart';
 import 'package:chopwell_rider_application/screens/registration_page/verifyOtpPage.dart';
 import 'package:chopwell_rider_application/services/password_reset_email_service.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +17,7 @@ class ConfirmEmailPage extends StatefulWidget {
 }
 
 class _ConfirmEmailPageState extends State<ConfirmEmailPage> {
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
 
   bool _showProgressIndicator = false;
   bool _isButtonDisabled = true;
@@ -23,13 +25,13 @@ class _ConfirmEmailPageState extends State<ConfirmEmailPage> {
   @override
   void initState() {
     super.initState();
-    _emailController.addListener(_validateInput);
+    _phoneController.addListener(_validateInput);
   }
 
   void _handleEmailConfirmation(BuildContext context) async {
-    final email = _emailController.text;
+    final phoneNumber = _phoneController.text;
     _showProgressIndicator = true;
-    final request = VerifyEmailRequestModel(email: email);
+    final request = VerifyPhoneRequestModel(phoneNumber: phoneNumber);
 
     final response = await PasswordResetEmailService.passwordReset(request);
     print(response);
@@ -37,7 +39,7 @@ class _ConfirmEmailPageState extends State<ConfirmEmailPage> {
       _showProgressIndicator = false;
       pushNewScreen(
         context,
-        screen: VerifyOtpPage(email: email),
+        screen: ResetOtpPage(phoneNumber: phoneNumber),
         withNavBar: false, // OPTIONAL VALUE. True by default.
         pageTransitionAnimation: PageTransitionAnimation.cupertino,
       );
@@ -50,7 +52,7 @@ class _ConfirmEmailPageState extends State<ConfirmEmailPage> {
   }
 
   void _validateInput() {
-    final emailValid = emailRegExp.hasMatch(_emailController.text);
+    final emailValid = emailRegExp.hasMatch(_phoneController.text);
     setState(() {
       _isButtonDisabled = !(emailValid);
     });
@@ -58,7 +60,7 @@ class _ConfirmEmailPageState extends State<ConfirmEmailPage> {
 
   @override
   void dispose() {
-    _emailController.dispose();
+    _phoneController.dispose();
     super.dispose();
   }
 
@@ -98,7 +100,7 @@ class _ConfirmEmailPageState extends State<ConfirmEmailPage> {
                           "user@gmail.com",
                           true,
                           regExp: emailRegExp,
-                          controller: _emailController,
+                          controller: _phoneController,
                         ),
                       ),
                       const SizedBox(

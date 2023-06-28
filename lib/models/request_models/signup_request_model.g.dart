@@ -8,12 +8,12 @@ part of 'signup_request_model.dart';
 
 SignupRequestModel _$SignupRequestModelFromJson(Map<String, dynamic> json) =>
     SignupRequestModel(
-      email: json['email'] as String,
+      phoneNumber: json['phoneNumber'] as String,
       password: json['password'] as String,
     );
 
 Map<String, dynamic> _$SignupRequestModelToJson(SignupRequestModel instance) =>
     <String, dynamic>{
-      'email': instance.email,
+      'phoneNumber': instance.phoneNumber,
       'password': instance.password,
     };

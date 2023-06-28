@@ -5,8 +5,8 @@ part "verify_otp_request_model.g.dart";
 @JsonSerializable()
 class VerifyOtpRequestModel {
   final String otp;
-  final String email;
-  VerifyOtpRequestModel({required this.email, required this.otp});
+  final String phoneNumber;
+  VerifyOtpRequestModel({required this.phoneNumber, required this.otp});
 
   factory VerifyOtpRequestModel.fromJson(Map<String, dynamic> json) =>
       _$VerifyOtpRequestModelFromJson(json);

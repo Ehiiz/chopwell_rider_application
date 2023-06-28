@@ -1,6 +1,7 @@
 import 'package:chopwell_rider_application/constants/constants.dart';
 import 'package:chopwell_rider_application/models/request_models/verify_otp_request_model.dart';
 import 'package:chopwell_rider_application/screens/micro_components/signin_input.dart';
+import 'package:chopwell_rider_application/screens/registration_page/completeAccountPage.dart';
 import 'package:chopwell_rider_application/screens/registration_page/loginPage.dart';
 import 'package:chopwell_rider_application/screens/registration_page/resetPasswordPage.dart';
 import 'package:chopwell_rider_application/services/verify_otp_service.dart';
@@ -8,22 +9,22 @@ import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 
 class VerifyOtpPage extends StatefulWidget {
-  VerifyOtpPage({Key? key, required this.email}) : super(key: key);
+  VerifyOtpPage({Key? key, required this.phoneNumber}) : super(key: key);
 
-  String email;
+  String phoneNumber;
 
   @override
-  State<VerifyOtpPage> createState() => _VerifyOtpPageState(this.email);
+  State<VerifyOtpPage> createState() => _VerifyOtpPageState(this.phoneNumber);
 }
 
 class _VerifyOtpPageState extends State<VerifyOtpPage> {
   final TextEditingController _otpController = TextEditingController();
 
-  _VerifyOtpPageState(this.email);
+  _VerifyOtpPageState(this.phoneNumber);
 
   bool _showProgressIndicator = false;
 
-  String email;
+  String phoneNumber;
   bool _isButtonDisabled = true;
 
   @override
@@ -36,15 +37,15 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
     final otp = _otpController.text;
     _showProgressIndicator = true;
 
-    final request = VerifyOtpRequestModel(email: email, otp: otp);
-    final response = await VerifyOtpService.verifyotp(request);
+    final request = VerifyOtpRequestModel(phoneNumber: phoneNumber, otp: otp);
+    final response = await VerifyOtpService.accountOtp(request);
 
     if (response.status == "success") {
       //Add toast notfication
       _showProgressIndicator = false;
       pushNewScreen(
         context,
-        screen: ResetPasswordPage(email: email, otp: otp),
+        screen: CompleteAccountPage(phoneNumber: phoneNumber),
         withNavBar: false, // OPTIONAL VALUE. True by default.
         pageTransitionAnimation: PageTransitionAnimation.cupertino,
       );
@@ -58,7 +59,7 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
   }
 
   void _validateInput() {
-    final otpValid = emailRegExp.hasMatch(_otpController.text);
+    final otpValid = otpRegex.hasMatch(_otpController.text);
     setState(() {
       _isButtonDisabled = !(otpValid);
     });
@@ -103,7 +104,7 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
                           Icons.numbers_outlined,
                           "otp",
                           "invalid otp",
-                          "user@gmail.com",
+                          "",
                           true,
                           regExp: otpRegex,
                           controller: _otpController,

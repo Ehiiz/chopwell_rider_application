@@ -4,12 +4,12 @@ part "signin_request_model.g.dart";
 
 @JsonSerializable()
 class SignInRequestModel {
-  final String email;
+  final String phoneNumber;
   final String password;
   final String appId;
 
   SignInRequestModel(
-      {required this.email, required this.password, required this.appId});
+      {required this.phoneNumber, required this.password, required this.appId});
 
   factory SignInRequestModel.fromJson(Map<String, dynamic> json) =>
       _$SignInRequestModelFromJson(json);

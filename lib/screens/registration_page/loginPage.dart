@@ -1,3 +1,4 @@
+import 'package:chopwell_rider_application/authentication/token-utils.dart';
 import 'package:chopwell_rider_application/authentication/user-utils.dart';
 import 'package:chopwell_rider_application/constants/constants.dart';
 import 'package:chopwell_rider_application/main.dart';
@@ -19,7 +20,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _showProgressIndicator = false;
   bool _isButtonDisabled = true;
@@ -27,7 +28,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    _emailController.addListener(_validateInput);
+    _phoneController.addListener(_validateInput);
     _passwordController.addListener(_validateInput);
   }
 
@@ -42,10 +43,10 @@ class _LoginPageState extends State<LoginPage> {
       return appId;
     });
 
-    final email = _emailController.text;
+    final phone = _phoneController.text;
     final password = _passwordController.text;
-    final request =
-        SignInRequestModel(email: email, password: password, appId: appId!);
+    final request = SignInRequestModel(
+        phoneNumber: phone, password: password, appId: appId!);
     final response = await SigninService.signin(request);
 
     if (response.status == "success") {
@@ -61,6 +62,7 @@ class _LoginPageState extends State<LoginPage> {
         final user = response.data["rider"];
 
         await UserInfo.setUserInfo(user!);
+        await AuthToken.setAuthToken(response.data["token"]);
 
         pushNewScreen(
           context,
@@ -71,7 +73,7 @@ class _LoginPageState extends State<LoginPage> {
       } else {
         pushNewScreen(
           context,
-          screen: CompleteAccountPage(userEmail: email),
+          screen: CompleteAccountPage(phoneNumber: phone),
           withNavBar: false, // OPTIONAL VALUE. True by default.
           pageTransitionAnimation: PageTransitionAnimation.cupertino,
         );
@@ -89,16 +91,16 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _validateInput() {
-    final emailValid = emailRegExp.hasMatch(_emailController.text);
+    final phoneValid = phoneRegex.hasMatch(_phoneController.text);
     final passwordValid = passwordRegex.hasMatch(_passwordController.text);
     setState(() {
-      _isButtonDisabled = !(emailValid && passwordValid);
+      _isButtonDisabled = !(phoneValid && passwordValid);
     });
   }
 
   @override
   void dispose() {
-    _emailController.dispose();
+    _phoneController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -160,13 +162,13 @@ class _LoginPageState extends State<LoginPage> {
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: width * .05),
                     child: SignInput(
-                      Icons.email_outlined,
-                      "email",
-                      "incorrect email",
-                      "user@gmail.com",
+                      Icons.phone,
+                      "phone",
+                      "incorrect phone number",
+                      "080",
                       true,
-                      regExp: emailRegExp,
-                      controller: _emailController,
+                      regExp: phoneRegex,
+                      controller: _phoneController,
                     ),
                   ),
                   const SizedBox(

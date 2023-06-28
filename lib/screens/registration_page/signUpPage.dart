@@ -3,6 +3,7 @@ import 'package:chopwell_rider_application/models/request_models/signup_request_
 import 'package:chopwell_rider_application/screens/micro_components/signin_input.dart';
 import 'package:chopwell_rider_application/screens/registration_page/completeAccountPage.dart';
 import 'package:chopwell_rider_application/screens/registration_page/loginPage.dart';
+import 'package:chopwell_rider_application/screens/registration_page/verifyOtpPage.dart';
 import 'package:chopwell_rider_application/services/signup_service.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
@@ -15,7 +16,7 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   bool _showProgressIndicator = false;
@@ -24,18 +25,18 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   void initState() {
     super.initState();
-    _emailController.addListener(_validateInput);
+    _phoneController.addListener(_validateInput);
     _passwordController.addListener(_validateInput);
   }
 
   void _handleSignUp(BuildContext context) async {
-    final email = _emailController.text;
+    final phone = _phoneController.text;
     final password = _passwordController.text;
 
     setState(() {
       _showProgressIndicator = true;
     });
-    final request = SignupRequestModel(email: email, password: password);
+    final request = SignupRequestModel(phoneNumber: phone, password: password);
     final response = await SignupService.signup(request);
 
     if (response.status == "success") {
@@ -46,7 +47,7 @@ class _SignUpPageState extends State<SignUpPage> {
           .showSnackBar(customSuccessBar("Signup Successful. Log in"));
       pushNewScreen(
         context,
-        screen: CompleteAccountPage(userEmail: email),
+        screen: VerifyOtpPage(phoneNumber: phone),
         withNavBar: false, // OPTIONAL VALUE. True by default.
         pageTransitionAnimation: PageTransitionAnimation.cupertino,
       );
@@ -62,16 +63,16 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   void _validateInput() {
-    final emailValid = emailRegExp.hasMatch(_emailController.text);
+    final phoneValid = phoneRegex.hasMatch(_phoneController.text);
     final passwordValid = passwordRegex.hasMatch(_passwordController.text);
     setState(() {
-      _isButtonDisabled = !(emailValid && passwordValid);
+      _isButtonDisabled = !(phoneValid && passwordValid);
     });
   }
 
   @override
   void dispose() {
-    _emailController.dispose();
+    _phoneController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -129,13 +130,13 @@ class _SignUpPageState extends State<SignUpPage> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: width * .05),
                 child: SignInput(
-                  Icons.email_outlined,
-                  "email",
-                  "incorrect email",
-                  "user@gmail.com",
+                  Icons.phone,
+                  "phone number",
+                  "invalid phone number",
+                  "080",
                   true,
-                  regExp: emailRegExp,
-                  controller: _emailController,
+                  regExp: phoneRegex,
+                  controller: _phoneController,
                 ),
               ),
               const SizedBox(
