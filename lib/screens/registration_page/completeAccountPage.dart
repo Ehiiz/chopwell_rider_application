@@ -98,7 +98,7 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
     final email = _emailController.text;
     final image = _imageController.text;
     final bvn = _bvnController.text;
-    final phone = "+234${widget.phoneNumber}";
+    String phone = "+234" + widget.phoneNumber.substring(1);
 
     setState(() {
       _showProgressIndicator = true;

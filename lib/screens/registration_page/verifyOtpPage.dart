@@ -37,6 +37,8 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
     final otp = _otpController.text;
     _showProgressIndicator = true;
 
+    String phone = "+234" + phoneNumber.substring(1);
+
     final request = VerifyOtpRequestModel(phoneNumber: phoneNumber, otp: otp);
     final response = await VerifyOtpService.accountOtp(request);
 

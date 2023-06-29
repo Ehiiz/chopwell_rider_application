@@ -29,12 +29,13 @@ class _ConfirmEmailPageState extends State<ConfirmEmailPage> {
   }
 
   void _handleEmailConfirmation(BuildContext context) async {
-    final phoneNumber = _phoneController.text;
+    String phoneNumber = "+234" + _phoneController.text.substring(1);
+
     _showProgressIndicator = true;
     final request = VerifyPhoneRequestModel(phoneNumber: phoneNumber);
 
     final response = await PasswordResetEmailService.passwordReset(request);
-    print(response);
+
     if (response.status == "success") {
       _showProgressIndicator = false;
       pushNewScreen(
@@ -52,9 +53,9 @@ class _ConfirmEmailPageState extends State<ConfirmEmailPage> {
   }
 
   void _validateInput() {
-    final emailValid = emailRegExp.hasMatch(_phoneController.text);
+    final phoneValid = phoneRegex.hasMatch(_phoneController.text);
     setState(() {
-      _isButtonDisabled = !(emailValid);
+      _isButtonDisabled = !(phoneValid);
     });
   }
 
@@ -94,12 +95,12 @@ class _ConfirmEmailPageState extends State<ConfirmEmailPage> {
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: width * .05),
                         child: SignInput(
-                          Icons.email_outlined,
-                          "email",
-                          "incorrect email",
-                          "user@gmail.com",
+                          Icons.phone,
+                          "080",
+                          "invalid phone number",
+                          "080",
                           true,
-                          regExp: emailRegExp,
+                          regExp: phoneRegex,
                           controller: _phoneController,
                         ),
                       ),

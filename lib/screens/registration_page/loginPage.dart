@@ -43,7 +43,8 @@ class _LoginPageState extends State<LoginPage> {
       return appId;
     });
 
-    final phone = _phoneController.text;
+    String phone = "+234" + _phoneController.text.substring(1);
+
     final password = _passwordController.text;
     final request = SignInRequestModel(
         phoneNumber: phone, password: password, appId: appId!);

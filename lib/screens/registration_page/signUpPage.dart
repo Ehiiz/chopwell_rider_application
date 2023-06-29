@@ -30,7 +30,7 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   void _handleSignUp(BuildContext context) async {
-    final phone = _phoneController.text;
+    String phone = "+234" + _phoneController.text.substring(1);
     final password = _passwordController.text;
 
     setState(() {
