@@ -38,7 +38,6 @@ class _LoginPageState extends State<LoginPage> {
     });
 
     final appId = await OneSignal.shared.getDeviceState().then((value) {
-      print(value!.userId);
       final appId = value!.userId;
       return appId;
     });

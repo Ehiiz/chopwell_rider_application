@@ -1895,3 +1895,4 @@ RegExp nameRegex = RegExp(r'[a-zA-Z]');
 RegExp otpRegex = RegExp(r'^[a-zA-Z0-9]{1,5}$');
 RegExp phoneRegex = RegExp(r'^\d{11}$');
 RegExp bvnRegex = RegExp(r'^\d{11}$');
+RegExp otpRegex2 = RegExp(r'^\d{6}$');

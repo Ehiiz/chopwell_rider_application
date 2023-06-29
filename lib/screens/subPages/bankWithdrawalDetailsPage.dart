@@ -51,15 +51,6 @@ class _BankWithdrawalDetailsPageState
                 size: 25,
               ),
             ),
-            actions: [
-              const IconButton(
-                  onPressed: null,
-                  icon: Icon(
-                    Icons.search,
-                    color: Colors.black,
-                    size: 25,
-                  ))
-            ],
           ),
           body: Padding(
             padding: EdgeInsets.symmetric(
@@ -122,14 +113,12 @@ class _BankWithdrawalDetailsPageState
                                   ),
                                   SizedBox(
                                     width: screenWidth * .75,
-                                    child: Expanded(
-                                      child: Text(
-                                        client,
-                                        style: const TextStyle(
-                                          fontFamily: "Questrial",
-                                          fontSize: 15,
-                                          color: Colors.black,
-                                        ),
+                                    child: Text(
+                                      client,
+                                      style: const TextStyle(
+                                        fontFamily: "Questrial",
+                                        fontSize: 15,
+                                        color: Colors.black,
                                       ),
                                     ),
                                   )
@@ -282,7 +271,6 @@ class _BankWithdrawalDetailsPageState
                     userDetailRef.when(data: (data) {
                       final accountNumber =
                           data.data["meta"]["transaction_pin"];
-                      print(data.data);
                       return Align(
                         alignment: Alignment.bottomRight,
                         child: TextButton(

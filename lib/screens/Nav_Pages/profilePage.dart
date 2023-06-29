@@ -303,7 +303,6 @@ class _NewProfilePageState extends ConsumerState<NewProfilePage> {
                                               riderStatus = false;
                                               requestStatus = "online";
                                             }
-                                            print(requestStatus);
                                             return Switch(
                                                 value: riderStatus,
                                                 onChanged: (value) {

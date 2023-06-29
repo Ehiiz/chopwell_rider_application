@@ -45,7 +45,6 @@ class _ConfirmEmailPageState extends State<ConfirmEmailPage> {
         pageTransitionAnimation: PageTransitionAnimation.cupertino,
       );
     } else {
-      print(response);
       ScaffoldMessenger.of(context)
           .showSnackBar(customErrorBar("Unable to confirm email"));
     }

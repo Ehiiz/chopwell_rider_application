@@ -37,8 +37,6 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
     final otp = _otpController.text;
     _showProgressIndicator = true;
 
-    String phone = "+234" + phoneNumber.substring(1);
-
     final request = VerifyOtpRequestModel(phoneNumber: phoneNumber, otp: otp);
     final response = await VerifyOtpService.accountOtp(request);
 
@@ -53,7 +51,6 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
       );
       ;
     } else {
-      print(response);
       ScaffoldMessenger.of(context)
           .showSnackBar(customErrorBar("OTP Verification Failed"));
     }
@@ -61,7 +58,7 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
   }
 
   void _validateInput() {
-    final otpValid = otpRegex.hasMatch(_otpController.text);
+    final otpValid = otpRegex2.hasMatch(_otpController.text);
     setState(() {
       _isButtonDisabled = !(otpValid);
     });
@@ -95,7 +92,7 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
               const SizedBox(
                 height: 15,
               ),
-              Container(
+              SizedBox(
                 width: width * .8,
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -108,7 +105,7 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
                           "invalid otp",
                           "",
                           true,
-                          regExp: otpRegex,
+                          regExp: otpRegex2,
                           controller: _otpController,
                         ),
                       ),
@@ -136,7 +133,7 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
                                   )),
                                 ),
                                 child: Text(
-                                  _showProgressIndicator ? '' : "sign in",
+                                  _showProgressIndicator ? '' : "verify",
                                   // ignore: prefer_const_constructors
                                   style: TextStyle(
                                     color: Colors.white,

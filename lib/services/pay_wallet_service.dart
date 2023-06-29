@@ -14,7 +14,6 @@ class PayWalletService {
   static Future<NullDataResponseModel> paywallet(
     WithdrawWalletRequestModel request,
   ) async {
-    print("I enter");
     final token = await AuthToken.getAuthToken();
     final response = await RequestModule.post(
         _withdrawWalletPath, request.toJson(),

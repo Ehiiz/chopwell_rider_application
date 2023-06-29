@@ -54,7 +54,6 @@ class _ResetOtpPageState extends State<ResetOtpPage> {
       );
       ;
     } else {
-      print(response);
       ScaffoldMessenger.of(context)
           .showSnackBar(customErrorBar("OTP Verification Failed"));
     }

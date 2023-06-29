@@ -72,7 +72,7 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
     if (pickedFile != null) {
       File file = File(pickedFile.path);
       final image = await imageUpload(file);
-      print(image);
+
       setState(() {
         // imageStatus = "image uploaded";
         _imageController.text = image;
@@ -92,13 +92,13 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
   bool submitForm = false;
   void _hanldeCompleteAccount(
       BuildContext context, double longitude, double latitude) async {
-    final name = _nameController.text;
+    String name = "${_firstNameController.text} ${_lastNameController.text}";
     final state = _stateController.text;
     final location = _locationController.text;
     final email = _emailController.text;
     final image = _imageController.text;
     final bvn = _bvnController.text;
-    String phone = "+234" + widget.phoneNumber.substring(1);
+    String phone = widget.phoneNumber;
 
     setState(() {
       _showProgressIndicator = true;
@@ -108,6 +108,9 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
       ScaffoldMessenger.of(context)
           .showSnackBar(customErrorBar("BVN details does not match"));
       _bvnController.clear();
+      setState(() {
+        _showProgressIndicator = false;
+      });
       return;
     }
 
@@ -197,7 +200,7 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
         final lastName = response.data["lastName"];
         setState(() {
           detailsMatch = true;
-          _nameController.text = "$firstName $lastName";
+          bvnName = "$firstName $lastName";
           _showLocationIndicator = false;
           dateOfBirth = response.data["dateOfBirth"];
         });
@@ -475,7 +478,7 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
                                     // ignore: prefer_const_constructors
                                     style: TextStyle(
                                       color: Colors.white,
-                                      fontSize: 20,
+                                      fontSize: 12,
                                       fontFamily: "Montserrat",
                                       fontWeight: FontWeight.bold,
                                     ),

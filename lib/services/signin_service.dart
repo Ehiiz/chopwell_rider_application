@@ -18,6 +18,7 @@ class SigninService {
 
     if (response.statusCode == 200) {
       final responseMap = json.decode(response.body);
+
       if (responseMap["status"] != "error") {
         final decodedResponse = MapDataResponseModel.fromJson(responseMap);
         return decodedResponse;
@@ -27,6 +28,7 @@ class SigninService {
       }
     } else {
       final responseMap = json.decode(response.body);
+
       final decodedResponse = ErrorResponseModel.fromJson(responseMap);
       return convertErrorResponse(decodedResponse);
       throw Exception('Failed to sign in user');

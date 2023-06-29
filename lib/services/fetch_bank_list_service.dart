@@ -46,8 +46,7 @@ class BankEnquiryService {
 
     if (response.statusCode == 200) {
       final responseMap = json.decode(response.body);
-      print("I was successful");
-      print(responseMap);
+
       if (responseMap["data"] != null) {
         final decodedResponse = MapDataResponseModel.fromJson(responseMap);
         return decodedResponse;
@@ -56,7 +55,6 @@ class BankEnquiryService {
       final decodedResponse = ErrorResponseModel.fromJson(responseMap);
       return convertErrorResponse(decodedResponse);
     } else {
-      print("I was failed");
       final responseMap = json.decode(response.body);
 
       final decodedResponse = ErrorResponseModel.fromJson(responseMap);
@@ -72,8 +70,7 @@ class BankEnquiryService {
 
     if (response.statusCode == 200) {
       final responseMap = json.decode(response.body);
-      print("I was successful");
-      print(responseMap);
+
       if (responseMap["data"] != null) {
         final decodedResponse = MapDataResponseModel.fromJson(responseMap);
         return decodedResponse;
@@ -82,7 +79,6 @@ class BankEnquiryService {
       final decodedResponse = ErrorResponseModel.fromJson(responseMap);
       return convertErrorResponse(decodedResponse);
     } else {
-      print("I was failed");
       final responseMap = json.decode(response.body);
 
       final decodedResponse = ErrorResponseModel.fromJson(responseMap);
