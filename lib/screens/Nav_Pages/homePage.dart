@@ -232,62 +232,6 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                 const SizedBox(
                   height: 30,
                 ),
-                // Text(
-                //   "Top Sellers",
-                //   style: TextStyle(
-                //     fontFamily: "Montserrat",
-                //     fontSize: 20.0,
-                //     color: KConstants.baseTwoGreyColor,
-                //     fontWeight: FontWeight.bold,
-                //   ),
-                // ),
-                // SizedBox(
-                //   height: 15,
-                // ),
-                //   topProductsRef.when(data: (data) {
-                //     print(data.data);
-                //     return Container(
-                //       height: screenHeight * 0.7,
-                //       child: GridView.builder(
-                //           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                //             crossAxisCount: 3,
-                //           ),
-                //           itemCount: 6,
-                //           itemBuilder: (BuildContext context, int index) =>
-                //               Container(
-                //                 decoration: BoxDecoration(
-                //                     borderRadius: BorderRadius.circular(5.0)),
-                //                 margin: EdgeInsets.all(5.0),
-                //                 child: Image.asset(
-                //                     KConstants.restaurantImages[index]),
-                //               )),
-                //     );
-                //   }, error: (error, _) {
-                //     return Container(
-                //       height: screenHeight * 0.7,
-                //       child: GridView.builder(
-                //           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                //             crossAxisCount: 3,
-                //           ),
-                //           itemCount: 6,
-                //           itemBuilder: (BuildContext context, int index) =>
-                //               Container(
-                //                 decoration: BoxDecoration(
-                //                     borderRadius: BorderRadius.circular(5.0)),
-                //                 margin: EdgeInsets.all(5.0),
-                //                 child: Image.asset(
-                //                     KConstants.restaurantImages[index]),
-                //               )),
-                //     );
-                //   }, loading: () {
-                //     return Shimmer.fromColors(
-                //         child: Container(
-                //           color: Colors.white,
-                //         ),
-                //         baseColor: KConstants.baseThreeGreyColor,
-                //         highlightColor: KConstants.baseFiveGreyColor);
-                //   })
-                //
               ],
             ),
           ),

@@ -173,7 +173,10 @@ class _SignUpPageState extends State<SignUpPage> {
                                     : () => _handleSignUp(context),
                                 style: ButtonStyle(
                                   backgroundColor: MaterialStateProperty.all(
-                                      KConstants.baseDarkColor),
+                                    _isButtonDisabled
+                                        ? KConstants.baseGreyColor
+                                        : KConstants.baseDarkColor,
+                                  ),
                                   shape: MaterialStateProperty.all(
                                       RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(30.0),

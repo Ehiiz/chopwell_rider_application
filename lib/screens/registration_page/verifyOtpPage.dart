@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:chopwell_rider_application/constants/constants.dart';
 import 'package:chopwell_rider_application/models/request_models/verify_otp_request_model.dart';
 import 'package:chopwell_rider_application/screens/micro_components/signin_input.dart';
@@ -35,7 +37,10 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
 
   void _handleVerifyOTP(BuildContext context) async {
     final otp = _otpController.text;
-    _showProgressIndicator = true;
+
+    setState(() {
+      _showProgressIndicator = true;
+    });
 
     final request = VerifyOtpRequestModel(phoneNumber: phoneNumber, otp: otp);
     final response = await VerifyOtpService.accountOtp(request);
@@ -49,10 +54,15 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
         withNavBar: false, // OPTIONAL VALUE. True by default.
         pageTransitionAnimation: PageTransitionAnimation.cupertino,
       );
-      ;
+      setState(() {
+        _showProgressIndicator = false;
+      });
     } else {
       ScaffoldMessenger.of(context)
           .showSnackBar(customErrorBar("OTP Verification Failed"));
+      setState(() {
+        _showProgressIndicator = false;
+      });
     }
     // Do something with the email and password values
   }
@@ -137,7 +147,7 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
                                   // ignore: prefer_const_constructors
                                   style: TextStyle(
                                     color: Colors.white,
-                                    fontSize: 20,
+                                    fontSize: 15,
                                     fontFamily: "Montserrat",
                                     fontWeight: FontWeight.bold,
                                   ),

@@ -61,7 +61,6 @@ class CompleteAccountService {
         headers: {"": ""});
     if (response.statusCode == 200) {
       final responseMap = json.decode(response.body);
-      print(responseMap);
       if (responseMap["data"] != null) {
         final decodedResponse = MapDataResponseModel.fromJson(responseMap);
         await AuthToken.setAuthToken(decodedResponse.data["token"]);
@@ -72,7 +71,6 @@ class CompleteAccountService {
       return convertErrorResponse(decodedResponse);
     } else {
       final responseMap = json.decode(response.body);
-      print(responseMap);
 
       final decodedResponse = ErrorResponseModel.fromJson(responseMap);
       return convertErrorResponse(decodedResponse);

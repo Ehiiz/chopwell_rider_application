@@ -143,6 +143,9 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
     } else {
       ScaffoldMessenger.of(context)
           .showSnackBar(customErrorBar("Account setup failed"));
+      setState(() {
+        _showProgressIndicator = false;
+      });
     }
     // Do something with the email and password values
   }
@@ -172,13 +175,16 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
     final emailValid = emailRegExp.hasMatch(_emailController.text);
     final stateValid = nameRegex.hasMatch(_stateController.text);
     final locationValid = nameRegex.hasMatch(_locationController.text);
-    final nameValid = nameRegex.hasMatch(_nameController.text);
+    final lastNameValid = nameRegex.hasMatch(_lastNameController.text);
+    final firstNameValid = nameRegex.hasMatch(_firstNameController.text);
+
     final bvnValid = bvnRegex.hasMatch(_bvnController.text);
     setState(() {
       _isButtonDisabled = !(emailValid &&
           stateValid &&
           locationValid &&
-          nameValid &&
+          lastNameValid &&
+          firstNameValid &&
           bvnValid &&
           detailsMatch);
     });
