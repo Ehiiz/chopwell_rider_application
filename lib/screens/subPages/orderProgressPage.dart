@@ -466,74 +466,150 @@ class _ConfirmationPageState extends ConsumerState<ConfirmationPage> {
                   }, error: (error, _) {
                     return Text(error.toString());
                   }, loading: () {
-                    return Column(
-                      children: [
-                        Shimmer.fromColors(
-                          child: Container(width: 10),
-                          baseColor: KConstants.baseFourGreyColor,
-                          highlightColor: KConstants.baseThreeGreyColor,
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        Shimmer.fromColors(
-                          baseColor: KConstants.baseFourGreyColor,
-                          highlightColor: KConstants.baseThreeGreyColor,
-                          child: Container(
-                            decoration: const BoxDecoration(
-                                color: Colors.white,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10.0))),
-                            width: screenWidth * .7,
-                            height: screenHeight * .1,
+                    return SizedBox(
+                      width: screenWidth,
+                      height: screenHeight,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Shimmer.fromColors(
+                                baseColor: KConstants.baseFourGreyColor,
+                                highlightColor: KConstants.baseThreeGreyColor,
+                                child: Container(
+                                  decoration: const BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(10.0))),
+                                  width: screenWidth * .2,
+                                  height: screenHeight * .03,
+                                ),
+                              ),
+                              Shimmer.fromColors(
+                                baseColor: KConstants.baseFourGreyColor,
+                                highlightColor: KConstants.baseThreeGreyColor,
+                                child: Container(
+                                  decoration: const BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(10.0))),
+                                  width: screenWidth * .2,
+                                  height: screenHeight * .03,
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Shimmer.fromColors(
-                          baseColor: KConstants.baseFourGreyColor,
-                          highlightColor: KConstants.baseThreeGreyColor,
-                          child: Container(
-                            decoration: const BoxDecoration(
-                                color: Colors.white,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10.0))),
-                            width: screenWidth * .7,
-                            height: screenHeight * .1,
+                          const SizedBox(
+                            height: 25,
                           ),
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Shimmer.fromColors(
-                          baseColor: KConstants.baseFourGreyColor,
-                          highlightColor: KConstants.baseThreeGreyColor,
-                          child: Container(
-                            decoration: const BoxDecoration(
-                                color: Colors.white,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10.0))),
-                            width: screenWidth * .7,
-                            height: screenHeight * .1,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Shimmer.fromColors(
+                                baseColor: KConstants.baseFourGreyColor,
+                                highlightColor: KConstants.baseThreeGreyColor,
+                                child: Container(
+                                  decoration: const BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(10.0))),
+                                  width: screenWidth * .3,
+                                  height: screenHeight * .05,
+                                ),
+                              ),
+                              Shimmer.fromColors(
+                                baseColor: KConstants.baseFourGreyColor,
+                                highlightColor: KConstants.baseThreeGreyColor,
+                                child: Container(
+                                  decoration: const BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(10.0))),
+                                  width: screenWidth * .3,
+                                  height: screenHeight * .05,
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Shimmer.fromColors(
-                          baseColor: KConstants.baseFourGreyColor,
-                          highlightColor: KConstants.baseThreeGreyColor,
-                          child: Container(
-                            decoration: const BoxDecoration(
-                                color: Colors.white,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10.0))),
-                            width: screenWidth * .7,
-                            height: screenHeight * .1,
+                          const SizedBox(
+                            height: 25,
                           ),
-                        )
-                      ],
+                          Shimmer.fromColors(
+                            baseColor: KConstants.baseFourGreyColor,
+                            highlightColor: KConstants.baseThreeGreyColor,
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10.0))),
+                              width: screenWidth,
+                              height: screenHeight * .1,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Shimmer.fromColors(
+                            baseColor: KConstants.baseFourGreyColor,
+                            highlightColor: KConstants.baseThreeGreyColor,
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10.0))),
+                              width: screenWidth,
+                              height: screenHeight * .1,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Shimmer.fromColors(
+                            baseColor: KConstants.baseFourGreyColor,
+                            highlightColor: KConstants.baseThreeGreyColor,
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10.0))),
+                              width: screenWidth,
+                              height: screenHeight * .1,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Shimmer.fromColors(
+                            baseColor: KConstants.baseFourGreyColor,
+                            highlightColor: KConstants.baseThreeGreyColor,
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10.0))),
+                              width: screenWidth,
+                              height: screenHeight * .1,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          Shimmer.fromColors(
+                            baseColor: KConstants.baseFourGreyColor,
+                            highlightColor: KConstants.baseThreeGreyColor,
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10.0))),
+                              width: screenWidth * .5,
+                              height: 50,
+                            ),
+                          ),
+                        ],
+                      ),
                     );
                   }),
                   const SizedBox(
