@@ -31,12 +31,10 @@ class CompleteAccountPage extends StatefulWidget {
 class _CompleteAccountPageState extends State<CompleteAccountPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _firstNameController = TextEditingController();
-  final TextEditingController _middleNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _stateController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
-  final TextEditingController _imageController = TextEditingController();
   final TextEditingController _bvnController = TextEditingController();
 
   bool _showProgressIndicator = false;
@@ -51,6 +49,9 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
 
   bool _isButtonDisabled = true;
 
+  File? selectedImage;
+  bool _imageLoader = false;
+
   @override
   void initState() {
     super.initState();
@@ -59,23 +60,32 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
     _nameController.addListener(_validateInput);
     _firstNameController.addListener(_validateInput);
     _lastNameController.addListener(_validateInput);
-    _middleNameController.addListener(_validateInput);
     _locationController.addListener(_validateInput);
     _bvnController.addListener(_fetchUserDetails);
     _bvnController.addListener(_validateInput);
   }
 
-  Future<File?> _getImage() async {
-    final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
+  Future<void> _getImage() async {
+    final pickedFile = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 1,
+    );
 
     if (pickedFile != null) {
       File file = File(pickedFile.path);
-      final image = await imageUpload(file);
+      int sizeInBytes = file.lengthSync();
+      double sizeInMb = sizeInBytes / (1024 * 1024);
+      if (sizeInMb > 3) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          customSuccessBar("Image size too large"),
+        );
+        return;
+
+        // This file is Longer the
+      }
 
       setState(() {
-        // imageStatus = "image uploaded";
-        _imageController.text = image;
+        selectedImage = file;
         _imageSet = true;
       });
     }
@@ -96,9 +106,9 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
     final state = _stateController.text;
     final location = _locationController.text;
     final email = _emailController.text;
-    final image = _imageController.text;
     final bvn = _bvnController.text;
     String phone = widget.phoneNumber;
+    String image;
 
     setState(() {
       _showProgressIndicator = true;
@@ -112,6 +122,13 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
         _showProgressIndicator = false;
       });
       return;
+    }
+
+    if (selectedImage == null) {
+      image =
+          "https://ik.imagekit.io/thelastkingpin/flutter_imagekit/pexels-i%C5%9F%C4%B1l-17215879.jpg?updatedAt=1687376134704";
+    } else {
+      image = await imageUpload(selectedImage!);
     }
 
     final request = CompleteAccountRequestModel(
@@ -150,27 +167,6 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
     // Do something with the email and password values
   }
 
-  Future<Position> _getCurrentLocation() async {
-    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      return Future.error('Location services are disabled');
-    }
-
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return Future.error('Location permissions are denied');
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      return Future.error('Location permissions are denied forever');
-    }
-
-    return await Geolocator.getCurrentPosition();
-  }
-
   void _validateInput() {
     final emailValid = emailRegExp.hasMatch(_emailController.text);
     final stateValid = nameRegex.hasMatch(_stateController.text);
@@ -185,8 +181,7 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
           locationValid &&
           lastNameValid &&
           firstNameValid &&
-          bvnValid &&
-          detailsMatch);
+          bvnValid);
     });
   }
 
@@ -202,7 +197,6 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
         // include toast notification
 
         final firstName = response.data["firstName"];
-        final middleName = response.data["middleName"];
         final lastName = response.data["lastName"];
         setState(() {
           detailsMatch = true;
@@ -261,50 +255,97 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         GestureDetector(
-                          onTap: () => _getImage(),
-                          child: _imageSet
-                              ? CircleAvatar(
-                                  radius: 50,
-                                  backgroundImage:
-                                      AssetImage("assets/OIP.jpeg"))
-                              : CircleAvatar(
-                                  radius: 50,
-                                  backgroundImage:
-                                      NetworkImage(_imageController.text),
-                                ),
+                          onTap: () {
+                            _getImage();
+                          },
+                          child: Stack(
+                            children: [
+                              _imageSet
+                                  ? Ink.image(
+                                      image: FileImage(selectedImage!),
+                                      fit: BoxFit.cover,
+                                      width: 100.0,
+                                      height: 100.0,
+                                      child: InkWell(
+                                          child: _imageLoader
+                                              ? Center(
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                    color: KConstants
+                                                        .baseTwoRedColor,
+                                                  ),
+                                                )
+                                              : Container()
+                                          // add any additional child widgets here
+                                          ),
+                                    )
+                                  : Ink.image(
+                                      image: AssetImage('assets/OIP.jpeg'),
+                                      fit: BoxFit.cover,
+                                      width: 100.0,
+                                      height: 100.0,
+                                      child: InkWell(
+                                          child: _imageLoader
+                                              ? Center(
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                    color: KConstants
+                                                        .baseTwoRedColor,
+                                                  ),
+                                                )
+                                              : Container()
+                                          // add any additional child widgets here
+                                          ),
+                                    ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          "upload image",
+                          style: TextStyle(
+                            fontSize: 12.0,
+                            fontFamily: "Montserrat",
+                            color: KConstants.baseRedColor,
+                          ),
                         ),
                         const SizedBox(
                           height: 10,
                         ),
-                        Padding(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: width * .05),
-                          child: SignInput(
-                            Icons.person,
-                            "first name",
-                            "first name",
-                            "",
-                            true,
-                            regExp: nameRegex,
-                            controller: _firstNameController,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Padding(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: width * .05),
-                          child: SignInput(
-                            Icons.person,
-                            "middle name",
-                            "middle name",
-                            "",
-                            true,
-                            regExp: nameRegex,
-                            controller: _middleNameController,
-                          ),
-                        ),
+                        Container(
+                            padding:
+                                EdgeInsets.symmetric(horizontal: width * .05),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                SizedBox(
+                                  width: width * .4,
+                                  child: SignInput(
+                                    Icons.person,
+                                    "first name",
+                                    "first name",
+                                    "",
+                                    true,
+                                    regExp: nameRegex,
+                                    controller: _firstNameController,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: width * .45,
+                                  child: SignInput(
+                                    Icons.person,
+                                    "last name",
+                                    "last name",
+                                    "",
+                                    true,
+                                    regExp: nameRegex,
+                                    controller: _lastNameController,
+                                  ),
+                                )
+                              ],
+                            )),
                         const SizedBox(
                           height: 15,
                         ),
