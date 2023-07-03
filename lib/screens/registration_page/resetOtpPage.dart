@@ -35,14 +35,18 @@ class _ResetOtpPageState extends State<ResetOtpPage> {
 
   void _handleVerifyOTP(BuildContext context) async {
     final otp = _otpController.text;
-    _showProgressIndicator = true;
+    setState(() {
+      _showProgressIndicator = true;
+    });
 
     final request = VerifyOtpRequestModel(phoneNumber: phoneNumber, otp: otp);
     final response = await VerifyOtpService.verifyotp(request);
 
     if (response.status == "success") {
       //Add toast notfication
-      _showProgressIndicator = false;
+      setState(() {
+        _showProgressIndicator = false;
+      });
       ScaffoldMessenger.of(context).showSnackBar(
           customSuccessBar("OTP Verification Successful, Sign In"));
 
@@ -54,6 +58,9 @@ class _ResetOtpPageState extends State<ResetOtpPage> {
       );
       ;
     } else {
+      setState(() {
+        _showProgressIndicator = false;
+      });
       ScaffoldMessenger.of(context)
           .showSnackBar(customErrorBar("OTP Verification Failed"));
     }
@@ -61,7 +68,7 @@ class _ResetOtpPageState extends State<ResetOtpPage> {
   }
 
   void _validateInput() {
-    final otpValid = otpRegex.hasMatch(_otpController.text);
+    final otpValid = otpRegex2.hasMatch(_otpController.text);
     setState(() {
       _isButtonDisabled = !(otpValid);
     });
@@ -108,7 +115,7 @@ class _ResetOtpPageState extends State<ResetOtpPage> {
                           "invalid otp",
                           "",
                           true,
-                          regExp: otpRegex,
+                          regExp: otpRegex2,
                           controller: _otpController,
                         ),
                       ),
@@ -129,14 +136,16 @@ class _ResetOtpPageState extends State<ResetOtpPage> {
                                     : () => _handleVerifyOTP(context),
                                 style: ButtonStyle(
                                   backgroundColor: MaterialStateProperty.all(
-                                      KConstants.baseDarkColor),
+                                      _isButtonDisabled
+                                          ? KConstants.baseGreyColor
+                                          : KConstants.baseDarkColor),
                                   shape: MaterialStateProperty.all(
                                       RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(30.0),
                                   )),
                                 ),
                                 child: Text(
-                                  _showProgressIndicator ? '' : "sign in",
+                                  _showProgressIndicator ? '' : "verify otp",
                                   // ignore: prefer_const_constructors
                                   style: TextStyle(
                                     color: Colors.white,

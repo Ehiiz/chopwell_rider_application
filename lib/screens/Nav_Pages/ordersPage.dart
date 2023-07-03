@@ -142,7 +142,8 @@ class MyOrders extends ConsumerWidget {
                                     completedOrders[index]["preOrder"]
                                         ["status"],
                                     completedOrders[index]["preOrder"]
-                                        ["deliveryTime"],
+                                            ["deliveryTime"] ??
+                                        0,
                                   ),
                                 ),
                                 onRefresh: () async {

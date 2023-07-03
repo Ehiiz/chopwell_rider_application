@@ -192,7 +192,8 @@ class _OrderFavouritesBoxState extends ConsumerState<OrderFavouritesBox> {
                       "preorder",
                       style: TextStyle(
                         fontFamily: "Montserrat",
-                        color: KConstants.baseGreenColor,
+                        color: KConstants.baseOrangeColor,
+                        fontWeight: FontWeight.bold,
                         fontSize: 12.0,
                       ),
                     )

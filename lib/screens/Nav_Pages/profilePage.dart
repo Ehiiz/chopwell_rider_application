@@ -353,10 +353,10 @@ class _NewProfilePageState extends ConsumerState<NewProfilePage> {
                                       child: Text(
                                         "Logout",
                                         style: TextStyle(
-                                          color: KConstants.baseThreeRedColor,
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                            color: KConstants.baseThreeRedColor,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold,
+                                            fontFamily: "Montserrat"),
                                       ),
                                     ),
                                   ],

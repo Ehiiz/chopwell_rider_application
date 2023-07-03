@@ -34,7 +34,9 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   }
 
   void _handleSetPassword() async {
-    _showProgressIndicator = true;
+    setState(() {
+      _showProgressIndicator = true;
+    });
     final new_password = _newPasswordController.text;
 
     final request = SetNewPasswordRequestModel(
@@ -43,7 +45,9 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
 
     if (response.status == "success") {
       //Add toast notfication
-      _showProgressIndicator = false;
+      setState(() {
+        _showProgressIndicator = false;
+      });
       pushNewScreen(
         context,
         screen: LoginPage(),
@@ -52,6 +56,9 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
       );
       ;
     } else {
+      setState(() {
+        _showProgressIndicator = false;
+      });
       ScaffoldMessenger.of(context)
           .showSnackBar(customErrorBar("Unable to reset password"));
     }
@@ -103,9 +110,9 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: width * .05),
                         child: SignInput(
-                          Icons.email_outlined,
-                          "email",
-                          "incorrect email",
+                          Icons.password_outlined,
+                          "enter new password",
+                          "enter valid password",
                           "user@gmail.com",
                           true,
                           regExp: passwordRegex,
@@ -134,7 +141,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                                   )),
                                 ),
                                 child: Text(
-                                  _showProgressIndicator ? '' : "sign in",
+                                  _showProgressIndicator ? '' : "set password",
                                   // ignore: prefer_const_constructors
                                   style: TextStyle(
                                     color: Colors.white,

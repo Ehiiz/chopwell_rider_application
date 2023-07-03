@@ -31,13 +31,17 @@ class _ConfirmEmailPageState extends State<ConfirmEmailPage> {
   void _handleEmailConfirmation(BuildContext context) async {
     String phoneNumber = "+234" + _phoneController.text.substring(1);
 
-    _showProgressIndicator = true;
+    setState(() {
+      _showProgressIndicator = true;
+    });
     final request = VerifyPhoneRequestModel(phoneNumber: phoneNumber);
 
     final response = await PasswordResetEmailService.passwordReset(request);
 
     if (response.status == "success") {
-      _showProgressIndicator = false;
+      setState(() {
+        _showProgressIndicator = false;
+      });
       pushNewScreen(
         context,
         screen: ResetOtpPage(phoneNumber: phoneNumber),
@@ -45,6 +49,9 @@ class _ConfirmEmailPageState extends State<ConfirmEmailPage> {
         pageTransitionAnimation: PageTransitionAnimation.cupertino,
       );
     } else {
+      setState(() {
+        _showProgressIndicator = false;
+      });
       ScaffoldMessenger.of(context)
           .showSnackBar(customErrorBar("Unable to confirm email"));
     }
@@ -91,6 +98,12 @@ class _ConfirmEmailPageState extends State<ConfirmEmailPage> {
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      Text(
+                        "enter phone number associated with account",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontFamily: "Montserrat"),
+                      ),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: width * .05),
                         child: SignInput(
@@ -130,7 +143,7 @@ class _ConfirmEmailPageState extends State<ConfirmEmailPage> {
                                   )),
                                 ),
                                 child: Text(
-                                  _showProgressIndicator ? '' : "sign in",
+                                  _showProgressIndicator ? '' : "send otp",
                                   // ignore: prefer_const_constructors
                                   style: TextStyle(
                                     color: Colors.white,

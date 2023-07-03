@@ -353,22 +353,6 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
                           padding:
                               EdgeInsets.symmetric(horizontal: width * .05),
                           child: SignInput(
-                            Icons.person,
-                            "last name",
-                            "last name",
-                            "",
-                            true,
-                            regExp: nameRegex,
-                            controller: _lastNameController,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Padding(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: width * .05),
-                          child: SignInput(
                             Icons.email,
                             "email",
                             "must be a valid email",
