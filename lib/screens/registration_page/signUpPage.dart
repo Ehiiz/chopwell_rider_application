@@ -6,6 +6,7 @@ import 'package:chopwell_rider_application/screens/registration_page/loginPage.d
 import 'package:chopwell_rider_application/screens/registration_page/verifyOtpPage.dart';
 import 'package:chopwell_rider_application/services/signup_service.dart';
 import 'package:flutter/material.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -32,11 +33,16 @@ class _SignUpPageState extends State<SignUpPage> {
   void _handleSignUp(BuildContext context) async {
     String phone = "+234" + _phoneController.text.substring(1);
     final password = _passwordController.text;
+    final appId = await OneSignal.shared.getDeviceState().then((value) {
+      final appId = value!.userId;
+      return appId;
+    });
 
     setState(() {
       _showProgressIndicator = true;
     });
-    final request = SignupRequestModel(phoneNumber: phone, password: password);
+    final request = SignupRequestModel(
+        phoneNumber: phone, password: password, appId: appId!);
     final response = await SignupService.signup(request);
 
     if (response.status == "success") {
@@ -60,6 +66,22 @@ class _SignUpPageState extends State<SignUpPage> {
       ScaffoldMessenger.of(context)
           .showSnackBar(customErrorBar("Failed to sign up"));
     }
+  }
+
+  bool _isPasswordValidLength() {
+    return _passwordController.text.length >= 8;
+  }
+
+  bool _isPasswordValidNumber() {
+    return _passwordController.text.contains(RegExp(r'\d'));
+  }
+
+  bool _isPasswordValidLetter() {
+    return _passwordController.text.contains(RegExp(r'[a-zA-Z]'));
+  }
+
+  bool _isPasswordValidSpecialChar() {
+    return _passwordController.text.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'));
   }
 
   void _validateInput() {
@@ -147,15 +169,65 @@ class _SignUpPageState extends State<SignUpPage> {
                 child: SignInput(
                   Icons.password_rounded,
                   "password",
-                  "password must have at least one letter, one number and one special character",
+                  "",
                   "create a strong password",
                   true,
                   regExp: passwordRegex,
                   controller: _passwordController,
                 ),
               ),
-              const SizedBox(
-                height: 30,
+              SizedBox(height: 5),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: width * .07),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "at least 8 characters in length",
+                      style: TextStyle(
+                        color: _isPasswordValidLength()
+                            ? Colors.green
+                            : KConstants.baseGreyColor,
+                        fontSize: 12,
+                        fontFamily: "Questrial",
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      "contain at least one number",
+                      style: TextStyle(
+                        color: _isPasswordValidNumber()
+                            ? Colors.green
+                            : KConstants.baseGreyColor,
+                        fontSize: 12,
+                        fontFamily: "Questrial",
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      "contain at least one letter",
+                      style: TextStyle(
+                        color: _isPasswordValidLetter()
+                            ? Colors.green
+                            : KConstants.baseGreyColor,
+                        fontSize: 12,
+                        fontFamily: "Questrial",
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      "contain at least one special character",
+                      style: TextStyle(
+                        color: _isPasswordValidSpecialChar()
+                            ? Colors.green
+                            : KConstants.baseGreyColor,
+                        fontSize: 12,
+                        fontFamily: "Questrial",
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
               ),
               SizedBox(
                 width: width * .8,
@@ -222,14 +294,26 @@ class _SignUpPageState extends State<SignUpPage> {
                       );
                       ;
                     },
-                    child: Text(
-                      //backgroundColor: MaterialStateProperty.all(KConstants.baseRedColor),
-                      'already a user? Login',
-                      style: TextStyle(
+                    child: Text.rich(
+                      TextSpan(
+                        text: "already a user ? ",
+                        style: TextStyle(
                           color: KConstants.baseTwoDarkColor,
                           fontSize: 20,
                           fontFamily: "Questrial",
-                          fontWeight: FontWeight.bold),
+                          fontWeight: FontWeight.bold,
+                        ),
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: 'log in',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              decoration: TextDecoration.underline,
+                              color: KConstants.baseRedColor,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

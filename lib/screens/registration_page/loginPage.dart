@@ -284,15 +284,28 @@ class _LoginPageState extends State<LoginPage> {
                           );
                           ;
                         },
-                        child: Text(
-                          //backgroundColor: MaterialStateProperty.all(KConstants.baseRedColor),
-                          'don\'t have an account? Sign up',
-                          style: TextStyle(
+                        child: Text.rich(
+                          TextSpan(
+                            text: "don't have an account? ",
+                            style: TextStyle(
                               color: KConstants.baseTwoDarkColor,
                               fontSize: 20,
                               fontFamily: "Questrial",
-                              fontWeight: FontWeight.bold),
+                              fontWeight: FontWeight.bold,
+                            ),
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: 'Sign up',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  decoration: TextDecoration.underline,
+                                  color: KConstants.baseRedColor,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
+                    
                       ),
                     ),
                   ),

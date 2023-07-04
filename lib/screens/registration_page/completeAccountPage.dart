@@ -126,7 +126,7 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
 
     if (selectedImage == null) {
       image =
-          "https://ik.imagekit.io/thelastkingpin/flutter_imagekit/pexels-i%C5%9F%C4%B1l-17215879.jpg?updatedAt=1687376134704";
+          "https://ik.imagekit.io/thelastkingpin/flutter_imagekit/pexels-mister-mister-3434523__2_.jpg?updatedAt=1688496946638";
     } else {
       image = await imageUpload(selectedImage!);
     }
