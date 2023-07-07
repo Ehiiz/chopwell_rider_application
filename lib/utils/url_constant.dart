@@ -18,5 +18,5 @@ class AppURLS {
   static String COMPLETE_ACCOUNT_SETUP = "/setup/complete-setup";
   static String CREATE_WALLET = "/create-wallet";
   static String FETCH_BALANCE = "/wallet-balance";
-  static String BASE_URL = "https://chopwell-backend.onrender.com/v1";
+  static String BASE_URL = "https://api.chopwell.ng/v1";
 }
