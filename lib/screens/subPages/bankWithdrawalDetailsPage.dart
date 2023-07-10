@@ -28,6 +28,7 @@ class BankWithdrawalDetailsPage extends ConsumerStatefulWidget {
 
 class _BankWithdrawalDetailsPageState
     extends ConsumerState<BankWithdrawalDetailsPage> {
+  bool detailsExist = false;
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
@@ -186,10 +187,9 @@ class _BankWithdrawalDetailsPageState
                       height: 15,
                     ),
                     userDetailRef.when(data: (data) {
-                      bool detailsExist = false;
                       Map<String, dynamic> bankDetails = {};
                       if (data.data.containsKey("bank_details") &&
-                          data.data["bank_details"] != null) {
+                          data.data["bank_details"]["bank_name"] != null) {
                         bankDetails = data.data["bank_details"];
 
                         setState(() {
@@ -244,14 +244,8 @@ class _BankWithdrawalDetailsPageState
                                 ),
                               ],
                             )
-                          : Text(
-                              "Set Withdrawal Account",
-                              style: TextStyle(
-                                fontFamily: "Montserrat",
-                                fontSize: 18.0,
-                                color: KConstants.baseRedColor,
-                              ),
-                            );
+                          : Container();
+                      ;
                     }, error: (error, _) {
                       return Text(error.toString());
                     }, loading: () {
@@ -332,7 +326,9 @@ class _BankWithdrawalDetailsPageState
                           );
                         },
                         child: Text(
-                          "update bank details",
+                          detailsExist
+                              ? "update bank details"
+                              : "set bank details",
                           style: TextStyle(
                             fontFamily: "Montserrat",
                             fontSize: 15.0,
@@ -351,25 +347,27 @@ class _BankWithdrawalDetailsPageState
                       width: 300,
                       height: 50,
                       child: ElevatedButton(
-                        onPressed: () {
-                          showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            builder: (BuildContext context) {
-                              return StatefulBuilder(
-                                builder: (BuildContext context,
-                                    StateSetter setState) {
-                                  return PinInputSheet(
-                                    createPin: false,
-                                    amount: "",
-                                    walletPay: true,
-                                    orderId: "",
-                                  );
-                                },
-                              );
-                            },
-                          );
-                        },
+                        onPressed: detailsExist
+                            ? () {
+                                showModalBottomSheet(
+                                  context: context,
+                                  isScrollControlled: true,
+                                  builder: (BuildContext context) {
+                                    return StatefulBuilder(
+                                      builder: (BuildContext context,
+                                          StateSetter setState) {
+                                        return PinInputSheet(
+                                          createPin: false,
+                                          amount: "",
+                                          walletPay: true,
+                                          orderId: "",
+                                        );
+                                      },
+                                    );
+                                  },
+                                );
+                              }
+                            : null,
                         child: const Text(
                           'Withdraw',
                           style: TextStyle(
@@ -381,7 +379,9 @@ class _BankWithdrawalDetailsPageState
                         ),
                         style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all(
-                              KConstants.baseTwoRedColor,
+                              detailsExist
+                                  ? KConstants.baseTwoRedColor
+                                  : KConstants.baseGreyColor,
                             ),
                             shape: MaterialStateProperty.all<
                                 RoundedRectangleBorder>(
