@@ -176,7 +176,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   controller: _passwordController,
                 ),
               ),
-              SizedBox(height: 5),
+              SizedBox(height: 15),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: width * .07),
                 child: Column(
@@ -229,6 +229,8 @@ class _SignUpPageState extends State<SignUpPage> {
                   ],
                 ),
               ),
+                            SizedBox(height: 30),
+
               SizedBox(
                 width: width * .8,
                 child: Column(

@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 import 'dart:io';
-
+import 'package:chopwell_rider_application/authentication/token-utils.dart';
+import 'package:chopwell_rider_application/authentication/user-utils.dart';
 import 'package:chopwell_rider_application/constants/constants.dart';
 import 'package:chopwell_rider_application/models/request_models/bvn_enquiry_request_model.dart';
 import 'package:chopwell_rider_application/models/request_models/complete_account_request_model.dart';
@@ -147,10 +148,14 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
 
     if (response.status == "success") {
       // include toast notification
+      final user = response.data["rider"];
 
+      await UserInfo.setUserInfo(user!);
+      await AuthToken.setAuthToken(response.data["token"]);
       setState(() {
         _showProgressIndicator = false;
       });
+
       pushNewScreen(
         context,
         screen: BottomNavBar(),

@@ -47,15 +47,15 @@ class MyOrders extends ConsumerWidget {
                     ),
                   ),
                 ),
-                IconButton(
-                  onPressed: () {},
-                  icon: SvgPicture.asset(
-                    "assets/notification-svgrepo-com.svg",
-                    color: KConstants.baseTwoDarkColor,
-                    width: 35.0,
-                    height: 35.0,
-                  ),
-                ),
+                // IconButton(
+                //   onPressed: () {},
+                //   icon: SvgPicture.asset(
+                //     "assets/notification-svgrepo-com.svg",
+                //     color: KConstants.baseTwoDarkColor,
+                //     width: 35.0,
+                //     height: 35.0,
+                //   ),
+                // ),
               ],
             ),
           ),
