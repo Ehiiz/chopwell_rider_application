@@ -53,11 +53,10 @@ class _SignUpPageState extends State<SignUpPage> {
           .showSnackBar(customSuccessBar("Signup Successful. Log in"));
       pushNewScreen(
         context,
-        screen: VerifyOtpPage(phoneNumber: phone),
+        screen: CompleteAccountPage(phoneNumber: phone),
         withNavBar: false, // OPTIONAL VALUE. True by default.
         pageTransitionAnimation: PageTransitionAnimation.cupertino,
       );
-      ;
     } else {
       setState(() {
         _showProgressIndicator = false;
@@ -229,8 +228,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   ],
                 ),
               ),
-                            SizedBox(height: 30),
-
+              SizedBox(height: 30),
               SizedBox(
                 width: width * .8,
                 child: Column(
