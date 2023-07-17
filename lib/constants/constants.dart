@@ -489,13 +489,13 @@ class FavouriteMealData {
   ];
 }
 
-List<Map<String, dynamic>> defaultBankList = [
+List<Map<String, dynamic>> defaulBankList = [
   {
-    "id": 266,
-    "code": "110005",
-    "name": "3line Card management Limited",
+    "id": 272,
+    "code": "120001",
+    "name": "9 Payment Service Bank",
     "logo": "",
-    "created": "2019-09-26 18:20:59"
+    "created": "2020-10-09 15:20:59"
   },
   {
     "id": 219,
@@ -526,6 +526,13 @@ List<Map<String, dynamic>> defaultBankList = [
     "created": "2019-09-26 18:20:59"
   },
   {
+    "id": 286,
+    "code": "090424",
+    "name": "Abucoop Microfinance Bank",
+    "logo": "",
+    "created": "2021-03-12 15:20:59"
+  },
+  {
     "id": 88,
     "code": "000014",
     "name": "Access Bank",
@@ -540,6 +547,13 @@ List<Map<String, dynamic>> defaultBankList = [
     "logo":
         "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC0AAAAtCAYAAAA6GuKaAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAPuSURBVGhD7Zh7TFNXHMe/tQUqlEZAymMrGLFGMjKzBFxIlLls7gGaxSzoHqIjm2L2MrCQkc0lRpmbWzYStsQ4Scge4pZNsoUYQ1L3SFgrThTwUaottDwK2hakpUJ76f3t0B4ljPDvDSz3kzTt93fP797PuffcP3oUxMASYxn/XlLI0lIhS0uFLC0VsrRUyNJSIUtLhSwtFf8v6Sn7Rf5r8bGgNPld8DXX8LS4WFA67B4EVAnwnzvKK4uHedLC2ABEYQrqLW9DHB+CQlTAf76eH52La9iDji4bBCHEK1HcnjF0XevDxESAV4BexzCs9iGQGI5kMTwN8yUr6xUieYZpdp4rV+3wjo7zCtBzawC2XhdPUeb8sQ383YiwdxjiXRuIVKC4BDarMGK0D4O0ydBsfIOPBH47dwHlNY3IXZ0B0x9X0W78FBvyDdj04mG0ne9E5tpMaOLjYP3zC6gN5QgGBWi1arzz2jPYvGEdtrxwCE8/nw+jsROO9q/huO3B5u2HUcDO8c8VO2iwCasKDzBDYHIqhPcrilFVsS1y7QfSgcvNCDs7IPrY3VAnQfNsNRQKJQKtn4MCI1CmrIUyMxfx+aWRxllElO6vR4JGjTyDHtVHT4Oc37M6uxpjTdF7SE9NRNuZQ5HM3hYoYrfCYW9Etl6HqiOnEGBPZFokdHQ70Nn6SWTU9Z5+5OVVwOs+jeSkFZHafR4sj7hHSyAMW6FMyoZKZ8CU6QdMmr+DIiULyuRsCINdiFkfnekMT+6shSK7DCXldTCaLFijT8OPLSaUlz7BjkaFxbAA+81+HNy/PZJnaD5rRvwqHTbtqEXy+n1oam6DbqUWJ4/txahvEoqsMtjsLjyyLguVH72MlPRd+OCzn3g3Z+ZO30cITpDnxC66+3Ml+Yx1NN5aR74zNeRt2E3TwXt8FBFbx4TYYp6IcjZWUdOvJirec4yyCw/wahToX6F9NSd5Imr9/TJBt4On+RQ89yEV7TzCE9Ff5mtsJRTxFGXeZo0w6YP/1FuISc5gM1oGweuEtuw4VMvnPqKk3Ndxj3WmpWgxYHHCcqEemsTl0Be8y94okX0IY/YG/NLSjr1vfgWsXIFEtQq+Gw14vOQgLl6y4aEcHVanp+L4x7uRV1iJ1JwMuIfcMJ+txbY9X0LJxt8eGcXWpx5Dy7fV/MqMiPp/CE2MkuebV8l74iUK+e7w6nwsN53Uc6ufp1mstgHqH5jtCwaD1H2jl3z+AK8Q2fpc1G3p44nI7Rmnzuu9PLGeUIi6WB4a8fDKLAtui4Xu2NmMRMSmGXhl8SDv5UmFLC0VsrRUyNJSIUtLhSwtFbK0VMjSUrEEpYF/AREybBR+bbExAAAAAElFTkSuQmCC",
     "created": "2019-09-26 18:20:59"
+  },
+  {
+    "id": 324,
+    "code": "100052",
+    "name": "Access Yelo & Beta",
+    "logo": "",
+    "created": "2021-07-26 09:20:59"
   },
   {
     "id": 243,
@@ -570,11 +584,25 @@ List<Map<String, dynamic>> defaultBankList = [
     "created": "2019-09-26 18:20:59"
   },
   {
+    "id": 169,
+    "code": "090155",
+    "name": "ADVANS LAFAYETTE MFB",
+    "logo": "",
+    "created": "2019-09-26 18:20:59"
+  },
+  {
     "id": 258,
     "code": "100028",
     "name": "AG MORTGAGE BANK PLC",
     "logo": "",
     "created": "2019-09-26 18:20:59"
+  },
+  {
+    "id": 342,
+    "code": "090531",
+    "name": "Aku MFB",
+    "logo": "",
+    "created": "2023-03-01 10:47:59"
   },
   {
     "id": 147,
@@ -591,13 +619,6 @@ List<Map<String, dynamic>> defaultBankList = [
     "created": "2019-09-26 18:20:59"
   },
   {
-    "id": "",
-    "code": "",
-    "name": "click to select bank",
-    "logo": "",
-    "created": ""
-  },
-  {
     "id": 225,
     "code": "090277",
     "name": "Alhayat MFB",
@@ -610,6 +631,13 @@ List<Map<String, dynamic>> defaultBankList = [
     "name": "ALLWORKERS MFB",
     "logo": "",
     "created": "2019-09-26 18:20:59"
+  },
+  {
+    "id": 358,
+    "code": "090548",
+    "name": "ALLY MFB",
+    "logo": "",
+    "created": "2023-05-05 08:10:59"
   },
   {
     "id": 183,
@@ -633,6 +661,27 @@ List<Map<String, dynamic>> defaultBankList = [
     "created": "2019-09-26 18:20:59"
   },
   {
+    "id": 346,
+    "code": "090610",
+    "name": "AMOYE MFB",
+    "logo": "",
+    "created": "2023-03-21 12:41:59"
+  },
+  {
+    "id": 340,
+    "code": "090529",
+    "name": "AMPERSAND MFB",
+    "logo": "",
+    "created": "2022-12-30 10:30:59"
+  },
+  {
+    "id": 362,
+    "code": "090645",
+    "name": "AMUCHA MFB",
+    "logo": "",
+    "created": "2023-06-20 14:03:12"
+  },
+  {
     "id": 157,
     "code": "090143",
     "name": "APEKS Microfinance Bank",
@@ -652,6 +701,13 @@ List<Map<String, dynamic>> defaultBankList = [
     "name": "ASOSavings",
     "logo": "",
     "created": "2019-09-26 18:20:59"
+  },
+  {
+    "id": 357,
+    "code": "090287",
+    "name": "ASSETMATRIX MFB",
+    "logo": "",
+    "created": "2023-04-26 17:19:59"
   },
   {
     "id": 186,
@@ -675,6 +731,20 @@ List<Map<String, dynamic>> defaultBankList = [
     "created": "2019-09-26 18:20:59"
   },
   {
+    "id": 343,
+    "code": "090581",
+    "name": "Banc Corp MFB",
+    "logo": "",
+    "created": "2023-03-01 10:48:05"
+  },
+  {
+    "id": 303,
+    "code": "090425",
+    "name": "Banex MFB",
+    "logo": "",
+    "created": "2021-06-01 14:20:59"
+  },
+  {
     "id": 141,
     "code": "090127",
     "name": "BC Kash MFB",
@@ -682,11 +752,32 @@ List<Map<String, dynamic>> defaultBankList = [
     "created": "2019-09-26 18:20:59"
   },
   {
+    "id": 345,
+    "code": "090615",
+    "name": "BESTSTAR MFB",
+    "logo": "",
+    "created": "2023-03-21 12:40:59"
+  },
+  {
+    "id": 289,
+    "code": "090431",
+    "name": "BLUEWHALES MFB",
+    "logo": "",
+    "created": "2021-03-12 15:20:59"
+  },
+  {
     "id": 131,
     "code": "090117",
     "name": "Boctrust Microfinance Bank",
     "logo": "",
     "created": "2019-09-26 18:20:59"
+  },
+  {
+    "id": 314,
+    "code": "090319",
+    "name": "BONGHE MFB",
+    "logo": "",
+    "created": "2021-07-09 15:20:59"
   },
   {
     "id": 190,
@@ -703,9 +794,44 @@ List<Map<String, dynamic>> defaultBankList = [
     "created": "2019-09-26 18:20:59"
   },
   {
+    "id": 339,
+    "code": "050006",
+    "name": "BRANCH INTERNATIONAL FINANCIAL SERVICES",
+    "logo": "",
+    "created": "2022-11-28 12:01:59"
+  },
+  {
     "id": 114,
     "code": "070015",
     "name": "Brent Mortgage Bank",
+    "logo": "",
+    "created": "2019-09-26 18:20:59"
+  },
+  {
+    "id": 276,
+    "code": "090293",
+    "name": "Brethren MFB",
+    "logo": "",
+    "created": "2021-01-29 15:20:59"
+  },
+  {
+    "id": 271,
+    "code": "090363",
+    "name": "Bridgeway MFB",
+    "logo": "",
+    "created": "2020-10-09 15:20:59"
+  },
+  {
+    "id": 322,
+    "code": "090445",
+    "name": "CAPSTONE MFB",
+    "logo": "",
+    "created": "2021-07-24 13:20:59"
+  },
+  {
+    "id": 256,
+    "code": "100026",
+    "name": "Carbon",
     "logo": "",
     "created": "2019-09-26 18:20:59"
   },
@@ -722,6 +848,27 @@ List<Map<String, dynamic>> defaultBankList = [
     "name": "CEMCS MFB",
     "logo": "",
     "created": "2019-09-26 18:20:59"
+  },
+  {
+    "id": 277,
+    "code": "090397",
+    "name": "Chanelle MFB",
+    "logo": "",
+    "created": "2021-01-29 15:20:59"
+  },
+  {
+    "id": 309,
+    "code": "090440",
+    "name": "CHERISH MFB",
+    "logo": "",
+    "created": "2021-06-21 18:20:59"
+  },
+  {
+    "id": 281,
+    "code": "090416",
+    "name": "CHIBUEZE MFB",
+    "logo": "",
+    "created": "2021-03-12 15:20:59"
   },
   {
     "id": 155,
@@ -746,6 +893,20 @@ List<Map<String, dynamic>> defaultBankList = [
     "created": "2019-09-26 18:20:59"
   },
   {
+    "id": 331,
+    "code": "090530",
+    "name": "CONFIDENCE MFB",
+    "logo": "",
+    "created": "2022-09-19 10:13:59"
+  },
+  {
+    "id": 359,
+    "code": "090553",
+    "name": "CONSISTENT TRUST MFB",
+    "logo": "",
+    "created": "2023-05-12 08:38:38"
+  },
+  {
     "id": 144,
     "code": "090130",
     "name": "CONSUMER  MFB",
@@ -758,6 +919,13 @@ List<Map<String, dynamic>> defaultBankList = [
     "name": "Contec Global",
     "logo": "",
     "created": "2019-09-26 18:20:59"
+  },
+  {
+    "id": 278,
+    "code": "070021",
+    "name": "COOP Mortgage Bank",
+    "logo": "",
+    "created": "2021-01-29 15:20:59"
   },
   {
     "id": 100,
@@ -783,11 +951,39 @@ List<Map<String, dynamic>> defaultBankList = [
     "created": "2019-09-26 18:20:59"
   },
   {
+    "id": 317,
+    "code": "090429",
+    "name": "CROSS RIVER MFB",
+    "logo": "",
+    "created": "2021-07-24 13:20:59"
+  },
+  {
+    "id": 291,
+    "code": "090414",
+    "name": "CRUTECH MFB",
+    "logo": "",
+    "created": "2021-05-04 15:20:59"
+  },
+  {
+    "id": 360,
+    "code": "050017",
+    "name": "CS ADVANCE FINANCE",
+    "logo": "",
+    "created": "2023-05-16 11:50:38"
+  },
+  {
     "id": 181,
     "code": "090167",
     "name": "Daylight Microfinance Bank",
     "logo": "",
     "created": "2019-09-26 18:20:59"
+  },
+  {
+    "id": 325,
+    "code": "090470",
+    "name": "DOT MICROFINANCE BANK LIMITED",
+    "logo": "",
+    "created": "2021-07-26 09:20:59"
   },
   {
     "id": 170,
@@ -840,6 +1036,13 @@ List<Map<String, dynamic>> defaultBankList = [
     "created": "2019-09-26 18:20:59"
   },
   {
+    "id": 329,
+    "code": "090539",
+    "name": "ENRICH MFB",
+    "logo": "",
+    "created": "2022-08-25 13:03:59"
+  },
+  {
     "id": 93,
     "code": "000019",
     "name": "Enterprise Bank",
@@ -866,6 +1069,34 @@ List<Map<String, dynamic>> defaultBankList = [
     "name": "eTranzact",
     "logo": "",
     "created": "2019-09-26 18:20:59"
+  },
+  {
+    "id": 356,
+    "code": "090541",
+    "name": "EXCELLENT MFB",
+    "logo": "",
+    "created": "2023-04-26 14:41:59"
+  },
+  {
+    "id": 327,
+    "code": "090328",
+    "name": "Eyowo",
+    "logo": "",
+    "created": "2021-11-09 17:37:59"
+  },
+  {
+    "id": 338,
+    "code": "090551",
+    "name": "FAIRMONEY MFB",
+    "logo": "",
+    "created": "2022-11-21 12:01:59"
+  },
+  {
+    "id": 306,
+    "code": "090330",
+    "name": "Fame MFB",
+    "logo": "",
+    "created": "2021-06-01 14:20:59"
   },
   {
     "id": 193,
@@ -956,20 +1187,6 @@ List<Map<String, dynamic>> defaultBankList = [
     "created": "2019-09-26 18:20:59"
   },
   {
-    "id": 229,
-    "code": "090281",
-    "name": "Finex MFB",
-    "logo": "",
-    "created": "2019-09-26 18:20:59"
-  },
-  {
-    "id": 265,
-    "code": "110004",
-    "name": "First Apple Limited",
-    "logo": "",
-    "created": "2019-09-26 18:20:59"
-  },
-  {
     "id": 90,
     "code": "000016",
     "name": "First Bank",
@@ -999,11 +1216,11 @@ List<Map<String, dynamic>> defaultBankList = [
     "created": "2019-09-26 18:20:59"
   },
   {
-    "id": 263,
-    "code": "110002",
-    "name": "Flutterwave Technology solutions Limited",
+    "id": 349,
+    "code": "090614",
+    "name": "FLOURISH MFB",
     "logo": "",
-    "created": "2019-09-26 18:20:59"
+    "created": "2023-03-21 12:43:59"
   },
   {
     "id": 104,
@@ -1034,6 +1251,13 @@ List<Map<String, dynamic>> defaultBankList = [
     "created": "2019-09-26 18:20:59"
   },
   {
+    "id": 301,
+    "code": "090438",
+    "name": "FUTMINNA MFB",
+    "logo": "",
+    "created": "2021-06-01 14:20:59"
+  },
+  {
     "id": 172,
     "code": "090158",
     "name": "FUTO MFB",
@@ -1055,6 +1279,27 @@ List<Map<String, dynamic>> defaultBankList = [
     "created": "2019-09-26 18:20:59"
   },
   {
+    "id": 275,
+    "code": "090411",
+    "name": "GIGINYA MFB",
+    "logo": "",
+    "created": "2021-01-29 15:20:59"
+  },
+  {
+    "id": 315,
+    "code": "090441",
+    "name": "GIWA MICROFINANCE BANK",
+    "logo": "",
+    "created": "2021-07-09 15:20:59"
+  },
+  {
+    "id": 308,
+    "code": "000027",
+    "name": "GLOBUS Bank",
+    "logo": "",
+    "created": "2021-06-01 18:20:59"
+  },
+  {
     "id": 226,
     "code": "090278",
     "name": "Glory MFB ",
@@ -1067,6 +1312,13 @@ List<Map<String, dynamic>> defaultBankList = [
     "name": "GoMoney",
     "logo": "",
     "created": "2019-09-26 18:20:59"
+  },
+  {
+    "id": 335,
+    "code": "090495",
+    "name": "GOODNEWS MFB",
+    "logo": "",
+    "created": "2022-10-14 14:59:59"
   },
   {
     "id": 136,
@@ -1088,6 +1340,13 @@ List<Map<String, dynamic>> defaultBankList = [
     "name": "Greenville Microfinance bank",
     "logo": "",
     "created": "2019-09-26 18:20:59"
+  },
+  {
+    "id": 293,
+    "code": "060004",
+    "name": "GREENWICH Merchant Bank",
+    "logo": "",
+    "created": "2021-06-01 18:20:59"
   },
   {
     "id": 201,
@@ -1148,11 +1407,25 @@ List<Map<String, dynamic>> defaultBankList = [
     "created": "2019-09-26 18:20:59"
   },
   {
+    "id": 287,
+    "code": "090418",
+    "name": "HIGHLAND MFB",
+    "logo": "",
+    "created": "2021-03-12 15:20:59"
+  },
+  {
     "id": 189,
     "code": "090175",
     "name": "HighStreet MFB",
     "logo": "",
     "created": "2019-09-26 18:20:59"
+  },
+  {
+    "id": 273,
+    "code": "120002",
+    "name": "Hope PSB",
+    "logo": "",
+    "created": "2020-10-09 15:20:59"
   },
   {
     "id": 132,
@@ -1167,6 +1440,13 @@ List<Map<String, dynamic>> defaultBankList = [
     "name": "Ikire MFB",
     "logo": "",
     "created": "2019-09-26 18:20:59"
+  },
+  {
+    "id": 294,
+    "code": "090350",
+    "name": "ILORIN MFB",
+    "logo": "",
+    "created": "2021-06-01 18:20:59"
   },
   {
     "id": 207,
@@ -1204,16 +1484,16 @@ List<Map<String, dynamic>> defaultBankList = [
     "created": "2019-09-26 18:20:59"
   },
   {
+    "id": 302,
+    "code": "090434",
+    "name": "Insight MFB",
+    "logo": "",
+    "created": "2021-06-01 14:20:59"
+  },
+  {
     "id": 257,
     "code": "100027",
     "name": "Intellifin",
-    "logo": "",
-    "created": "2019-09-26 18:20:59"
-  },
-  {
-    "id": 264,
-    "code": "110003",
-    "name": "Interswitch Limited",
     "logo": "",
     "created": "2019-09-26 18:20:59"
   },
@@ -1225,11 +1505,18 @@ List<Map<String, dynamic>> defaultBankList = [
     "created": "2019-09-26 18:20:59"
   },
   {
-    "id": 206,
-    "code": "090211",
-    "name": "Itex Integrated Services Limited",
+    "id": 348,
+    "code": "090620",
+    "name": "IYIN EKITI MFB",
     "logo": "",
-    "created": "2019-09-26 18:20:59"
+    "created": "2023-03-21 12:43:59"
+  },
+  {
+    "id": 285,
+    "code": "090421",
+    "name": "Izon Microfinance Bank",
+    "logo": "",
+    "created": "2021-03-12 15:20:59"
   },
   {
     "id": 80,
@@ -1269,6 +1556,13 @@ List<Map<String, dynamic>> defaultBankList = [
     "created": "2019-09-26 18:20:59"
   },
   {
+    "id": 270,
+    "code": "090380",
+    "name": "KREDI MONEY MFB",
+    "logo": "",
+    "created": "2019-09-26 18:20:59"
+  },
+  {
     "id": 216,
     "code": "090267",
     "name": "Kuda Microfinance Bank",
@@ -1276,11 +1570,18 @@ List<Map<String, dynamic>> defaultBankList = [
     "created": "2019-09-26 18:20:59"
   },
   {
-    "id": 169,
-    "code": "090155",
-    "name": "La Fayette Microfinance Bank",
+    "id": 312,
+    "code": "090450",
+    "name": "KWASU MFB",
     "logo": "",
-    "created": "2019-09-26 18:20:59"
+    "created": "2021-07-06 06:20:59"
+  },
+  {
+    "id": 282,
+    "code": "090422",
+    "name": "LANDGOLD MFB",
+    "logo": "",
+    "created": "2021-03-12 15:20:59"
   },
   {
     "id": 191,
@@ -1304,11 +1605,53 @@ List<Map<String, dynamic>> defaultBankList = [
     "created": "2019-09-26 18:20:59"
   },
   {
+    "id": 361,
+    "code": "090372",
+    "name": "LEGEND MFB",
+    "logo": "",
+    "created": "2023-06-15 22:46:38"
+  },
+  {
+    "id": 284,
+    "code": "090420",
+    "name": "LETSHEGO MFB",
+    "logo": "",
+    "created": "2021-03-12 15:20:59"
+  },
+  {
+    "id": 333,
+    "code": "090557",
+    "name": "LIFEGATE MFB",
+    "logo": "",
+    "created": "2022-09-27 18:20:59"
+  },
+  {
+    "id": 296,
+    "code": "090435",
+    "name": "LINKS MFB",
+    "logo": "",
+    "created": "2021-06-01 14:20:59"
+  },
+  {
+    "id": 316,
+    "code": "000029",
+    "name": "LOTUS BANK",
+    "logo": "",
+    "created": "2021-07-09 15:20:59"
+  },
+  {
     "id": 214,
     "code": "090265",
     "name": "Lovonus Microfinance bank",
     "logo": "",
     "created": "2019-09-26 18:20:59"
+  },
+  {
+    "id": 347,
+    "code": "090623",
+    "name": "MAB ALLIANZ MFB",
+    "logo": "",
+    "created": "2023-03-21 12:42:59"
   },
   {
     "id": 185,
@@ -1325,11 +1668,25 @@ List<Map<String, dynamic>> defaultBankList = [
     "created": "2019-09-26 18:20:59"
   },
   {
+    "id": 299,
+    "code": "090423",
+    "name": "MAUTECH MFB",
+    "logo": "",
+    "created": "2021-06-01 14:20:59"
+  },
+  {
     "id": 228,
     "code": "090280",
     "name": "Megapraise Microfinance Bank",
     "logo": "",
     "created": "2019-09-26 18:20:59"
+  },
+  {
+    "id": 297,
+    "code": "090432",
+    "name": "Memphis MFB",
+    "logo": "",
+    "created": "2021-06-01 14:20:59"
   },
   {
     "id": 224,
@@ -1342,6 +1699,13 @@ List<Map<String, dynamic>> defaultBankList = [
     "id": 150,
     "code": "090136",
     "name": "Microcred Microfinance Bank",
+    "logo": "",
+    "created": "2019-09-26 18:20:59"
+  },
+  {
+    "id": 229,
+    "code": "090281",
+    "name": "MINT-FINEX MFB",
     "logo": "",
     "created": "2019-09-26 18:20:59"
   },
@@ -1365,6 +1729,20 @@ List<Map<String, dynamic>> defaultBankList = [
     "name": "MONEYTRUST MFB",
     "logo": "",
     "created": "2019-09-26 18:20:59"
+  },
+  {
+    "id": 332,
+    "code": "090405",
+    "name": "Moniepoint MFB",
+    "logo": "",
+    "created": "2022-09-22 19:25:59"
+  },
+  {
+    "id": 364,
+    "code": "090392",
+    "name": "MOZFIN MFB",
+    "logo": "",
+    "created": "2023-07-03 11:56:43"
   },
   {
     "id": 197,
@@ -1416,6 +1794,13 @@ List<Map<String, dynamic>> defaultBankList = [
     "created": "2019-09-26 18:20:59"
   },
   {
+    "id": 318,
+    "code": "090459",
+    "name": "NICE MFB",
+    "logo": "",
+    "created": "2021-07-24 13:20:59"
+  },
+  {
     "id": 200,
     "code": "090194",
     "name": "NIRSAL National microfinance bank",
@@ -1437,6 +1822,13 @@ List<Map<String, dynamic>> defaultBankList = [
     "logo":
         "data:image/png;base64,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",
     "created": "2019-09-26 18:20:59"
+  },
+  {
+    "id": 304,
+    "code": "090437",
+    "name": "OakLand MFB",
+    "logo": "",
+    "created": "2021-06-01 14:20:59"
   },
   {
     "id": 133,
@@ -1467,11 +1859,25 @@ List<Map<String, dynamic>> defaultBankList = [
     "created": "2019-09-26 18:20:59"
   },
   {
-    "id": 256,
-    "code": "100026",
-    "name": "ONE FINANCE",
+    "id": 344,
+    "code": "000036",
+    "name": "Optimus Bank",
     "logo": "",
-    "created": "2019-09-26 18:20:59"
+    "created": "2023-03-01 17:22:05"
+  },
+  {
+    "id": 320,
+    "code": "090460",
+    "name": "ORITABASORUN MFB",
+    "logo": "",
+    "created": "2021-07-24 13:20:59"
+  },
+  {
+    "id": 311,
+    "code": "090456",
+    "name": "OSPOLY MFB",
+    "logo": "",
+    "created": "2021-06-28 06:20:59"
   },
   {
     "id": 232,
@@ -1488,16 +1894,30 @@ List<Map<String, dynamic>> defaultBankList = [
     "created": "2019-09-26 18:20:59"
   },
   {
-    "id": 233,
-    "code": "100003",
-    "name": "Parkway-ReadyCash",
+    "id": 280,
+    "code": "100033",
+    "name": "PalmPay",
+    "logo": "",
+    "created": "2021-01-29 15:20:59"
+  },
+  {
+    "id": 119,
+    "code": "000030",
+    "name": "Parallex",
     "logo": "",
     "created": "2019-09-26 18:20:59"
   },
   {
-    "id": 119,
-    "code": "090004",
-    "name": "Parralex",
+    "id": 313,
+    "code": "090390",
+    "name": "PARKWAY MFB",
+    "logo": "",
+    "created": "2021-07-06 06:20:59"
+  },
+  {
+    "id": 233,
+    "code": "100003",
+    "name": "Parkway-ReadyCash",
     "logo": "",
     "created": "2019-09-26 18:20:59"
   },
@@ -1511,16 +1931,16 @@ List<Map<String, dynamic>> defaultBankList = [
   {
     "id": 234,
     "code": "100004",
-    "name": "Paycom",
+    "name": "Paycom (Opay)",
     "logo": "",
     "created": "2019-09-26 18:20:59"
   },
   {
-    "id": 267,
-    "code": "110006",
-    "name": "Paystack Payments Limited",
+    "id": 283,
+    "code": "090402",
+    "name": "PEACE MFB",
     "logo": "",
-    "created": "2019-09-26 18:20:59"
+    "created": "2021-03-12 15:20:59"
   },
   {
     "id": 151,
@@ -1566,6 +1986,13 @@ List<Map<String, dynamic>> defaultBankList = [
     "created": "2019-09-26 18:20:59"
   },
   {
+    "id": 337,
+    "code": "000031",
+    "name": "Premium Trust Bank",
+    "logo": "",
+    "created": "2022-10-31 21:06:59"
+  },
+  {
     "id": 223,
     "code": "090274",
     "name": "Prestige Microfinance bank",
@@ -1579,6 +2006,13 @@ List<Map<String, dynamic>> defaultBankList = [
     "logo":
         "data:image/png;base64,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",
     "created": "2019-09-26 18:20:59"
+  },
+  {
+    "id": 355,
+    "code": "090303",
+    "name": "PURPLEMONEY MFB",
+    "logo": "",
+    "created": "2023-04-20 18:55:59"
   },
   {
     "id": 210,
@@ -1616,6 +2050,13 @@ List<Map<String, dynamic>> defaultBankList = [
     "created": "2019-09-26 18:20:59"
   },
   {
+    "id": 350,
+    "code": "090463",
+    "name": "REHOBOTH MFB",
+    "logo": "",
+    "created": "2023-03-29 13:50:59"
+  },
+  {
     "id": 187,
     "code": "090173",
     "name": "Reliance MFB",
@@ -1637,11 +2078,53 @@ List<Map<String, dynamic>> defaultBankList = [
     "created": "2019-09-26 18:20:59"
   },
   {
+    "id": 298,
+    "code": "090433",
+    "name": "RIGO MFB",
+    "logo": "",
+    "created": "2021-06-01 14:20:59"
+  },
+  {
+    "id": 330,
+    "code": "090547",
+    "name": "ROCKSHIELD MFB",
+    "logo": "",
+    "created": "2022-09-06 19:00:59"
+  },
+  {
+    "id": 290,
+    "code": "090405",
+    "name": "Rolez Microfinance Bank",
+    "logo": "",
+    "created": "2021-03-12 15:20:59"
+  },
+  {
     "id": 152,
     "code": "090138",
     "name": "Royal Exchange Microfinance Bank",
     "logo": "",
     "created": "2019-09-26 18:20:59"
+  },
+  {
+    "id": 279,
+    "code": "090175",
+    "name": "Rubies MFB",
+    "logo": "",
+    "created": "2021-01-29 15:20:59"
+  },
+  {
+    "id": 326,
+    "code": "090286",
+    "name": "Safe Haven MFB",
+    "logo": "",
+    "created": "2021-11-09 17:37:59"
+  },
+  {
+    "id": 321,
+    "code": "090485",
+    "name": "SAFEGATE MFB",
+    "logo": "",
+    "created": "2021-07-24 13:20:59"
   },
   {
     "id": 121,
@@ -1663,6 +2146,35 @@ List<Map<String, dynamic>> defaultBankList = [
     "name": "Seed Capital Microfinance Bank",
     "logo": "",
     "created": "2019-09-26 18:20:59"
+  },
+  {
+    "id": 341,
+    "code": "000034",
+    "name": "SIGNATURE BANK",
+    "logo": "",
+    "created": "2023-02-16 20:12:59"
+  },
+  {
+    "id": 328,
+    "code": "120004",
+    "name": "SmartCash PSB",
+    "logo":
+        "data:image/jpeg;base64,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",
+    "created": "2022-05-25 12:37:59"
+  },
+  {
+    "id": 269,
+    "code": "090325",
+    "name": "Sparkle",
+    "logo": "",
+    "created": "2019-09-26 18:20:59"
+  },
+  {
+    "id": 305,
+    "code": "090436",
+    "name": "Spectrum MFB",
+    "logo": "",
+    "created": "2021-06-01 14:20:59"
   },
   {
     "id": 237,
@@ -1695,6 +2207,13 @@ List<Map<String, dynamic>> defaultBankList = [
     "created": "2019-09-26 18:20:59"
   },
   {
+    "id": 300,
+    "code": "070022",
+    "name": "STB Mortgage Bank",
+    "logo": "",
+    "created": "2021-06-01 14:20:59"
+  },
+  {
     "id": 211,
     "code": "090262",
     "name": "Stellas Microfinance bank",
@@ -1710,12 +2229,33 @@ List<Map<String, dynamic>> defaultBankList = [
     "created": "2019-09-26 18:20:59"
   },
   {
+    "id": 310,
+    "code": "090340",
+    "name": "STOCKCORP MFB",
+    "logo": "",
+    "created": "2021-06-21 18:20:59"
+  },
+  {
+    "id": 295,
+    "code": "090302",
+    "name": "SUNBEAM MFB",
+    "logo": "",
+    "created": "2021-06-01 14:20:59"
+  },
+  {
     "id": 96,
     "code": "000022",
     "name": "SUNTRUST BANK",
     "logo":
         "data:image/png;base64,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",
     "created": "2019-09-26 18:20:59"
+  },
+  {
+    "id": 323,
+    "code": "090446",
+    "name": "SUPPORT MFB",
+    "logo": "",
+    "created": "2021-07-24 13:20:59"
   },
   {
     "id": 253,
@@ -1732,6 +2272,20 @@ List<Map<String, dynamic>> defaultBankList = [
     "created": "2019-09-26 18:20:59"
   },
   {
+    "id": 336,
+    "code": "090560",
+    "name": "TANADI MFB",
+    "logo": "",
+    "created": "2022-10-19 15:53:59"
+  },
+  {
+    "id": 288,
+    "code": "090426",
+    "name": "TANGERINE MONEY",
+    "logo": "",
+    "created": "2021-03-12 15:20:59"
+  },
+  {
     "id": 129,
     "code": "090115",
     "name": "TCF",
@@ -1744,6 +2298,27 @@ List<Map<String, dynamic>> defaultBankList = [
     "name": "TeasyMobile",
     "logo": "",
     "created": "2019-09-26 18:20:59"
+  },
+  {
+    "id": 363,
+    "code": "090283",
+    "name": "THRIVE MFB",
+    "logo": "",
+    "created": "2023-06-21 09:41:31"
+  },
+  {
+    "id": 274,
+    "code": "000025",
+    "name": "Titan Trust Bank",
+    "logo": "",
+    "created": "2020-10-09 15:20:59"
+  },
+  {
+    "id": 334,
+    "code": "100039",
+    "name": "TITAN-PAYSTACK MFB",
+    "logo": "",
+    "created": "2022-09-27 19:30:59"
   },
   {
     "id": 160,
@@ -1768,6 +2343,13 @@ List<Map<String, dynamic>> defaultBankList = [
     "created": "2019-09-26 18:20:59"
   },
   {
+    "id": 319,
+    "code": "090461",
+    "name": "UNIBADAN MFB",
+    "logo": "",
+    "created": "2021-07-24 13:20:59"
+  },
+  {
     "id": 215,
     "code": "090266",
     "name": "Uniben Microfinance bank",
@@ -1780,6 +2362,13 @@ List<Map<String, dynamic>> defaultBankList = [
     "name": "Unical MFB",
     "logo": "",
     "created": "2019-09-26 18:20:59"
+  },
+  {
+    "id": 307,
+    "code": "090341",
+    "name": "UNIILORIN MFB",
+    "logo": "",
+    "created": "2021-06-01 14:20:59"
   },
   {
     "id": 92,
@@ -1808,8 +2397,7 @@ List<Map<String, dynamic>> defaultBankList = [
     "id": 45,
     "code": "999999",
     "name": "VFD MICROFINANCE BANK",
-    "logo":
-        "data:image/png;base64,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",
+    "logo": "https://cms.vbank.ng/wp-content/uploads/2020/08/mfb.png",
     "created": "2019-04-16 15:59:06"
   },
   {
@@ -1832,6 +2420,13 @@ List<Map<String, dynamic>> defaultBankList = [
     "name": "VTNetworks",
     "logo": "",
     "created": "2019-09-26 18:20:59"
+  },
+  {
+    "id": 354,
+    "code": "090590",
+    "name": "WAYA MFB",
+    "logo": "",
+    "created": "2023-04-06 15:38:59"
   },
   {
     "id": 91,
@@ -1885,7 +2480,6 @@ List<Map<String, dynamic>> defaultBankList = [
     "created": "2019-09-26 18:20:59"
   }
 ];
-
 RegExp emailRegExp = RegExp(
     r'^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$');
 RegExp passwordRegex = RegExp(
