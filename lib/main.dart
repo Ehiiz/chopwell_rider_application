@@ -6,7 +6,6 @@ import 'package:chopwell_rider_application/screens/Nav_Pages/homePage.dart';
 import 'package:chopwell_rider_application/screens/Nav_Pages/ordersPage.dart';
 import 'package:chopwell_rider_application/screens/Nav_Pages/profilePage.dart';
 import 'package:chopwell_rider_application/screens/registration_page/loginPage.dart';
-import 'package:chopwell_rider_application/screens/registration_page/signUpPage.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -16,9 +15,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:alarm/alarm.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -234,8 +233,16 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-class BottomNavBar extends StatelessWidget {
-  BottomNavBar({Key? key}) : super(key: key);
+class BottomNavBar extends StatefulWidget {
+  const BottomNavBar({Key? key}) : super(key: key);
+
+  @override
+  State<BottomNavBar> createState() => _BottomNavBarState();
+}
+
+class _BottomNavBarState extends State<BottomNavBar> {
+  // late IO.Socket socket;
+  // Timer? locationTimer;
 
   List<Widget> _buildScreens() {
     return [
@@ -279,6 +286,68 @@ class BottomNavBar extends StatelessWidget {
   // ignore: prefer_final_fields
   PersistentTabController _controller =
       PersistentTabController(initialIndex: 0);
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize the Socket.io client and connect to the server
+    // Replace 'your_socket_server_url' with the actual URL of your Socket.io server
+    // print('connect 1');
+
+    // IO.Socket socket = IO.io('http://172.20.10.2:8000');
+    // socket.onConnect((_) {
+    //   print('connect');
+    //   socket.emit('msg', 'test');
+    // });
+    // socket.on('event', (data) => print(data));
+    // socket.onDisconnect((_) => print('disconnect'));
+    // socket.on('fromServer', (_) => print(_));
+
+    // // Event handler for connection error
+    // socket.onConnectError((error) {
+    //   print('Socket connection error: $error');
+    // });
+
+    // // Event handler for connection timeout
+    // socket.onConnectTimeout((timeout) {
+    //   print('Socket connection timeout: $timeout');
+    // });
+
+    // // Start the periodic location update timer
+    // startLocationUpdateTimer();
+  }
+
+  @override
+  void dispose() {
+    //  socket.disconnect();
+    super.dispose();
+  }
+
+  // void startLocationUpdateTimer() {
+  //   const updateInterval =
+  //       Duration(minutes: 10); // Update interval of 10 minutes
+  //   locationTimer = Timer.periodic(updateInterval, (Timer timer) {
+  //     // Call the method to send the location data over the socket
+  //     getUserLocation();
+  //   });
+  // }
+
+  // Method to send user location data over the socket
+  // void sendUserLocationData(double latitude, double longitude) {
+  //   if (socket.connected) {
+  //     // Send the location data as a JSON object to the server
+  //     socket.emit('userLocation', {
+  //       'latitude': latitude,
+  //       'longitude': longitude,
+  //     });
+  //   }
+  // }
+
+  // Example method to get user location data (you may use a location plugin for this)
+  // void getUserLocation() {
+  //   // Call the method to send the location data over the socket
+  //   sendUserLocationData(0, 2);
+  // }
 
   @override
   Widget build(BuildContext context) {

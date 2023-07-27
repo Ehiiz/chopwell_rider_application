@@ -129,7 +129,6 @@ class _PinInputSheetState extends ConsumerState<PinInputSheet> {
         setState(() {
           _showProgressIndicator = false;
         });
-        ref.refresh(walletBalanceFutureProvider);
         Navigator.pop(context);
         ScaffoldMessenger.of(context)
             .showSnackBar(customSuccessBar("Withdrawal Successful"));

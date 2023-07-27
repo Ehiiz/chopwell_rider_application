@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chopwell_rider_application/authentication/token-utils.dart';
 import 'package:chopwell_rider_application/authentication/user-utils.dart';
+import 'package:chopwell_rider_application/builders/subAppBar.dart';
 import 'package:chopwell_rider_application/models/request_models/update_rider_status_request_model.dart';
 import 'package:chopwell_rider_application/models/response_models/map_based_response_model.dart';
 import 'package:chopwell_rider_application/models/request_models/set_location_request_model.dart';
@@ -23,6 +24,26 @@ import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../registration_page/loginPage.dart';
+
+Future<Position> getCurrentLocation() async {
+  bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  if (!serviceEnabled) {
+    return Future.error('Location services are disabled');
+  }
+
+  LocationPermission permission = await Geolocator.checkPermission();
+  if (permission == LocationPermission.denied) {
+    permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied) {
+      return Future.error('Location permissions are denied');
+    }
+  }
+
+  if (permission == LocationPermission.deniedForever) {
+    return Future.error('Location permissions are denied forever');
+  }
+  return await Geolocator.getCurrentPosition();
+}
 
 final fetchUserDetailFutureProvider =
     FutureProvider<MapDataResponseModel>((ref) async {
@@ -85,26 +106,6 @@ class _NewProfilePageState extends ConsumerState<NewProfilePage> {
     }
   }
 
-  Future<Position> _getCurrentLocation() async {
-    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      return Future.error('Location services are disabled');
-    }
-
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return Future.error('Location permissions are denied');
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      return Future.error('Location permissions are denied forever');
-    }
-    return await Geolocator.getCurrentPosition();
-  }
-
   void _updateRiderStatus(BuildContext context, String status) async {
     setState(() {
       _updateRIderProgress = true;
@@ -155,41 +156,7 @@ class _NewProfilePageState extends ConsumerState<NewProfilePage> {
               return SafeArea(
                 child: Scaffold(
                   extendBody: true,
-                  appBar: AppBar(
-                    elevation: 0.0,
-                    backgroundColor: Colors.white,
-                    actions: [
-                      Container(
-                        width: screenWidth,
-                        color: Colors.transparent,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(left: 10),
-                              child: Text(
-                                'Profile',
-                                style: TextStyle(
-                                  fontFamily: "Questrial",
-                                  fontSize: 30.0,
-                                  color: KConstants.baseDarkColor,
-                                ),
-                              ),
-                            ),
-                            // IconButton(
-                            //   onPressed: () {},
-                            //   icon: SvgPicture.asset(
-                            //     "assets/notification-svgrepo-com.svg",
-                            //     color: KConstants.baseTwoDarkColor,
-                            //     width: 35.0,
-                            //     height: 35.0,
-                            //   ),
-                            // ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+                  appBar: buildNavAppBar(context, "Profile", screenWidth),
                   body: Center(
                       child: Padding(
                           padding: EdgeInsets.symmetric(

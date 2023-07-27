@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:chopwell_rider_application/builders/subAppBar.dart';
 import 'package:chopwell_rider_application/models/response_models/list_based_response_model.dart';
 import 'package:chopwell_rider_application/models/response_models/map_based_response_model.dart';
 import 'package:chopwell_rider_application/screens/Nav_Pages/ordersPage.dart';
@@ -48,41 +49,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
-        appBar: AppBar(
-          elevation: 0.0,
-          backgroundColor: Colors.white,
-          actions: [
-            Container(
-              width: screenWidth,
-              color: Colors.transparent,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: 10),
-                    child: Text(
-                      'Home',
-                      style: TextStyle(
-                        fontFamily: "Questrial",
-                        fontSize: 30.0,
-                        color: KConstants.baseDarkColor,
-                      ),
-                    ),
-                  ),
-                  // IconButton(
-                  //   onPressed: () {},
-                  //   icon: SvgPicture.asset(
-                  //     "assets/notification-svgrepo-com.svg",
-                  //     color: KConstants.baseTwoDarkColor,
-                  //     width: 35.0,
-                  //     height: 35.0,
-                  //   ),
-                  // ),
-                ],
-              ),
-            ),
-          ],
-        ),
+        appBar: buildNavAppBar(context, "Home", screenWidth),
         body: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.symmetric(
@@ -120,93 +87,89 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                 const SizedBox(
                   height: 20,
                 ),
-                walletBalanceRef.when(data: (data) {
-                  var formattedBalance = "";
-                  if (data.status == "error") {
-                    formattedBalance = "-- -- ";
-                  } else {
-                    final balance = double.parse(data.data["accountBalance"]);
-                    formattedBalance = balance.toStringAsFixed(
-                        max(0, balance.truncateToDouble() == balance ? 0 : 2));
-                  }
-                  return balanceBox(
-                    label: "balance",
-                    figure: "₦$formattedBalance",
-                    bgColor: KConstants.baseGreenColor,
-                    screenWidth: screenWidth,
-                    screenHeight: screenHeight * 0.3,
-                  );
-                }, error: (error, _) {
-                  return Text(error.toString());
-                }, loading: () {
-                  return Shimmer.fromColors(
-                    baseColor: KConstants.baseSixGreyColor,
-                    highlightColor: KConstants.baseSixGreyColor,
-                    child: Container(
-                      width: screenWidth,
-                      height: screenHeight * 0.3,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                    ),
-                  );
-                }),
                 const SizedBox(
                   height: 15,
                 ),
                 orderSummaryRef.when(data: (data) {
                   final orderDetails = data.data;
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      balanceBox(
-                          bgColor: KConstants.baseOrangeColor,
-                          label: "orders",
-                          figure: orderDetails["totalOrder"].toString(),
+                  final formattedBalance =
+                      orderDetails["balance"].toStringAsFixed(2);
+                  return Column(children: [
+                    balanceBox(
+                      label: "balance",
+                      figure: "₦$formattedBalance",
+                      bgColor: KConstants.baseGreenColor,
+                      screenWidth: screenWidth,
+                      screenHeight: screenHeight * 0.3,
+                    ),
+                    SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        balanceBox(
+                            bgColor: KConstants.baseOrangeColor,
+                            label: "orders",
+                            figure: orderDetails["totalOrder"].toString(),
+                            screenWidth: screenWidth * 0.45,
+                            screenHeight: screenHeight),
+                        balanceBox(
+                          label: "sales",
+                          figure: "₦${orderDetails["orderBalance"].toString()}",
+                          bgColor: KConstants.baseTwoRedColor,
                           screenWidth: screenWidth * 0.45,
-                          screenHeight: screenHeight),
-                      balanceBox(
-                        label: "sales",
-                        figure: "₦${orderDetails["orderBalance"].toString()}",
-                        bgColor: KConstants.baseTwoRedColor,
-                        screenWidth: screenWidth * 0.45,
-                        screenHeight: screenHeight,
-                      ),
-                    ],
-                  );
+                          screenHeight: screenHeight,
+                        ),
+                      ],
+                    )
+                  ]);
                 }, error: (error, _) {
-                  return Text(error.toString());
+                  return Text("unable to fetch data");
                 }, loading: () {
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Shimmer.fromColors(
-                        baseColor: KConstants.baseFiveGreyColor,
-                        highlightColor: KConstants.baseFiveGreyColor,
-                        child: Container(
-                          width: screenWidth * 0.45,
-                          height: screenHeight * 0.25,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20.0),
-                            color: Colors.white,
-                          ),
+                  return Column(children: [
+                    Shimmer.fromColors(
+                      baseColor: KConstants.baseSixGreyColor,
+                      highlightColor: KConstants.baseSixGreyColor,
+                      child: Container(
+                        width: screenWidth,
+                        height: screenHeight * 0.3,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20.0),
                         ),
                       ),
-                      Shimmer.fromColors(
-                        baseColor: KConstants.baseFiveGreyColor,
-                        highlightColor: KConstants.baseFiveGreyColor,
-                        child: Container(
-                          width: screenWidth * 0.45,
-                          height: screenHeight * 0.25,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20.0),
-                            color: Colors.white,
+                    ),
+                                        SizedBox(height: 10),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Shimmer.fromColors(
+                          baseColor: KConstants.baseFiveGreyColor,
+                          highlightColor: KConstants.baseFiveGreyColor,
+                          child: Container(
+                            width: screenWidth * 0.45,
+                            height: screenHeight * 0.25,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20.0),
+                              color: Colors.white,
+                            ),
                           ),
                         ),
-                      )
-                    ],
-                  );
+                        Shimmer.fromColors(
+                          baseColor: KConstants.baseFiveGreyColor,
+                          highlightColor: KConstants.baseFiveGreyColor,
+                          child: Container(
+                            width: screenWidth * 0.45,
+                            height: screenHeight * 0.25,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20.0),
+                              color: Colors.white,
+                            ),
+                          ),
+                        )
+                      ],
+                    )
+                  ]);
                 }),
                 const SizedBox(
                   height: 30,

@@ -489,7 +489,7 @@ class FavouriteMealData {
   ];
 }
 
-List<Map<String, dynamic>> defaulBankList = [
+List<Map<String, dynamic>> defaultBankList = [
   {
     "id": 272,
     "code": "120001",

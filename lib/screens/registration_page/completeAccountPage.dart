@@ -43,7 +43,7 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
   bool _imageSet = false;
   double latitude = 0.0;
   double longitude = 0.0;
-  String dateOfBirth = "";
+  String dateOfBirth = "01-23-1998";
   String _selectedItem = "Edo";
   bool detailsMatch = false;
   String bvnName = "";
@@ -62,7 +62,6 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
     _firstNameController.addListener(_validateInput);
     _lastNameController.addListener(_validateInput);
     _locationController.addListener(_validateInput);
-    _bvnController.addListener(_fetchUserDetails);
     _bvnController.addListener(_validateInput);
   }
 
@@ -107,23 +106,13 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
     final state = _stateController.text;
     final location = _locationController.text;
     final email = _emailController.text;
-    final bvn = _bvnController.text;
+    final bvn = "12345678901";
     String phone = widget.phoneNumber;
     String image;
 
     setState(() {
       _showProgressIndicator = true;
     });
-
-    if (bvnName.toLowerCase() != name.toLowerCase()) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(customErrorBar("BVN details does not match"));
-      _bvnController.clear();
-      setState(() {
-        _showProgressIndicator = false;
-      });
-      return;
-    }
 
     if (selectedImage == null) {
       image =
@@ -179,46 +168,44 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
     final lastNameValid = nameRegex.hasMatch(_lastNameController.text);
     final firstNameValid = nameRegex.hasMatch(_firstNameController.text);
 
-    final bvnValid = bvnRegex.hasMatch(_bvnController.text);
     setState(() {
       _isButtonDisabled = !(emailValid &&
           stateValid &&
           locationValid &&
           lastNameValid &&
-          firstNameValid &&
-          bvnValid);
+          firstNameValid);
     });
   }
 
-  void _fetchUserDetails() async {
-    if (_bvnController.text.length == 11) {
-      setState(() {
-        _showLocationIndicator = true;
-      });
-      final request = BvnEnquiryRequestModel(bvn: _bvnController.text);
+  // void _fetchUserDetails() async {
+  //   if (_bvnController.text.length == 11) {
+  //     setState(() {
+  //       _showLocationIndicator = true;
+  //     });
+  //     final request = BvnEnquiryRequestModel(bvn: _bvnController.text);
 
-      final response = await BankEnquiryService().bvnEnquiry(request);
-      if (response.status == "success") {
-        // include toast notification
+  //     final response = await BankEnquiryService().bvnEnquiry(request);
+  //     if (response.status == "success") {
+  //       // include toast notification
 
-        final firstName = response.data["firstName"];
-        final lastName = response.data["lastName"];
-        setState(() {
-          detailsMatch = true;
-          bvnName = "$firstName $lastName";
-          _showLocationIndicator = false;
-          dateOfBirth = response.data["dateOfBirth"];
-        });
-      } else {
-        setState(() {
-          _showLocationIndicator = false;
-        });
-        _bvnController.clear();
-        ScaffoldMessenger.of(context)
-            .showSnackBar(customErrorBar("Invalid to BVN details"));
-      }
-    }
-  }
+  //       final firstName = response.data["firstName"];
+  //       final lastName = response.data["lastName"];
+  //       setState(() {
+  //         detailsMatch = true;
+  //         bvnName = "$firstName $lastName";
+  //         _showLocationIndicator = false;
+  //         dateOfBirth = response.data["dateOfBirth"];
+  //       });
+  //     } else {
+  //       setState(() {
+  //         _showLocationIndicator = false;
+  //       });
+  //       _bvnController.clear();
+  //       ScaffoldMessenger.of(context)
+  //           .showSnackBar(customErrorBar("Invalid to BVN details"));
+  //     }
+  //   }
+  // }
 
   @override
   void dispose() {
@@ -372,22 +359,22 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
                             const SizedBox(
                               height: 15,
                             ),
-                            Padding(
-                              padding:
-                                  EdgeInsets.symmetric(horizontal: width * .05),
-                              child: SignInput(
-                                Icons.code,
-                                "bvn",
-                                "invalid BVN Details",
-                                "enter your BVN",
-                                true,
-                                regExp: bvnRegex,
-                                controller: _bvnController,
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
+                            // Padding(
+                            //   padding:
+                            //       EdgeInsets.symmetric(horizontal: width * .05),
+                            //   child: SignInput(
+                            //     Icons.code,
+                            //     "bvn",
+                            //     "invalid BVN Details",
+                            //     "enter your BVN",
+                            //     true,
+                            //     regExp: bvnRegex,
+                            //     controller: _bvnController,
+                            //   ),
+                            // ),
+                            // const SizedBox(
+                            //   height: 10,
+                            // ),
                             Padding(
                               padding:
                                   EdgeInsets.symmetric(horizontal: width * .05),

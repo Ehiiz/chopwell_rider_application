@@ -1,3 +1,4 @@
+import 'package:chopwell_rider_application/builders/subAppBar.dart';
 import 'package:chopwell_rider_application/constants/constants.dart';
 import 'package:chopwell_rider_application/providers/cart_provider.dart';
 import 'package:chopwell_rider_application/screens/micro_components/order_favourites.dart';
@@ -26,41 +27,7 @@ class MyOrders extends ConsumerWidget {
     final cart = ref.watch(cartStateNotifierProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0.0,
-        backgroundColor: Colors.white,
-        actions: [
-          Container(
-            width: screenWidth,
-            color: Colors.transparent,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(left: 10),
-                  child: Text(
-                    'Orders',
-                    style: TextStyle(
-                      fontFamily: "Questrial",
-                      fontSize: 30.0,
-                      color: KConstants.baseDarkColor,
-                    ),
-                  ),
-                ),
-                // IconButton(
-                //   onPressed: () {},
-                //   icon: SvgPicture.asset(
-                //     "assets/notification-svgrepo-com.svg",
-                //     color: KConstants.baseTwoDarkColor,
-                //     width: 35.0,
-                //     height: 35.0,
-                //   ),
-                // ),
-              ],
-            ),
-          ),
-        ],
-      ),
+      appBar: buildNavAppBar(context, "Orders", screenWidth),
       body: Padding(
           padding: EdgeInsets.symmetric(
               vertical: screenHeight * 0.01, horizontal: screenWidth * 0.02),
@@ -174,7 +141,7 @@ class MyOrders extends ConsumerWidget {
                               );
                       },
                       error: (error, _) {
-                        return Text(error.toString());
+                        return Text("unable to fetch data");
                       },
                       loading: () {
                         return SizedBox(
@@ -261,7 +228,7 @@ class MyOrders extends ConsumerWidget {
                                 });
                       },
                       error: (error, _) {
-                        return Text(error.toString());
+                        return Text("unable to fetch data");
                       },
                       loading: () {
                         return SizedBox(
