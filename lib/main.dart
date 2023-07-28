@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:chopwell_rider_application/authentication/token-utils.dart';
+import 'package:chopwell_rider_application/authentication/user-utils.dart';
 import 'package:chopwell_rider_application/constants/constants.dart';
 import 'package:chopwell_rider_application/screens/Nav_Pages/homePage.dart';
 import 'package:chopwell_rider_application/screens/Nav_Pages/ordersPage.dart';
@@ -241,8 +242,10 @@ class BottomNavBar extends StatefulWidget {
 }
 
 class _BottomNavBarState extends State<BottomNavBar> {
-  // late IO.Socket socket;
-  // Timer? locationTimer;
+  late IO.Socket socket;
+  Timer? locationTimer;
+
+  String userEmail = "";
 
   List<Widget> _buildScreens() {
     return [
@@ -250,6 +253,13 @@ class _BottomNavBarState extends State<BottomNavBar> {
       const MyOrders(),
       const NewProfilePage(),
     ];
+  }
+
+  _connectSocket() {
+    socket.onConnect((data) => print("Connection established"));
+    socket.onConnectError(
+        (data) => print("Socket.IO server disconnected : $data"));
+    socket.onConnectTimeout((data) => print("Socket.io server timeout $data"));
   }
 
   List<PersistentBottomNavBarItem> _navBarsItems() {
@@ -292,62 +302,53 @@ class _BottomNavBarState extends State<BottomNavBar> {
     super.initState();
     // Initialize the Socket.io client and connect to the server
     // Replace 'your_socket_server_url' with the actual URL of your Socket.io server
-    // print('connect 1');
+    socket = IO.io("https://api.chopwell.ng",
+        IO.OptionBuilder().setTransports(["websocket"]).build());
+    _connectSocket();
 
-    // IO.Socket socket = IO.io('http://172.20.10.2:8000');
-    // socket.onConnect((_) {
-    //   print('connect');
-    //   socket.emit('msg', 'test');
-    // });
-    // socket.on('event', (data) => print(data));
-    // socket.onDisconnect((_) => print('disconnect'));
-    // socket.on('fromServer', (_) => print(_));
-
-    // // Event handler for connection error
-    // socket.onConnectError((error) {
-    //   print('Socket connection error: $error');
-    // });
-
-    // // Event handler for connection timeout
-    // socket.onConnectTimeout((timeout) {
-    //   print('Socket connection timeout: $timeout');
-    // });
-
-    // // Start the periodic location update timer
-    // startLocationUpdateTimer();
+    // Start the periodic location update timer
+    startLocationUpdateTimer();
   }
 
   @override
   void dispose() {
-    //  socket.disconnect();
     super.dispose();
   }
 
-  // void startLocationUpdateTimer() {
-  //   const updateInterval =
-  //       Duration(minutes: 10); // Update interval of 10 minutes
-  //   locationTimer = Timer.periodic(updateInterval, (Timer timer) {
-  //     // Call the method to send the location data over the socket
-  //     getUserLocation();
-  //   });
-  // }
+  void startLocationUpdateTimer() {
+    const updateInterval =
+        Duration(minutes: 3); // Update interval of 10 minutes
+    locationTimer = Timer.periodic(updateInterval, (Timer timer) {
+      // Call the method to send the location data over the socket
+      getUserLocation();
+    });
+  }
 
   // Method to send user location data over the socket
-  // void sendUserLocationData(double latitude, double longitude) {
-  //   if (socket.connected) {
-  //     // Send the location data as a JSON object to the server
-  //     socket.emit('userLocation', {
-  //       'latitude': latitude,
-  //       'longitude': longitude,
-  //     });
-  //   }
-  // }
+  void sendUserLocationData(double latitude, double longitude) {
+    if (socket.connected) {
+      // Send the location data as a JSON object to the server
+      socket.emit('userLocation', {
+        'userEmail': userEmail,
+        'latitude': latitude,
+        'longitude': longitude,
+      });
+    }
+  }
 
   // Example method to get user location data (you may use a location plugin for this)
-  // void getUserLocation() {
-  //   // Call the method to send the location data over the socket
-  //   sendUserLocationData(0, 2);
-  // }
+  void getUserLocation() async {
+    // Call the method to send the location data over the socket
+    final position = await getCurrentLocation();
+    final user = await UserInfo.getUserInfo();
+    final _user = user as Map<String, dynamic>;
+
+    setState(() {
+      userEmail = user?["phone_number"];
+    });
+
+    sendUserLocationData(position.latitude, position.longitude);
+  }
 
   @override
   Widget build(BuildContext context) {
