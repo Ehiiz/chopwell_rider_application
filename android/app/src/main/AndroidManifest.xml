@@ -12,7 +12,9 @@
    <application
         android:label="chopwell_rider_application"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        >
 
         <service
     android:name="dev.fluttercommunity.plus.androidalarmmanager.AlarmService"
