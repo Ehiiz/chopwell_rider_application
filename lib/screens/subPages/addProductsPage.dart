@@ -1,3 +1,4 @@
+import 'package:chopwell_rider_application/builders/subAppBar.dart';
 import 'package:chopwell_rider_application/screens/micro_components/product_list.dart';
 import 'package:flutter/material.dart';
 import 'package:chopwell_rider_application/constants/constants.dart';
@@ -18,31 +19,7 @@ class _AddProductsPageState extends State<AddProductsPage> {
 
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-            backgroundColor: Colors.white,
-            shadowColor: Colors.white,
-            elevation: 0,
-            leading: IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: Icon(
-                  Icons.arrow_back_ios,
-                  color: Colors.black,
-                )),
-            actions: [
-              TextButton(
-                  onPressed: () {},
-                  child: Text(
-                    "add products",
-                    style: TextStyle(
-                      color: KConstants.baseRedColor,
-                      fontSize: 15.0,
-                      fontFamily: "Montserrat",
-                      fontWeight: FontWeight.bold,
-                    ),
-                  )),
-            ]),
+        appBar: buildAppBar(context),
         body: Padding(
           padding: EdgeInsets.symmetric(
             vertical: screenHeight * 0.01,

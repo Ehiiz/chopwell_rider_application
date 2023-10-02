@@ -1,10 +1,7 @@
 import 'dart:math';
 
-import 'package:chopwell_rider_application/models/response_models/map_based_response_model.dart';
 import 'package:chopwell_rider_application/screens/Nav_Pages/profilePage.dart';
 import 'package:chopwell_rider_application/screens/bottom_sheets/pinInputCard.dart';
-import 'package:chopwell_rider_application/services/fetch_user_detail_service.dart';
-import 'package:chopwell_rider_application/services/wallet_balance_service.dart';
 import 'package:flutter/material.dart';
 import 'package:chopwell_rider_application/constants/constants.dart';
 import 'package:chopwell_rider_application/screens/subPages/changePaymentDetailsPage.dart';
@@ -12,11 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:shimmer/shimmer.dart';
 
-final walletBalanceFutureProvider =
-    FutureProvider.autoDispose<MapDataResponseModel>((ref) async {
-  final walletBalanceService = ref.watch(walletBalanceProvider);
-  return walletBalanceService.fetchBalance();
-});
+import '../../builders/subAppBar.dart';
 
 class BankWithdrawalDetailsPage extends ConsumerStatefulWidget {
   const BankWithdrawalDetailsPage({Key? key}) : super(key: key);
@@ -28,30 +21,16 @@ class BankWithdrawalDetailsPage extends ConsumerStatefulWidget {
 
 class _BankWithdrawalDetailsPageState
     extends ConsumerState<BankWithdrawalDetailsPage> {
+  bool detailsExist = false;
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
-    final walletRef = ref.watch(walletBalanceFutureProvider);
     final userDetailRef = ref.watch(fetchUserDetailFutureProvider);
 
     return SafeArea(
       child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.white,
-            shadowColor: Colors.white,
-            elevation: 0,
-            leading: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: const Icon(
-                Icons.arrow_back_ios,
-                color: Colors.black,
-                size: 25,
-              ),
-            ),
-          ),
+          appBar: buildAppBar(context),
           body: Padding(
             padding: EdgeInsets.symmetric(
               vertical: screenHeight * 0.01,
@@ -81,21 +60,10 @@ class _BankWithdrawalDetailsPageState
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            walletRef.when(data: (data) {
-                              var formattedBalance = "";
-                              var client = "";
-                              if (data.status == "error") {
-                                formattedBalance = "-- -- ";
-                              } else {
-                                final balance =
-                                    double.parse(data.data["accountBalance"]);
-                                formattedBalance = balance.toStringAsFixed(max(
-                                    0,
-                                    balance.truncateToDouble() == balance
-                                        ? 0
-                                        : 2));
-                                client = data.data["client"];
-                              }
+                            userDetailRef.when(data: (data) {
+                              final formattedBalance =
+                                  data.data["balance"].toStringAsFixed(2);
+
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -108,20 +76,6 @@ class _BankWithdrawalDetailsPageState
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  SizedBox(
-                                    width: screenWidth * .75,
-                                    child: Text(
-                                      client,
-                                      style: const TextStyle(
-                                        fontFamily: "Questrial",
-                                        fontSize: 15,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                  )
                                 ],
                               );
                             }, error: (error, _) {
@@ -146,15 +100,6 @@ class _BankWithdrawalDetailsPageState
                             }),
                             const SizedBox(
                               height: 5,
-                            ),
-                            Text(
-                              'VFD MicroFinance Bank',
-                              style: TextStyle(
-                                fontFamily: 'Montserrat',
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                                color: KConstants.baseGreyColor,
-                              ),
                             ),
                           ],
                         ),
@@ -186,10 +131,9 @@ class _BankWithdrawalDetailsPageState
                       height: 15,
                     ),
                     userDetailRef.when(data: (data) {
-                      bool detailsExist = false;
                       Map<String, dynamic> bankDetails = {};
                       if (data.data.containsKey("bank_details") &&
-                          data.data["bank_details"] != null) {
+                          data.data["bank_details"]["bank_name"] != null) {
                         bankDetails = data.data["bank_details"];
 
                         setState(() {
@@ -244,16 +188,10 @@ class _BankWithdrawalDetailsPageState
                                 ),
                               ],
                             )
-                          : Text(
-                              "Set Withdrawal Account",
-                              style: TextStyle(
-                                fontFamily: "Montserrat",
-                                fontSize: 18.0,
-                                color: KConstants.baseRedColor,
-                              ),
-                            );
+                          : Container();
+                      ;
                     }, error: (error, _) {
-                      return Text(error.toString());
+                      return Text("unable to fetch data");
                     }, loading: () {
                       return Shimmer.fromColors(
                         baseColor: KConstants.baseFourGreyColor,
@@ -332,7 +270,9 @@ class _BankWithdrawalDetailsPageState
                           );
                         },
                         child: Text(
-                          "update bank details",
+                          detailsExist
+                              ? "update bank details"
+                              : "set bank details",
                           style: TextStyle(
                             fontFamily: "Montserrat",
                             fontSize: 15.0,
@@ -351,25 +291,27 @@ class _BankWithdrawalDetailsPageState
                       width: 300,
                       height: 50,
                       child: ElevatedButton(
-                        onPressed: () {
-                          showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            builder: (BuildContext context) {
-                              return StatefulBuilder(
-                                builder: (BuildContext context,
-                                    StateSetter setState) {
-                                  return PinInputSheet(
-                                    createPin: false,
-                                    amount: "",
-                                    walletPay: true,
-                                    orderId: "",
-                                  );
-                                },
-                              );
-                            },
-                          );
-                        },
+                        onPressed: detailsExist
+                            ? () {
+                                showModalBottomSheet(
+                                  context: context,
+                                  isScrollControlled: true,
+                                  builder: (BuildContext context) {
+                                    return StatefulBuilder(
+                                      builder: (BuildContext context,
+                                          StateSetter setState) {
+                                        return PinInputSheet(
+                                          createPin: false,
+                                          amount: "",
+                                          walletPay: true,
+                                          orderId: "",
+                                        );
+                                      },
+                                    );
+                                  },
+                                );
+                              }
+                            : null,
                         child: const Text(
                           'Withdraw',
                           style: TextStyle(
@@ -381,7 +323,9 @@ class _BankWithdrawalDetailsPageState
                         ),
                         style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all(
-                              KConstants.baseTwoRedColor,
+                              detailsExist
+                                  ? KConstants.baseTwoRedColor
+                                  : KConstants.baseGreyColor,
                             ),
                             shape: MaterialStateProperty.all<
                                 RoundedRectangleBorder>(

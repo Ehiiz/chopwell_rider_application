@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:chopwell_rider_application/authentication/token-utils.dart';
+import 'package:chopwell_rider_application/authentication/user-utils.dart';
 import 'package:chopwell_rider_application/constants/constants.dart';
 import 'package:chopwell_rider_application/screens/Nav_Pages/homePage.dart';
 import 'package:chopwell_rider_application/screens/Nav_Pages/ordersPage.dart';
@@ -16,9 +17,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:alarm/alarm.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -234,8 +235,18 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-class BottomNavBar extends StatelessWidget {
-  BottomNavBar({Key? key}) : super(key: key);
+class BottomNavBar extends StatefulWidget {
+  const BottomNavBar({Key? key}) : super(key: key);
+
+  @override
+  State<BottomNavBar> createState() => _BottomNavBarState();
+}
+
+class _BottomNavBarState extends State<BottomNavBar> {
+  late IO.Socket socket;
+  Timer? locationTimer;
+
+  String userEmail = "";
 
   List<Widget> _buildScreens() {
     return [
@@ -243,6 +254,13 @@ class BottomNavBar extends StatelessWidget {
       const MyOrders(),
       const NewProfilePage(),
     ];
+  }
+
+  _connectSocket() {
+    socket.onConnect((data) => print("Connection established"));
+    socket.onConnectError(
+        (data) => print("Socket.IO server disconnected : $data"));
+    socket.onConnectTimeout((data) => print("Socket.io server timeout $data"));
   }
 
   List<PersistentBottomNavBarItem> _navBarsItems() {
@@ -279,6 +297,59 @@ class BottomNavBar extends StatelessWidget {
   // ignore: prefer_final_fields
   PersistentTabController _controller =
       PersistentTabController(initialIndex: 0);
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize the Socket.io client and connect to the server
+    // Replace 'your_socket_server_url' with the actual URL of your Socket.io server
+    socket = IO.io("https://api.chopwell.ng",
+        IO.OptionBuilder().setTransports(["websocket"]).build());
+    _connectSocket();
+
+    // Start the periodic location update timer
+    startLocationUpdateTimer();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  void startLocationUpdateTimer() {
+    const updateInterval =
+        Duration(minutes: 3); // Update interval of 10 minutes
+    locationTimer = Timer.periodic(updateInterval, (Timer timer) {
+      // Call the method to send the location data over the socket
+      getUserLocation();
+    });
+  }
+
+  // Method to send user location data over the socket
+  void sendUserLocationData(double latitude, double longitude) {
+    if (socket.connected) {
+      // Send the location data as a JSON object to the server
+      socket.emit('userLocation', {
+        'userEmail': userEmail,
+        'latitude': latitude,
+        'longitude': longitude,
+      });
+    }
+  }
+
+  // Example method to get user location data (you may use a location plugin for this)
+  void getUserLocation() async {
+    // Call the method to send the location data over the socket
+    final position = await getCurrentLocation();
+    final user = await UserInfo.getUserInfo();
+    final _user = user as Map<String, dynamic>;
+
+    setState(() {
+      userEmail = user?["phone_number"];
+    });
+
+    sendUserLocationData(position.latitude, position.longitude);
+  }
 
   @override
   Widget build(BuildContext context) {

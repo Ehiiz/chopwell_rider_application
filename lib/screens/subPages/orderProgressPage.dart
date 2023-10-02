@@ -1,3 +1,4 @@
+import 'package:chopwell_rider_application/builders/subAppBar.dart';
 import 'package:chopwell_rider_application/constants/constants.dart';
 import 'package:chopwell_rider_application/models/request_models/set_delivery_status_request_model.dart';
 import 'package:chopwell_rider_application/models/response_models/map_based_response_model.dart';
@@ -14,7 +15,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 final singleProductFutureProvider =
@@ -151,21 +151,7 @@ class _ConfirmationPageState extends ConsumerState<ConfirmationPage> {
 
     return SafeArea(
       child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.white,
-            shadowColor: Colors.white,
-            elevation: 0,
-            leading: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: const Icon(
-                Icons.arrow_back_ios,
-                color: Colors.black,
-                size: 25,
-              ),
-            ),
-          ),
+          appBar: buildAppBar(context),
           body: Padding(
             padding: EdgeInsets.symmetric(
               vertical: screenHeight * 0.01,
@@ -237,15 +223,13 @@ class _ConfirmationPageState extends ConsumerState<ConfirmationPage> {
                                   ),
                                   Container(
                                     width: screenWidth * .45,
-                                    child: Expanded(
-                                      child: Text(
-                                        address,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.clip,
-                                        style: const TextStyle(
-                                            fontSize: 15,
-                                            fontFamily: 'Montserrat'),
-                                      ),
+                                    child: Text(
+                                      address,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.clip,
+                                      style: const TextStyle(
+                                          fontSize: 15,
+                                          fontFamily: 'Montserrat'),
                                     ),
                                   )
                                 ],
@@ -314,7 +298,6 @@ class _ConfirmationPageState extends ConsumerState<ConfirmationPage> {
                                     fontFamily: "Montserrat",
                                     color: KConstants.baseRedColor,
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 12,
                                   ),
                                 ),
                               ],
@@ -464,7 +447,7 @@ class _ConfirmationPageState extends ConsumerState<ConfirmationPage> {
                       ],
                     );
                   }, error: (error, _) {
-                    return Text(error.toString());
+                    return Text("unable to fetch data");
                   }, loading: () {
                     return SizedBox(
                       width: screenWidth,
@@ -625,7 +608,7 @@ class _ConfirmationPageState extends ConsumerState<ConfirmationPage> {
                           onPressed: clickButtonValue
                               ? () async {
                                   _confirmDelivery(
-                                    currentId,
+                                    orderId,
                                     statusRequest,
                                   );
                                 }

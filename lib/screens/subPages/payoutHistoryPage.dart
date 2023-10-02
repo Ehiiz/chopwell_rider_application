@@ -1,3 +1,4 @@
+import 'package:chopwell_rider_application/builders/subAppBar.dart';
 import 'package:chopwell_rider_application/models/response_models/list_based_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:chopwell_rider_application/constants/constants.dart';
@@ -23,30 +24,7 @@ class PayoutHistoryPage extends ConsumerWidget {
     final payoutsRef = ref.watch(payoutHistoryFutureProvider);
     return SafeArea(
         child: Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        shadowColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.arrow_back_ios,
-            color: Colors.black,
-            size: 25,
-          ),
-        ),
-        actions: const [
-          IconButton(
-              onPressed: null,
-              icon: Icon(
-                Icons.search,
-                color: Colors.black,
-                size: 25,
-              ))
-        ],
-      ),
+      appBar: buildAppBar(context),
       body: Padding(
         padding: EdgeInsets.symmetric(
             vertical: screenHeight * 0.01, horizontal: screenWidth * 0.02),
@@ -186,7 +164,7 @@ class PayoutHistoryPage extends ConsumerWidget {
                           ),
                         ));
           }, error: (error, _) {
-            return [Text(error.toString())];
+            return [Text("unable to fetch data")];
           }, loading: () {
             return [
               Shimmer.fromColors(

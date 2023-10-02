@@ -1,4 +1,5 @@
 import 'package:alarm/alarm.dart';
+import 'package:chopwell_rider_application/builders/subAppBar.dart';
 import 'package:chopwell_rider_application/screens/micro_components/order_favourites.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -49,30 +50,7 @@ class SingleOrderDetailsPage extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          shadowColor: Colors.white,
-          elevation: 0,
-          leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(
-              Icons.arrow_back_ios,
-              color: Colors.black,
-              size: 25,
-            ),
-          ),
-          actions: const [
-            IconButton(
-                onPressed: null,
-                icon: Icon(
-                  Icons.search,
-                  color: Colors.black,
-                  size: 25,
-                ))
-          ],
-        ),
+        appBar: buildAppBar(context),
         body: SizedBox(
           height: screenHeight,
           width: screenWidth,
