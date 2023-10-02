@@ -1,3 +1,4 @@
+import 'package:chopwell_rider_application/builders/subAppBar.dart';
 import 'package:chopwell_rider_application/services/fetch_delivery_history_service.dart';
 import 'package:flutter/material.dart';
 import 'package:chopwell_rider_application/constants/constants.dart';
@@ -24,31 +25,7 @@ class OrderHistoryPage extends ConsumerWidget {
 
     return SafeArea(
         child: Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        shadowColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          // ignore: prefer_const_constructors
-          icon: Icon(
-            Icons.arrow_back_ios,
-            color: Colors.black,
-            size: 25,
-          ),
-        ),
-        actions: [
-          const IconButton(
-              onPressed: null,
-              icon: Icon(
-                Icons.search,
-                color: Colors.black,
-                size: 25,
-              ))
-        ],
-      ),
+      appBar: buildAppBar(context),
       body: Padding(
         padding: EdgeInsets.symmetric(
             vertical: screenHeight * 0.01, horizontal: screenWidth * 0.02),
@@ -216,7 +193,7 @@ class OrderHistoryPage extends ConsumerWidget {
                       )
                     ];
             }, error: (error, _) {
-              return [Text(error.toString())];
+              return [Text("unable to fetch data")];
             }, loading: () {
               return [Text("")];
             }),

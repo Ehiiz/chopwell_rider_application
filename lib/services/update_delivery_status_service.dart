@@ -33,6 +33,7 @@ class UpdateDeliveryStatus {
       return convertErrorResponse(decodedResponse);
     } else {
       final responseMap = json.decode(response.body);
+      print(responseMap);
 
       final decodedResponse = ErrorResponseModel.fromJson(responseMap);
       return convertErrorResponse(decodedResponse);

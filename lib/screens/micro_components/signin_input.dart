@@ -1,7 +1,6 @@
 import 'package:chopwell_rider_application/constants/constants.dart';
 import 'package:flutter/material.dart';
 
-
 class SignInput extends StatefulWidget {
   SignInput(this.icon, this.label, this.errorMessage, this.hint, this.status,
       {required this.controller, required this.regExp});
@@ -45,6 +44,7 @@ class _SignInputState extends State<SignInput> {
       controller: widget.controller,
       keyboardType: TextInputType.visiblePassword,
       textInputAction: TextInputAction.done,
+      obscureText: widget.label == "password" ? true : false,
       decoration: InputDecoration(
           floatingLabelBehavior: FloatingLabelBehavior.never,
           filled: true,
@@ -91,4 +91,3 @@ class _SignInputState extends State<SignInput> {
     );
   }
 }
-

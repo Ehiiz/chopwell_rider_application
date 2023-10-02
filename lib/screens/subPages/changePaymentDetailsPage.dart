@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:chopwell_rider_application/builders/subAppBar.dart';
 import 'package:chopwell_rider_application/models/request_models/name_enquiry_request_model.dart';
 import 'package:chopwell_rider_application/models/request_models/update_bank_details_request_model.dart';
 import 'package:chopwell_rider_application/models/response_models/map_based_response_model.dart';
@@ -69,7 +70,7 @@ class _ChangePaymentDetailsPageState
     }
   }
 
-  String _selectedItem = "click to select bank";
+  String _selectedItem = "9 Payment Service Bank";
   String _userName = "";
   String bankCode = "";
   List<dynamic> bankCodeList = [];
@@ -116,21 +117,7 @@ class _ChangePaymentDetailsPageState
 
     return SafeArea(
       child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.white,
-            shadowColor: Colors.white,
-            elevation: 0,
-            leading: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: Icon(
-                Icons.arrow_back_ios,
-                color: Colors.black,
-                size: 25,
-              ),
-            ),
-          ),
+          appBar: buildAppBar(context),
           body: Padding(
               padding: EdgeInsets.symmetric(
                 vertical: screenHeight * 0.01,
@@ -145,10 +132,14 @@ class _ChangePaymentDetailsPageState
                     children: [
                       Text(
                         'Update Payment Details',
-                        style: Theme.of(context).primaryTextTheme.titleLarge,
+                        style: TextStyle(
+                          fontFamily: "Montserrat",
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       const SizedBox(
-                        height: 50,
+                        height: 20,
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
