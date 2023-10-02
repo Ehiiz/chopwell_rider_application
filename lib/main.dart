@@ -7,7 +7,8 @@ import 'package:chopwell_rider_application/screens/Nav_Pages/homePage.dart';
 import 'package:chopwell_rider_application/screens/Nav_Pages/ordersPage.dart';
 import 'package:chopwell_rider_application/screens/Nav_Pages/profilePage.dart';
 import 'package:chopwell_rider_application/screens/registration_page/loginPage.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:chopwell_rider_application/screens/registration_page/signUpPage.dart';
+// import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -116,27 +117,27 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    getConnectivity();
+  //  getConnectivity();
     super.initState();
     setState(() {
       _token = AuthToken.getAuthToken();
     });
   }
 
-  getConnectivity() {
-    subscription = Connectivity()
-        .onConnectivityChanged
-        .listen((ConnectivityResult result) async {
-      isDeviceConnected = await InternetConnectionChecker().hasConnection;
-      print(isDeviceConnected);
-      if (!isDeviceConnected && isAlertSet == false) {
-        showDialogBox();
-        setState(() {
-          isAlertSet = true;
-        });
-      }
-    });
-  }
+  // getConnectivity() {
+  //   subscription = Connectivity()
+  //       .onConnectivityChanged
+  //       .listen((ConnectivityResult result) async {
+  //     isDeviceConnected = await InternetConnectionChecker().hasConnection;
+  //     print(isDeviceConnected);
+  //     if (!isDeviceConnected && isAlertSet == false) {
+  //       showDialogBox();
+  //       setState(() {
+  //         isAlertSet = true;
+  //       });
+  //     }
+  //   });
+  // }
 
   @override
   void dispose() {
