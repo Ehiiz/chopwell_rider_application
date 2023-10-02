@@ -117,6 +117,7 @@ class _LocationBarState extends ConsumerState<LocationBar> {
               String placeid = place.placeId ?? "0";
               final detail = await plist.getDetailsByPlaceId(placeid);
               final geometry = detail.result.geometry!;
+             // _updateLocation(context, location, geometry.location.lat, geometry.location.lng);
 
               widget.onLocationChanged(
                   geometry.location.lat, geometry.location.lng, location);
@@ -127,7 +128,7 @@ class _LocationBarState extends ConsumerState<LocationBar> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
+                  SizedBox(
                     child: Row(
                       children: [
                         SvgPicture.asset(

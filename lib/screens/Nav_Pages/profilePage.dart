@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chopwell_rider_application/authentication/token-utils.dart';
 import 'package:chopwell_rider_application/authentication/user-utils.dart';
@@ -24,6 +26,9 @@ import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../registration_page/loginPage.dart';
+
+
+
 
 Future<Position> getCurrentLocation() async {
   bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
@@ -69,11 +74,13 @@ class _NewProfilePageState extends ConsumerState<NewProfilePage> {
   double longitude = 0.0;
 
   void changeValue(double lat, double long, String addr) {
+   
     setState(() {
       latitude = lat;
       longitude = long;
       location = addr;
     });
+    _updateLocation(context, location, latitude, longitude);
   }
 
   @override
@@ -98,6 +105,7 @@ class _NewProfilePageState extends ConsumerState<NewProfilePage> {
     final response = await UpdateLocationService.location(request);
 
     if (response.status == "success") {
+      await UserInfo.setUserInfo(response.data);
       ScaffoldMessenger.of(context)
           .showSnackBar(customSuccessBar("Location Updated"));
     } else {
@@ -132,14 +140,16 @@ class _NewProfilePageState extends ConsumerState<NewProfilePage> {
     }
   }
 
+      bool riderStatus = false;
+    String requestStatus = "";
+
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     final userDetailRef = ref.watch(fetchUserDetailFutureProvider);
 
-    bool riderStatus = false;
-    String requestStatus = "";
 
     return MaterialApp(
       home: FutureBuilder(
@@ -234,20 +244,22 @@ class _NewProfilePageState extends ConsumerState<NewProfilePage> {
                                         children: [
                                           // ignore: prefer_const_constructors
                                           Container(
-                                            margin: EdgeInsets.symmetric(
+                                            margin: const EdgeInsets.symmetric(
                                                 vertical: 5.0),
-                                            child: const Row(
+                                            child:  Row(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.center,
                                               children: [
                                                 IconButton(
                                                     onPressed: null,
                                                     icon: Icon(
-                                                        CupertinoIcons.flag)),
-                                                SizedBox(
+                                                        CupertinoIcons.hand_draw_fill,
+                                                        color: KConstants.baseDarkColor,
+                                                        ),),
+                                              const  SizedBox(
                                                   width: 10,
                                                 ),
-                                                Text(
+                                             const   Text(
                                                   "change status",
                                                   style: TextStyle(
                                                     fontSize: 20,
@@ -261,26 +273,20 @@ class _NewProfilePageState extends ConsumerState<NewProfilePage> {
                                           userDetailRef.when(data: (data) {
                                             final status = data.data["status"];
 
-                                            if (status == "online") {
-                                              riderStatus = true;
-                                              requestStatus = "offline";
-                                            }
-
-                                            if (status == "offline") {
-                                              riderStatus = false;
-                                              requestStatus = "online";
-                                            }
-                                            return Switch(
-                                                value: riderStatus,
+                                            
+                                            return Column(children: [
+                                              Switch(
+                                                value: status == "online" ? true : false,
                                                 onChanged: (value) {
                                                   _updateRiderStatus(
-                                                      context, requestStatus);
-                                                  setState(() {
-                                                    riderStatus = value;
-                                                  });
-                                                });
+                                                      context, status == "online" ? "offline" : "online");
+                                                ref.refresh(fetchUserDetailFutureProvider);
+                                                }),
+                                                Text(status, style: const TextStyle(fontFamily: "Montserrat", fontSize: 12.00),)
+
+                                            ],) ;
                                           }, error: (error, _) {
-                                            return Text("");
+                                            return const Text("error update status");
                                           }, loading: () {
                                             return Shimmer.fromColors(
                                               baseColor:
@@ -298,19 +304,19 @@ class _NewProfilePageState extends ConsumerState<NewProfilePage> {
                                     ProfileButtons(
                                         "assets/coupon.svg",
                                         "Payment Details",
-                                        BankWithdrawalDetailsPage()),
+                                        const BankWithdrawalDetailsPage()),
                                     ProfileButtons("assets/helmet.svg",
-                                        "Delivery History", OrderHistoryPage()),
+                                        "Delivery History", const OrderHistoryPage()),
                                     ProfileButtons("assets/withdrawal.svg",
-                                        "Payout History", PayoutHistoryPage()),
+                                        "Payout History", const PayoutHistoryPage()),
                                     ProfileButtons(
-                                        "assets/help.svg", "Help", MyOrders()),
+                                        "assets/help.svg", "Help", const MyOrders()),
                                     TextButton(
                                       onPressed: () async {
                                         await AuthToken.clearAuthToken();
                                         pushNewScreen(
                                           context,
-                                          screen: LoginPage(),
+                                          screen: const LoginPage(),
                                           withNavBar:
                                               false, // OPTIONAL VALUE. True by default.
                                           pageTransitionAnimation:
@@ -320,7 +326,7 @@ class _NewProfilePageState extends ConsumerState<NewProfilePage> {
                                       child: Text(
                                         "Logout",
                                         style: TextStyle(
-                                            color: KConstants.baseThreeRedColor,
+                                            color: KConstants.baseRedColor,
                                             fontSize: 15,
                                             fontWeight: FontWeight.bold,
                                             fontFamily: "Montserrat"),
@@ -331,7 +337,7 @@ class _NewProfilePageState extends ConsumerState<NewProfilePage> {
                               ],
                             ),
                             if (_updateRIderProgress)
-                              Center(
+                              const Center(
                                 child: CircularProgressIndicator(
                                   color: Colors.red,
                                 ),
@@ -344,7 +350,7 @@ class _NewProfilePageState extends ConsumerState<NewProfilePage> {
                 // Navigate to login page without the navigation bar
                 pushNewScreen(
                   context,
-                  screen: LoginPage(),
+                  screen: const LoginPage(),
                   withNavBar: false, // OPTIONAL VALUE. True by default.
                   pageTransitionAnimation: PageTransitionAnimation.cupertino,
                 );

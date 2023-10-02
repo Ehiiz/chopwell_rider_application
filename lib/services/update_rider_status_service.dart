@@ -13,6 +13,8 @@ class UpdateRiderService {
   Future<MapDataResponseModel> flipStatus(
       UpdateRiderStatusRequestModel request) async {
     final token = await AuthToken.getAuthToken();
+
+   
     final response = await RequestModule.patch(_updateRiderStatus, request,
         headers: {"Authorization": "Bearer ${token!}"});
 
