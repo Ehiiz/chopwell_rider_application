@@ -43,35 +43,91 @@ Future main() async {
 
   String appID = dotenv.get('ONE_SIGNAL_APP_ID');
 
-  OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
-  FlutterNativeSplash.remove();
-  OneSignal.shared.setAppId(appID);
-  OneSignal.shared
-      .promptUserForPushNotificationPermission()
-      .then((accepted) => print("Accepted Permission: $accepted"));
-  OneSignal.shared.getDeviceState().then((value) => {print(value!.userId)});
+  OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
 
-  OneSignal.shared.setNotificationWillShowInForegroundHandler((event) {
+  OneSignal.Debug.setAlertLevel(OSLogLevel.none);
+  OneSignal.consentRequired(true);
+  OneSignal.initialize(appID);
+
+  OneSignal.Notifications.clearAll();
+
+  OneSignal.User.pushSubscription.addObserver((state) {
+    print(OneSignal.User.pushSubscription.optedIn);
+    print("this is user id : ${OneSignal.User.pushSubscription.id}");
+    print(OneSignal.User.pushSubscription.token);
+    print(state.current.jsonRepresentation());
+  });
+
+  OneSignal.Notifications.requestPermission(true).then((value) {
+    print("this is permissions vale $value");
+    if (value) {
+      OneSignal.User.pushSubscription.optIn();
+    }
+  });
+
+  // void _handlePromptForPushPermission() {
+  //   print("Prompting for Permission");
+  //   OneSignal.Notifications.requestPermission(true);
+  // }
+
+  OneSignal.Notifications.addForegroundWillDisplayListener((event) {
+    print(
+        'NOTIFICATION WILL DISPLAY LISTENER CALLED WITH: ${event.notification.jsonRepresentation()}');
     final notification = event.notification;
 
+    /// Display Notification, preventDefault to not display
+    event.preventDefault();
+
+    /// Do async work
+
+    /// notification.display() to display after preventing default
+    event.notification.display();
     if (notification.body == "Successfully paid order") {
       _showPaymentMadeDialog(navigatorKey.currentState!.overlay!.context);
-      event.complete(notification);
-    } else {
-      event.complete(notification);
-    }
-
-    print("this is notification title: ${notification.title}");
-    print("this is notification body:  ${notification.body}");
-  });
-
-  OneSignal.shared
-      .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
-    // fix title to match
-    if (result.notification.title == "Payment Made") {
+      event.notification.display();
+    } else if (notification.title == "Payment Made") {
       _showPaymentMadeDialog(navigatorKey.currentState!.overlay!.context);
-    } else {}
+    }
+    {
+      event.notification.display();
+    }
   });
+
+  OneSignal.InAppMessages.addWillDisplayListener((event) {
+    print("ON WILL DISPLAY IN APP MESSAGE ${event.message.messageId}");
+  });
+
+  OneSignal.InAppMessages.paused(false);
+
+  // OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
+  // FlutterNativeSplash.remove();
+  // OneSignal.shared.setAppId(appID);
+  // OneSignal.shared
+  //     .promptUserForPushNotificationPermission()
+  //     .then((accepted) => print("Accepted Permission: $accepted"));
+  // OneSignal.shared.getDeviceState().then((value) => {print(value!.userId)});
+
+  // OneSignal.shared.setNotificationWillShowInForegroundHandler((event) {
+  //   final notification = event.notification;
+
+  //   if (notification.body == "Successfully paid order") {
+  //     _showPaymentMadeDialog(navigatorKey.currentState!.overlay!.context);
+  //     event.complete(notification);
+  //   } else {
+  //     event.complete(notification);
+  //   }
+
+  //   print("this is notification title: ${notification.title}");
+  //   print("this is notification body:  ${notification.body}");
+  // });
+
+  // OneSignal.shared
+  //     .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
+  //   // fix title to match
+  //   if (result.notification.title == "Payment Made") {
+  //     _showPaymentMadeDialog(navigatorKey.currentState!.overlay!.context);
+  //   } else {}
+  // });
 }
 
 void _showPaymentMadeDialog(BuildContext context) {
@@ -117,7 +173,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-  //  getConnectivity();
+    //  getConnectivity();
     super.initState();
     setState(() {
       _token = AuthToken.getAuthToken();

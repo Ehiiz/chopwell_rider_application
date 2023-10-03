@@ -34,7 +34,7 @@ dependencies:
   flutter_svg: ^2.0.2
   sliding_sheet: ^0.5.2
   firebase_core: ^2.7.0
-  onesignal_flutter: ^3.5.0
+  onesignal_flutter: ^5.0.0
   google_maps_flutter: ^2.2.5
   url_launcher: ^6.1.10
   maps_places_autocomplete: ^0.0.2
