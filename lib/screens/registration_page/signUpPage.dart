@@ -33,10 +33,12 @@ class _SignUpPageState extends State<SignUpPage> {
   void _handleSignUp(BuildContext context) async {
     String phone = "+234" + _phoneController.text.substring(1);
     final password = _passwordController.text;
-    final appId = await OneSignal.shared.getDeviceState().then((value) {
-      final appId = value!.userId;
-      return appId;
-    });
+    // final appId = await OneSignal.shared.getDeviceState().then((value) {
+    //   final appId = value!.userId;
+    //   return appId;
+    // });
+
+    final appId = OneSignal.User.pushSubscription.id;
 
     setState(() {
       _showProgressIndicator = true;

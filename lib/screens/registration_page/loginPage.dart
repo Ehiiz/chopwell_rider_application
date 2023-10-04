@@ -37,10 +37,12 @@ class _LoginPageState extends State<LoginPage> {
       _showProgressIndicator = true;
     });
 
-    final appId = await OneSignal.shared.getDeviceState().then((value) {
-      final appId = value!.userId;
-      return appId;
-    });
+    // final appId = await OneSignal.shared.getDeviceState().then((value) {
+    //   final appId = value!.userId;
+    //   return appId;
+    // });
+
+    final appId = OneSignal.User.pushSubscription.id;
 
     String phone = "+234" + _phoneController.text.substring(1);
 
@@ -305,7 +307,6 @@ class _LoginPageState extends State<LoginPage> {
                             ],
                           ),
                         ),
-                    
                       ),
                     ),
                   ),
