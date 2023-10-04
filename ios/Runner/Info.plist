@@ -34,6 +34,10 @@
 	<string>Chopwell needs access to gallery when open</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Chopwell need your location to provide you with relevant information in the background.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Chopwell needs access to location when in use</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Chopwell needs access to your gallery to upload images</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Chopwell need your location to provide you with relevant information in the background.</string>
 	<key>NSMicrophoneUsageDescription</key>

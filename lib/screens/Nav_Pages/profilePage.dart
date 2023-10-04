@@ -27,9 +27,6 @@ import 'package:shimmer/shimmer.dart';
 
 import '../registration_page/loginPage.dart';
 
-
-
-
 Future<Position> getCurrentLocation() async {
   bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
   if (!serviceEnabled) {
@@ -74,7 +71,6 @@ class _NewProfilePageState extends ConsumerState<NewProfilePage> {
   double longitude = 0.0;
 
   void changeValue(double lat, double long, String addr) {
-   
     setState(() {
       latitude = lat;
       longitude = long;
@@ -140,16 +136,14 @@ class _NewProfilePageState extends ConsumerState<NewProfilePage> {
     }
   }
 
-      bool riderStatus = false;
-    String requestStatus = "";
-
+  bool riderStatus = false;
+  String requestStatus = "";
 
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     final userDetailRef = ref.watch(fetchUserDetailFutureProvider);
-
 
     return MaterialApp(
       home: FutureBuilder(
@@ -246,20 +240,23 @@ class _NewProfilePageState extends ConsumerState<NewProfilePage> {
                                           Container(
                                             margin: const EdgeInsets.symmetric(
                                                 vertical: 5.0),
-                                            child:  Row(
+                                            child: Row(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.center,
                                               children: [
                                                 IconButton(
-                                                    onPressed: null,
-                                                    icon: Icon(
-                                                        CupertinoIcons.hand_draw_fill,
-                                                        color: KConstants.baseDarkColor,
-                                                        ),),
-                                              const  SizedBox(
+                                                  onPressed: null,
+                                                  icon: Icon(
+                                                    CupertinoIcons
+                                                        .hand_draw_fill,
+                                                    color: KConstants
+                                                        .baseDarkColor,
+                                                  ),
+                                                ),
+                                                const SizedBox(
                                                   width: 10,
                                                 ),
-                                             const   Text(
+                                                const Text(
                                                   "change status",
                                                   style: TextStyle(
                                                     fontSize: 20,
@@ -273,20 +270,32 @@ class _NewProfilePageState extends ConsumerState<NewProfilePage> {
                                           userDetailRef.when(data: (data) {
                                             final status = data.data["status"];
 
-                                            
-                                            return Column(children: [
-                                              Switch(
-                                                value: status == "online" ? true : false,
-                                                onChanged: (value) {
-                                                  _updateRiderStatus(
-                                                      context, status == "online" ? "offline" : "online");
-                                                ref.refresh(fetchUserDetailFutureProvider);
-                                                }),
-                                                Text(status, style: const TextStyle(fontFamily: "Montserrat", fontSize: 12.00),)
-
-                                            ],) ;
+                                            return Column(
+                                              children: [
+                                                Switch(
+                                                    value: status == "online"
+                                                        ? true
+                                                        : false,
+                                                    onChanged: (value) {
+                                                      _updateRiderStatus(
+                                                          context,
+                                                          status == "online"
+                                                              ? "offline"
+                                                              : "online");
+                                                      ref.refresh(
+                                                          fetchUserDetailFutureProvider);
+                                                    }),
+                                                Text(
+                                                  status,
+                                                  style: const TextStyle(
+                                                      fontFamily: "Montserrat",
+                                                      fontSize: 12.00),
+                                                )
+                                              ],
+                                            );
                                           }, error: (error, _) {
-                                            return const Text("error update status");
+                                            return const Text(
+                                                "error update status");
                                           }, loading: () {
                                             return Shimmer.fromColors(
                                               baseColor:
@@ -305,12 +314,16 @@ class _NewProfilePageState extends ConsumerState<NewProfilePage> {
                                         "assets/coupon.svg",
                                         "Payment Details",
                                         const BankWithdrawalDetailsPage()),
-                                    ProfileButtons("assets/helmet.svg",
-                                        "Delivery History", const OrderHistoryPage()),
-                                    ProfileButtons("assets/withdrawal.svg",
-                                        "Payout History", const PayoutHistoryPage()),
                                     ProfileButtons(
-                                        "assets/help.svg", "Help", const MyOrders()),
+                                        "assets/helmet.svg",
+                                        "Delivery History",
+                                        const OrderHistoryPage()),
+                                    ProfileButtons(
+                                        "assets/withdrawal.svg",
+                                        "Payout History",
+                                        const PayoutHistoryPage()),
+                                    // ProfileButtons(
+                                    //     "assets/help.svg", "Help", const MyOrders()),
                                     TextButton(
                                       onPressed: () async {
                                         await AuthToken.clearAuthToken();

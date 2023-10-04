@@ -33,9 +33,7 @@ bool isTokenExpired(String? token) {
 }
 
 Future main() async {
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(ProviderScope(child: MaterialApp(home: MyApp(navigatorKey))));
   await Alarm.init();
 
@@ -46,7 +44,7 @@ Future main() async {
   OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
 
   OneSignal.Debug.setAlertLevel(OSLogLevel.none);
-  OneSignal.consentRequired(true);
+  OneSignal.consentGiven(true);
   OneSignal.initialize(appID);
 
   OneSignal.Notifications.clearAll();
@@ -99,36 +97,6 @@ Future main() async {
   });
 
   OneSignal.InAppMessages.paused(false);
-
-  // OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
-  // FlutterNativeSplash.remove();
-  // OneSignal.shared.setAppId(appID);
-  // OneSignal.shared
-  //     .promptUserForPushNotificationPermission()
-  //     .then((accepted) => print("Accepted Permission: $accepted"));
-  // OneSignal.shared.getDeviceState().then((value) => {print(value!.userId)});
-
-  // OneSignal.shared.setNotificationWillShowInForegroundHandler((event) {
-  //   final notification = event.notification;
-
-  //   if (notification.body == "Successfully paid order") {
-  //     _showPaymentMadeDialog(navigatorKey.currentState!.overlay!.context);
-  //     event.complete(notification);
-  //   } else {
-  //     event.complete(notification);
-  //   }
-
-  //   print("this is notification title: ${notification.title}");
-  //   print("this is notification body:  ${notification.body}");
-  // });
-
-  // OneSignal.shared
-  //     .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
-  //   // fix title to match
-  //   if (result.notification.title == "Payment Made") {
-  //     _showPaymentMadeDialog(navigatorKey.currentState!.overlay!.context);
-  //   } else {}
-  // });
 }
 
 void _showPaymentMadeDialog(BuildContext context) {
