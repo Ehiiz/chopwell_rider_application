@@ -10,6 +10,7 @@ import 'package:chopwell_rider_application/models/request_models/set_location_re
 import 'package:chopwell_rider_application/screens/Nav_Pages/ordersPage.dart';
 import 'package:chopwell_rider_application/screens/micro_components/location_bar.dart';
 import 'package:chopwell_rider_application/screens/micro_components/profile_buttons.dart';
+import 'package:chopwell_rider_application/screens/subPages/deleteAccountPage.dart';
 import 'package:chopwell_rider_application/services/fetch_user_detail_service.dart';
 import 'package:chopwell_rider_application/services/update_location_service.dart';
 import 'package:chopwell_rider_application/constants/constants.dart';
@@ -343,6 +344,27 @@ class _NewProfilePageState extends ConsumerState<NewProfilePage> {
                                             fontSize: 15,
                                             fontWeight: FontWeight.bold,
                                             fontFamily: "Montserrat"),
+                                      ),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        pushNewScreen(
+                                          context,
+                                          screen: DeleteAccountPage(),
+                                          withNavBar:
+                                              false, // OPTIONAL VALUE. True by default.
+                                          pageTransitionAnimation:
+                                              PageTransitionAnimation.cupertino,
+                                        );
+                                      },
+                                      child: Text(
+                                        "Delete Account",
+                                        style: TextStyle(
+                                          color: KConstants.baseDarkColor,
+                                          fontSize: 15,
+                                          fontFamily: "Montserrat",
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ),
                                   ],
