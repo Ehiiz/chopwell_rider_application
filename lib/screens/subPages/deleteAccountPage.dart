@@ -75,7 +75,7 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> {
                               _showProgressIndicator = true;
                             });
                             final response = await SigninService.deleteAccount(
-                                _phoneController.text);
+                                {"phoneNumber": _phoneController.text});
                             if (response.status == "success") {
                               setState(() {
                                 _showProgressIndicator = true;

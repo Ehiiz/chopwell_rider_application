@@ -11,7 +11,8 @@ class SigninService {
   static const String _signinPath = "/rider/login";
   static const String _deletePath = "/rider/delete";
 
-  static Future<MapDataResponseModel> deleteAccount(String request) async {
+  static Future<MapDataResponseModel> deleteAccount(
+      Map<String, dynamic> request) async {
     final token = await AuthToken.getAuthToken();
 
     final headers = {"Authorization": "Bearer ${token!}"};
