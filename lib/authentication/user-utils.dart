@@ -11,6 +11,7 @@ class UserInfo {
   static Future<void> clearUserInfo() async {
     final prefs = await SharedPreferences.getInstance();
     prefs.remove("user");
+    prefs.clear();
   }
 
   static Future<Object?> getUserInfo() async {

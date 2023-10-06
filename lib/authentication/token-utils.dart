@@ -9,6 +9,7 @@ class AuthToken {
   static Future<void> clearAuthToken() async {
     final prefs = await SharedPreferences.getInstance();
     prefs.remove("rider");
+    prefs.clear();
   }
 
   static Future<String?> getAuthToken() async {
