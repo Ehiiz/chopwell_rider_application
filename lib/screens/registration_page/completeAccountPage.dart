@@ -108,7 +108,7 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
     final email = _emailController.text;
     final bvn = "12345678901";
     String phone = widget.phoneNumber;
-    String image;
+    String? image;
 
     setState(() {
       _showProgressIndicator = true;
@@ -128,7 +128,7 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
       phone: phone,
       longitude: longitude,
       latitude: latitude,
-      profile_picture: image,
+      profile_picture: image!,
       bvn: bvn,
       dateOfBirth: dateOfBirth,
       email: email,
