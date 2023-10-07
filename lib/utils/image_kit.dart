@@ -7,7 +7,8 @@ import 'package:permission_handler/permission_handler.dart';
 Future<String?> imageUpload(File file) async {
   try {
     if (Platform.isIOS) {
-      PermissionStatus requestGranted = await Permission.photos.request();
+      PermissionStatus requestGranted = await Permission.mediaLibrary.request();
+      print(requestGranted);
       if (requestGranted.isPermanentlyDenied) {
         print("I entered Cloudinary at all");
 
