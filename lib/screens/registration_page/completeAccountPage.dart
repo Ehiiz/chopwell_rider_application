@@ -15,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/widgets.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 
 import '../../../main.dart';
@@ -66,28 +67,60 @@ class _CompleteAccountPageState extends State<CompleteAccountPage> {
   }
 
   Future<void> _getImage() async {
-    final pickedFile = await ImagePicker().pickImage(
-      source: ImageSource.gallery,
-      imageQuality: 1,
-    );
-
-    if (pickedFile != null) {
-      File file = File(pickedFile.path);
-      int sizeInBytes = file.lengthSync();
-      double sizeInMb = sizeInBytes / (1024 * 1024);
-      if (sizeInMb > 3) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          customSuccessBar("Image size too large"),
+    if (Platform.isIOS) {
+      PermissionStatus requestGranted = await Permission.mediaLibrary.request();
+      if (requestGranted.isPermanentlyDenied) {
+        final pickedFile = await ImagePicker().pickImage(
+          source: ImageSource.gallery,
+          imageQuality: 50,
         );
-        return;
 
-        // This file is Longer the
+        if (pickedFile != null) {
+          File file = File(pickedFile.path);
+          int sizeInBytes = file.lengthSync();
+          double sizeInMb = sizeInBytes / (1024 * 1024);
+          if (sizeInMb > 3) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              customSuccessBar("Image size too large"),
+            );
+            return;
+
+            // This file is Longer the
+          }
+
+          setState(() {
+            selectedImage = file;
+            _imageSet = true;
+          });
+        }
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(customErrorBar("Error selecting image"));
       }
+    } else {
+      final pickedFile = await ImagePicker().pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 50,
+      );
 
-      setState(() {
-        selectedImage = file;
-        _imageSet = true;
-      });
+      if (pickedFile != null) {
+        File file = File(pickedFile.path);
+        int sizeInBytes = file.lengthSync();
+        double sizeInMb = sizeInBytes / (1024 * 1024);
+        if (sizeInMb > 3) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            customSuccessBar("Image size too large"),
+          );
+          return;
+
+          // This file is Longer the
+        }
+
+        setState(() {
+          selectedImage = file;
+          _imageSet = true;
+        });
+      }
     }
   }
 
