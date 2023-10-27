@@ -50,10 +50,10 @@ Future main() async {
   OneSignal.Notifications.clearAll();
 
   OneSignal.User.pushSubscription.addObserver((state) {
-    print(OneSignal.User.pushSubscription.optedIn);
-    print("this is user id : ${OneSignal.User.pushSubscription.id}");
-    print(OneSignal.User.pushSubscription.token);
-    print(state.current.jsonRepresentation());
+    OneSignal.User.pushSubscription.optedIn;
+    OneSignal.User.pushSubscription.id;
+    OneSignal.User.pushSubscription.token;
+   state.current.jsonRepresentation();
   });
 
   OneSignal.Notifications.requestPermission(true).then((value) {
@@ -63,10 +63,7 @@ Future main() async {
     }
   });
 
-  // void _handlePromptForPushPermission() {
-  //   print("Prompting for Permission");
-  //   OneSignal.Notifications.requestPermission(true);
-  // }
+
 
   OneSignal.Notifications.addForegroundWillDisplayListener((event) {
     print(

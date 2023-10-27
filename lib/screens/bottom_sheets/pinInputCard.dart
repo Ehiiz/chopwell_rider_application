@@ -129,12 +129,15 @@ class _PinInputSheetState extends ConsumerState<PinInputSheet> {
         setState(() {
           _showProgressIndicator = false;
         });
+        ref.refresh(fetchUserDetailFutureProvider);
         Navigator.pop(context);
         ScaffoldMessenger.of(context)
             .showSnackBar(customSuccessBar("Withdrawal Successful"));
         //create pop up that pin has been updated successfully
       } else {
         // create pop up that pin failed or pass in error
+                ref.refresh(fetchUserDetailFutureProvider);
+
         Navigator.pop(context);
         ScaffoldMessenger.of(context)
             .showSnackBar(customSuccessBar("Error paying with wallet"));
