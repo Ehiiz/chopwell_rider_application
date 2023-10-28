@@ -108,6 +108,9 @@ class _LocationBarState extends ConsumerState<LocationBar> {
                 location = place.description.toString();
               });
 
+            
+
+
               //form google_maps_webservice package
               final plist = GoogleMapsPlaces(
                 apiKey: googleApikey,
@@ -116,7 +119,10 @@ class _LocationBarState extends ConsumerState<LocationBar> {
               );
               String placeid = place.placeId ?? "0";
               final detail = await plist.getDetailsByPlaceId(placeid);
+
               final geometry = detail.result.geometry!;
+            
+             
              // _updateLocation(context, location, geometry.location.lat, geometry.location.lng);
 
               widget.onLocationChanged(

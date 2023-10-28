@@ -19,7 +19,6 @@ class UpdateLocationService {
         headers: {"Authorization": "Bearer ${token!}"});
     if (response.statusCode == 200) {
       final responseMap = json.decode(response.body);
-      print(responseMap);
       if (responseMap["data"] != null) {
         final decodedResponse = MapDataResponseModel.fromJson(responseMap);
         return decodedResponse;
