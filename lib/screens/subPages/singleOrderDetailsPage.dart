@@ -114,15 +114,17 @@ class SingleOrderDetailsPage extends StatelessWidget {
                             ],
                           ),
                           TextButton(
-                              onPressed: () async {
-                                DateTime prepTime = DateTime.now()
-                                    .add(Duration(hours: deliveryTime!));
+                              onPressed: status != "cancelled"
+                                  ? () async {
+                                      DateTime prepTime = DateTime.now()
+                                          .add(Duration(hours: deliveryTime!));
 
-                                _setAlarm(
-                                    "You have a pre order pickup for $restaurantName by $prepTime ",
-                                    prepTime!,
-                                    "Preorder delivery for $restaurantName");
-                              },
+                                      _setAlarm(
+                                          "You have a pre order pickup for $restaurantName by $prepTime ",
+                                          prepTime!,
+                                          "Preorder delivery for $restaurantName");
+                                    }
+                                  : null,
                               child: Text(
                                 "set reminder",
                                 style: TextStyle(
