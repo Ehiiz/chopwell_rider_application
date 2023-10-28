@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:alarm/alarm.dart';
 import 'package:chopwell_rider_application/builders/subAppBar.dart';
 import 'package:chopwell_rider_application/screens/micro_components/order_favourites.dart';
@@ -242,13 +244,16 @@ class SingleOrderDetailsPage extends StatelessWidget {
   }
 
   void _setAlarm(String message, DateTime timer, String title) async {
+    Random random = new Random();
+    int randomNumber = random.nextInt(100);
+
     final alarmSettings = AlarmSettings(
-      id: 42,
+      id: randomNumber,
       dateTime: timer,
       assetAudioPath: 'assets/alarm.mp3',
-      loopAudio: true,
+      loopAudio: false,
       vibrate: true,
-      fadeDuration: 5.0,
+      fadeDuration: 20.0,
       notificationTitle: title,
       notificationBody: message,
       enableNotificationOnKill: true,
