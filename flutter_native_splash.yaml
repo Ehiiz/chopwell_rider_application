@@ -3,8 +3,6 @@ flutter_native_splash:
 
   image: assets/all white.png
 
-  branding_dark: assets/all white.png
-
   android_12:
     image: assets/all white.png
 
