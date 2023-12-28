@@ -36,8 +36,7 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
 
-    return SafeArea(
-        child: Scaffold(
+    return Scaffold(
       appBar: buildAppBar(context),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -130,6 +129,6 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> {
           ),
         ],
       ),
-    ));
+    );
   }
 }

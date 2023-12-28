@@ -22,8 +22,7 @@ class PayoutHistoryPage extends ConsumerWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     final payoutsRef = ref.watch(payoutHistoryFutureProvider);
-    return SafeArea(
-        child: Scaffold(
+    return Scaffold(
       appBar: buildAppBar(context),
       body: Padding(
         padding: EdgeInsets.symmetric(
@@ -179,6 +178,6 @@ class PayoutHistoryPage extends ConsumerWidget {
           }))
         ]),
       ),
-    ));
+    );
   }
 }

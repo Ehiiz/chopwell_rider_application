@@ -34,7 +34,11 @@ bool isTokenExpired(String? token) {
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(ProviderScope(child: MaterialApp(home: MyApp(navigatorKey))));
+  runApp(ProviderScope(
+      child: MaterialApp(
+    home: MyApp(navigatorKey),
+    debugShowCheckedModeBanner: false,
+  )));
   await Alarm.init();
 
   await dotenv.load(fileName: ".env");
@@ -53,7 +57,7 @@ Future main() async {
     OneSignal.User.pushSubscription.optedIn;
     OneSignal.User.pushSubscription.id;
     OneSignal.User.pushSubscription.token;
-   state.current.jsonRepresentation();
+    state.current.jsonRepresentation();
   });
 
   OneSignal.Notifications.requestPermission(true).then((value) {
@@ -62,8 +66,6 @@ Future main() async {
       OneSignal.User.pushSubscription.optIn();
     }
   });
-
-
 
   OneSignal.Notifications.addForegroundWillDisplayListener((event) {
     print(

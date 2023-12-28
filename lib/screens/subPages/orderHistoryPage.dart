@@ -23,15 +23,15 @@ class OrderHistoryPage extends ConsumerWidget {
     final screenHeight = MediaQuery.of(context).size.height;
     final riderDeliveries = ref.watch(fetchDeliveryFutureProvider);
 
-    return SafeArea(
-        child: Scaffold(
+    return Scaffold(
       appBar: buildAppBar(context),
       body: Padding(
         padding: EdgeInsets.symmetric(
             vertical: screenHeight * 0.01, horizontal: screenWidth * 0.02),
         child: ListView(children: [
-          Text('Delivery History',
-              style: Theme.of(context).primaryTextTheme.titleLarge),
+          const Text('Delivery History',
+              style: TextStyle(
+                  color: Colors.black, fontSize: 20, fontFamily: "Montserrat")),
           const SizedBox(height: 10),
           // Row(
           //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -200,6 +200,6 @@ class OrderHistoryPage extends ConsumerWidget {
           ),
         ]),
       ),
-    ));
+    );
   }
 }

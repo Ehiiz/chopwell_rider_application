@@ -115,261 +115,257 @@ class _ChangePaymentDetailsPageState
     final screenWidth = MediaQuery.of(context).size.width;
     final bankList = ref.watch(bankListServiceFutureProvider);
 
-    return SafeArea(
-      child: Scaffold(
-          appBar: buildAppBar(context),
-          body: Padding(
-              padding: EdgeInsets.symmetric(
-                vertical: screenHeight * 0.01,
-                horizontal: screenWidth * 0.02,
-              ),
-              child: SingleChildScrollView(
-                  child: Stack(
-                children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Update Payment Details',
-                        style: TextStyle(
-                          fontFamily: "Montserrat",
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                              height: 35,
-                              width: screenWidth,
-                              decoration: BoxDecoration(
-                                border: Border(
-                                  bottom: BorderSide(
-                                    color: KConstants.baseRedColor,
-                                    width: 1.0,
-                                  ),
-                                ),
-                              ),
-                              child: DropdownButton(
-                                value: _selectedItem,
-                                items: defaultBankList
-                                    .map<DropdownMenuItem<String>>(
-                                        (Map<String, dynamic> value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value["name"]! as String,
-                                    child: SizedBox(
-                                      width: screenWidth * .8,
-                                      child: Text(
-                                        value["name"]!,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.fade,
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontFamily: "Montserrat",
-                                          color: KConstants.baseTwoRedColor,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                }).toList(),
-                                onChanged: (value) {
-                                  final result = defaultBankList.firstWhere(
-                                      (item) => item['name'] == value);
-                                  setState(() {
-                                    _selectedItem = value as String;
-                                    bankCode = result["code"];
-                                  });
-                                },
-                              )),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            "bank name",
-                            style: TextStyle(
-                              fontFamily: "Questrial",
-                              color: KConstants.baseRedColor,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          Container(
-                            height: 35,
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  color: KConstants.baseRedColor,
-                                  width: 1.0,
-                                ),
-                              ),
-                            ),
-                            child: TextField(
-                              controller: _accountNumberController,
-                              keyboardType: TextInputType.number,
-                              onChanged: (value) async {
-                                if (value.length > 10) {
-                                  _accountNumberController.text =
-                                      _accountNumberController.text
-                                          .substring(0, 10);
-                                }
-                                if (value.length == 10) {
-                                  setState(() {
-                                    _verifyingName = true;
-                                  });
-                                  final response = await _verifyUserName(
-                                      context,
-                                      _accountNumberController.text,
-                                      bankCode);
-                                  setState(() {
-                                    _accountNameController.text =
-                                        response.data["name"];
-                                    _verifyingName = false;
-                                    _buttonReady = true;
-                                  });
-                                }
-                              },
-                              maxLines: 1,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                floatingLabelBehavior:
-                                    FloatingLabelBehavior.never,
-                                labelText: "000000",
-                                labelStyle: TextStyle(
-                                  color: KConstants.baseTwoGreyColor,
-                                  fontSize: 15,
-                                  height: 1,
-                                  fontFamily: "Montserrat",
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            "account number",
-                            style: TextStyle(
-                              fontFamily: "Questrial",
-                              color: KConstants.baseRedColor,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          Container(
-                            height: 35,
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  color: KConstants.baseRedColor,
-                                  width: 1.0,
-                                ),
-                              ),
-                            ),
-                            child: TextField(
-                              controller: _accountNameController,
-                              maxLines: 1,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                floatingLabelBehavior:
-                                    FloatingLabelBehavior.never,
-                                labelText: "oriasotie emmanuel",
-                                labelStyle: TextStyle(
-                                  color: KConstants.baseTwoGreyColor,
-                                  fontSize: 15,
-                                  height: 1,
-                                  fontFamily: "Montserrat",
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            "account name",
-                            style: TextStyle(
-                              fontFamily: "Questrial",
-                              color: KConstants.baseRedColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 100,
-                      ),
-                      Center(
-                          child: Stack(
-                        children: [
-                          SizedBox(
-                            width: 300,
-                            height: 50,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                _updateBankDetails(
-                                  context,
-                                  _accountNumberController.text,
-                                  _accountNameController.text,
-                                  _selectedItem,
-                                  bankCode,
-                                );
-                              },
-                              // ignore: sort_child_properties_last
-                              child: Text(
-                                _showProgressIndicator
-                                    ? ""
-                                    : 'Update Bank Details',
-                                style: TextStyle(
-                                  fontFamily: "Montserrat",
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                ),
-                              ),
-                              style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(
-                                    _buttonReady
-                                        ? KConstants.baseTwoRedColor
-                                        : KConstants.baseGreyColor,
-                                  ),
-                                  shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                    ),
-                                  )),
-                            ),
-                          ),
-                          if (_showProgressIndicator)
-                            const Positioned.fill(
-                              child: Center(
-                                child: CircularProgressIndicator(
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                        ],
-                      )),
-                    ],
-                  ),
-                  if (_verifyingName)
-                    Positioned.fill(
-                      child: Center(
-                        child: CircularProgressIndicator(
-                          backgroundColor: Colors.transparent,
-                          color: KConstants.baseRedColor,
-                        ),
+    return Scaffold(
+        appBar: buildAppBar(context),
+        body: Padding(
+            padding: EdgeInsets.symmetric(
+              vertical: screenHeight * 0.01,
+              horizontal: screenWidth * 0.02,
+            ),
+            child: SingleChildScrollView(
+                child: Stack(
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Update Payment Details',
+                      style: TextStyle(
+                        fontFamily: "Montserrat",
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                ],
-              )))),
-    );
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                            height: 35,
+                            width: screenWidth,
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: KConstants.baseRedColor,
+                                  width: 1.0,
+                                ),
+                              ),
+                            ),
+                            child: DropdownButton(
+                              value: _selectedItem,
+                              items: defaultBankList
+                                  .map<DropdownMenuItem<String>>(
+                                      (Map<String, dynamic> value) {
+                                return DropdownMenuItem<String>(
+                                  value: value["name"]! as String,
+                                  child: SizedBox(
+                                    width: screenWidth * .8,
+                                    child: Text(
+                                      value["name"]!,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.fade,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontFamily: "Montserrat",
+                                        color: KConstants.baseTwoRedColor,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (value) {
+                                final result = defaultBankList.firstWhere(
+                                    (item) => item['name'] == value);
+                                setState(() {
+                                  _selectedItem = value as String;
+                                  bankCode = result["code"];
+                                });
+                              },
+                            )),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          "bank name",
+                          style: TextStyle(
+                            fontFamily: "Questrial",
+                            color: KConstants.baseRedColor,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        Container(
+                          height: 35,
+                          decoration: BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                color: KConstants.baseRedColor,
+                                width: 1.0,
+                              ),
+                            ),
+                          ),
+                          child: TextField(
+                            controller: _accountNumberController,
+                            keyboardType: TextInputType.number,
+                            onChanged: (value) async {
+                              if (value.length > 10) {
+                                _accountNumberController.text =
+                                    _accountNumberController.text
+                                        .substring(0, 10);
+                              }
+                              if (value.length == 10) {
+                                setState(() {
+                                  _verifyingName = true;
+                                });
+                                final response = await _verifyUserName(context,
+                                    _accountNumberController.text, bankCode);
+                                setState(() {
+                                  _accountNameController.text =
+                                      response.data["name"];
+                                  _verifyingName = false;
+                                  _buttonReady = true;
+                                });
+                              }
+                            },
+                            maxLines: 1,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              floatingLabelBehavior:
+                                  FloatingLabelBehavior.never,
+                              labelText: "000000",
+                              labelStyle: TextStyle(
+                                color: KConstants.baseTwoGreyColor,
+                                fontSize: 15,
+                                height: 1,
+                                fontFamily: "Montserrat",
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          "account number",
+                          style: TextStyle(
+                            fontFamily: "Questrial",
+                            color: KConstants.baseRedColor,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        Container(
+                          height: 35,
+                          decoration: BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                color: KConstants.baseRedColor,
+                                width: 1.0,
+                              ),
+                            ),
+                          ),
+                          child: TextField(
+                            controller: _accountNameController,
+                            maxLines: 1,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              floatingLabelBehavior:
+                                  FloatingLabelBehavior.never,
+                              labelText: "oriasotie emmanuel",
+                              labelStyle: TextStyle(
+                                color: KConstants.baseTwoGreyColor,
+                                fontSize: 15,
+                                height: 1,
+                                fontFamily: "Montserrat",
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          "account name",
+                          style: TextStyle(
+                            fontFamily: "Questrial",
+                            color: KConstants.baseRedColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 100,
+                    ),
+                    Center(
+                        child: Stack(
+                      children: [
+                        SizedBox(
+                          width: 300,
+                          height: 50,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              _updateBankDetails(
+                                context,
+                                _accountNumberController.text,
+                                _accountNameController.text,
+                                _selectedItem,
+                                bankCode,
+                              );
+                            },
+                            // ignore: sort_child_properties_last
+                            child: Text(
+                              _showProgressIndicator
+                                  ? ""
+                                  : 'Update Bank Details',
+                              style: TextStyle(
+                                fontFamily: "Montserrat",
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
+                            ),
+                            style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(
+                                  _buttonReady
+                                      ? KConstants.baseTwoRedColor
+                                      : KConstants.baseGreyColor,
+                                ),
+                                shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20.0),
+                                  ),
+                                )),
+                          ),
+                        ),
+                        if (_showProgressIndicator)
+                          const Positioned.fill(
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                      ],
+                    )),
+                  ],
+                ),
+                if (_verifyingName)
+                  Positioned.fill(
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        backgroundColor: Colors.transparent,
+                        color: KConstants.baseRedColor,
+                      ),
+                    ),
+                  ),
+              ],
+            ))));
   }
 }
