@@ -15,8 +15,9 @@ class PasswordResetEmailService {
   static Future<StringDataResponseModel> passwordReset(
       VerifyPhoneRequestModel request) async {
     final response = await RequestModule.post(
-        _passwordPhoneResetPath, request.toJson(),
-        headers: {"": ""});
+      _passwordPhoneResetPath,
+      request.toJson(),
+    );
 
     if (response.statusCode == 200) {
       final responseMap = json.decode(response.body);

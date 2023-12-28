@@ -37,10 +37,10 @@ class SigninService {
   }
 
   static Future<MapDataResponseModel> signin(SignInRequestModel request) async {
-    final headers = {"": ""};
-
-    final response = await RequestModule.post(_signinPath, request.toJson(),
-        headers: headers);
+    final response = await RequestModule.post(
+      _signinPath,
+      request.toJson(),
+    );
 
     if (response.statusCode == 200) {
       final responseMap = json.decode(response.body);

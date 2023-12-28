@@ -9,8 +9,10 @@ class SignupService {
   static const String _signupPath = '/rider/signup';
 
   static Future<MapDataResponseModel> signup(SignupRequestModel request) async {
-    final response = await RequestModule.post(_signupPath, request.toJson(),
-        headers: {"": ""});
+    final response = await RequestModule.post(
+      _signupPath,
+      request.toJson(),
+    );
 
     if (response.statusCode == 200) {
       final responseMap = json.decode(response.body);

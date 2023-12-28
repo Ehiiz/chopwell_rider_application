@@ -10,7 +10,7 @@ class RequestModule {
   };
 
   static Future<http.Response> post(String path, dynamic data,
-      {required Map<String, String>? headers}) async {
+      {Map<String, String>? headers}) async {
     final url = Uri.parse(baseUrl + path);
     final mergedHeaders = Map.from(defaultHeaders)
       ..addAll(headers?.cast<String, String>() ?? {});
@@ -22,7 +22,7 @@ class RequestModule {
   }
 
   static Future<http.Response> patch(String path, dynamic data,
-      {required Map<String, String>? headers}) async {
+      {Map<String, String>? headers}) async {
     final url = Uri.parse(baseUrl + path);
     final mergedHeaders = Map.from(defaultHeaders)
       ..addAll(headers?.cast<String, String>() ?? {});
@@ -33,7 +33,7 @@ class RequestModule {
   }
 
   static Future<http.Response> get(String path,
-      {required Map<String, String>? headers}) async {
+      {Map<String, String>? headers}) async {
     final url = Uri.parse(baseUrl + path);
     final mergedHeaders = Map.from(defaultHeaders)
       ..addAll(headers?.cast<String, String>() ?? {});

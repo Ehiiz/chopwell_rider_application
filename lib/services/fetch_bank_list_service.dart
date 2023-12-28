@@ -19,7 +19,7 @@ class BankEnquiryService {
   static const String _bvnEnquiryPath = "/payment/bvn-enquiry";
 
   Future<MapDataResponseModel> bankList() async {
-    final response = await RequestModule.get(_bankListPath, headers: {"": ""});
+    final response = await RequestModule.get(_bankListPath);
 
     if (response.statusCode == 200) {
       final responseMap = json.decode(response.body);
@@ -41,8 +41,7 @@ class BankEnquiryService {
 
   Future<MapDataResponseModel> nameEnquiry(
       NameEnquiryRequestModel request) async {
-    final response =
-        await RequestModule.post(_nameEnquiryPath, request, headers: {"": ""});
+    final response = await RequestModule.post(_nameEnquiryPath, request);
 
     if (response.statusCode == 200) {
       final responseMap = json.decode(response.body);
@@ -65,8 +64,7 @@ class BankEnquiryService {
 
   Future<MapDataResponseModel> bvnEnquiry(
       BvnEnquiryRequestModel request) async {
-    final response =
-        await RequestModule.post(_bvnEnquiryPath, request, headers: {"": ""});
+    final response = await RequestModule.post(_bvnEnquiryPath, request);
 
     if (response.statusCode == 200) {
       final responseMap = json.decode(response.body);

@@ -57,8 +57,9 @@ class CompleteAccountService {
   static Future<MapDataResponseModel> setup(
       CompleteAccountRequestModel request) async {
     final response = await RequestModule.post(
-        _completeAccountPath, request.toJson(),
-        headers: {"": ""});
+      _completeAccountPath,
+      request.toJson(),
+    );
     if (response.statusCode == 200) {
       final responseMap = json.decode(response.body);
       if (responseMap["data"] != null) {

@@ -12,10 +12,10 @@ class SetNewPasswordService {
 
   static Future<NullDataResponseModel> setNewPassword(
       SetNewPasswordRequestModel request) async {
-    final headers = {"": ""};
     final response = await RequestModule.patch(
-        _setNewPasswordPath, request.toJson(),
-        headers: headers);
+      _setNewPasswordPath,
+      request.toJson(),
+    );
 
     if (response.statusCode == 200) {
       final responseMap = json.decode(response.body);

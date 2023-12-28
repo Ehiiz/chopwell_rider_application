@@ -11,8 +11,10 @@ class VerifyOtpService {
 
   static Future<MapDataResponseModel> verifyotp(
       VerifyOtpRequestModel request) async {
-    final response = await RequestModule.post(_verifyOtpPath, request.toJson(),
-        headers: {"": ""});
+    final response = await RequestModule.post(
+      _verifyOtpPath,
+      request.toJson(),
+    );
 
     if (response.statusCode == 200) {
       final responseMap = json.decode(response.body);
@@ -35,8 +37,9 @@ class VerifyOtpService {
   static Future<MapDataResponseModel> accountOtp(
       VerifyOtpRequestModel request) async {
     final response = await RequestModule.post(
-        _verifyAccountOtpPath, request.toJson(),
-        headers: {"": ""});
+      _verifyAccountOtpPath,
+      request.toJson(),
+    );
 
     if (response.statusCode == 200) {
       final responseMap = json.decode(response.body);
