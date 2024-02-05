@@ -73,17 +73,17 @@ class _SignUpPageState extends State<SignUpPage> {
     return _passwordController.text.length >= 8;
   }
 
-  bool _isPasswordValidNumber() {
-    return _passwordController.text.contains(RegExp(r'\d'));
-  }
+  // bool _isPasswordValidNumber() {
+  //   return _passwordController.text.contains(RegExp(r'\d'));
+  // }
 
-  bool _isPasswordValidLetter() {
-    return _passwordController.text.contains(RegExp(r'[a-zA-Z]'));
-  }
+  // bool _isPasswordValidLetter() {
+  //   return _passwordController.text.contains(RegExp(r'[a-zA-Z]'));
+  // }
 
-  bool _isPasswordValidSpecialChar() {
-    return _passwordController.text.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'));
-  }
+  // bool _isPasswordValidSpecialChar() {
+  //   return _passwordController.text.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'));
+  // }
 
   void _validateInput() {
     final phoneValid = phoneRegex.hasMatch(_phoneController.text);
@@ -187,39 +187,6 @@ class _SignUpPageState extends State<SignUpPage> {
                       "at least 8 characters in length",
                       style: TextStyle(
                         color: _isPasswordValidLength()
-                            ? Colors.green
-                            : KConstants.baseGreyColor,
-                        fontSize: 12,
-                        fontFamily: "Questrial",
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      "contain at least one number",
-                      style: TextStyle(
-                        color: _isPasswordValidNumber()
-                            ? Colors.green
-                            : KConstants.baseGreyColor,
-                        fontSize: 12,
-                        fontFamily: "Questrial",
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      "contain at least one letter",
-                      style: TextStyle(
-                        color: _isPasswordValidLetter()
-                            ? Colors.green
-                            : KConstants.baseGreyColor,
-                        fontSize: 12,
-                        fontFamily: "Questrial",
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      "contain at least one special character",
-                      style: TextStyle(
-                        color: _isPasswordValidSpecialChar()
                             ? Colors.green
                             : KConstants.baseGreyColor,
                         fontSize: 12,

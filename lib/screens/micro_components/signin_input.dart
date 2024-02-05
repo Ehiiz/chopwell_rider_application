@@ -19,6 +19,7 @@ class SignInput extends StatefulWidget {
 
 class _SignInputState extends State<SignInput> {
   bool _isValid = true;
+  bool _isPasswordVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +45,10 @@ class _SignInputState extends State<SignInput> {
       controller: widget.controller,
       keyboardType: TextInputType.visiblePassword,
       textInputAction: TextInputAction.done,
-      obscureText: widget.label == "password" ? true : false,
+      obscureText:
+          (widget.label == "password" || widget.label == "confirm password")
+              ? !_isPasswordVisible
+              : false,
       decoration: InputDecoration(
           floatingLabelBehavior: FloatingLabelBehavior.never,
           filled: true,
@@ -63,6 +67,19 @@ class _SignInputState extends State<SignInput> {
             widget.icon,
             color: KConstants.baseRedColor,
           ),
+          suffixIcon:
+              (widget.label == "password" || widget.label == "confirm password")
+                  ? IconButton(
+                      icon: Icon(_isPasswordVisible
+                          ? Icons.visibility_off
+                          : Icons.visibility),
+                      onPressed: () {
+                        setState(() {
+                          _isPasswordVisible = !_isPasswordVisible;
+                        });
+                      },
+                    )
+                  : null,
           labelStyle: TextStyle(
             fontFamily: "Montserrat",
             color: KConstants.baseThreeRedColor,
